@@ -1,0 +1,763 @@
+[
+  {
+    "experiment": 1,
+    "chapter": 1,
+    "name": "llm_call",
+    "file": "chapters/01/01_llm_call.py",
+    "framework_file": "framework_examples/01_llm_call.py",
+    "module": "framework_examples.01_llm_call",
+    "concept": "LangChain model invocation",
+    "expected": "37 x 42 is approximately 1,500.",
+    "limitation": "The model is a deterministic test double; this does not measure model accuracy."
+  },
+  {
+    "experiment": 2,
+    "chapter": 1,
+    "name": "llm_to_agent",
+    "file": "chapters/01/02_llm_to_agent.py",
+    "framework_file": "framework_examples/02_llm_to_agent.py",
+    "module": "framework_examples.02_llm_to_agent",
+    "concept": "LangGraph model/tool loop",
+    "expected": [
+      "",
+      "1554",
+      "37 x 42 = 1554."
+    ],
+    "limitation": "Tool choices are scripted; the framework actually dispatches the tool and appends its observation."
+  },
+  {
+    "experiment": 3,
+    "chapter": 2,
+    "name": "structured_output",
+    "file": "chapters/02/03_structured_output.py",
+    "framework_file": "framework_examples/03_structured_output.py",
+    "module": "framework_examples.03_structured_output",
+    "concept": "LangChain structured-output parsing",
+    "expected": {
+      "tool": "calculator",
+      "arguments": {
+        "expression": "6*7"
+      }
+    },
+    "limitation": "Parsing a fixture demonstrates schema enforcement, not provider-native structured generation."
+  },
+  {
+    "experiment": 4,
+    "chapter": 2,
+    "name": "validation",
+    "file": "chapters/02/04_validation.py",
+    "framework_file": "framework_examples/04_validation.py",
+    "module": "framework_examples.04_validation",
+    "concept": "LangChain tool argument validation",
+    "expected": {
+      "valid": 13,
+      "invalid_rejected": true
+    },
+    "limitation": "Schema validity does not authorize a tool; permissions remain an application check."
+  },
+  {
+    "experiment": 5,
+    "chapter": 3,
+    "name": "agent_loop",
+    "file": "chapters/03/05_agent_loop.py",
+    "framework_file": "framework_examples/05_agent_loop.py",
+    "module": "framework_examples.05_agent_loop",
+    "concept": "LangGraph conditional loop",
+    "expected": 3,
+    "limitation": ""
+  },
+  {
+    "experiment": 6,
+    "chapter": 3,
+    "name": "stopping",
+    "file": "chapters/03/06_stopping.py",
+    "framework_file": "framework_examples/06_stopping.py",
+    "module": "framework_examples.06_stopping",
+    "concept": "LangGraph recursion ceiling",
+    "expected": "stopped by framework recursion ceiling",
+    "limitation": "A recursion ceiling bounds graph supersteps; it is not a dollar, token, or wall-clock budget."
+  },
+  {
+    "experiment": 7,
+    "chapter": 4,
+    "name": "workflow_vs_agent",
+    "file": "chapters/04/07_workflow_vs_agent.py",
+    "framework_file": "framework_examples/07_workflow_vs_agent.py",
+    "module": "framework_examples.07_workflow_vs_agent",
+    "concept": "Fixed LangChain composition versus LangGraph conditional routing",
+    "expected": [
+      8,
+      144
+    ],
+    "limitation": "The conditional policy is scripted; branching alone does not make an LLM agent."
+  },
+  {
+    "experiment": 8,
+    "chapter": 5,
+    "name": "tool_calling",
+    "file": "chapters/05/08_tool_calling.py",
+    "framework_file": "framework_examples/08_tool_calling.py",
+    "module": "framework_examples.08_tool_calling",
+    "concept": "LangChain tool schema and invocation",
+    "expected": 5,
+    "limitation": ""
+  },
+  {
+    "experiment": 9,
+    "chapter": 5,
+    "name": "multiple_tools",
+    "file": "chapters/05/09_multiple_tools.py",
+    "framework_file": "framework_examples/09_multiple_tools.py",
+    "module": "framework_examples.09_multiple_tools",
+    "concept": "LangGraph named-tool dispatch",
+    "expected": "7",
+    "limitation": ""
+  },
+  {
+    "experiment": 10,
+    "chapter": 5,
+    "name": "tool_errors",
+    "file": "chapters/05/10_tool_errors.py",
+    "framework_file": "framework_examples/10_tool_errors.py",
+    "module": "framework_examples.10_tool_errors",
+    "concept": "LangChain controlled tool-error observations",
+    "expected": "zero denominator",
+    "limitation": ""
+  },
+  {
+    "experiment": 11,
+    "chapter": 6,
+    "name": "context_quantity",
+    "file": "chapters/06/11_context_quantity.py",
+    "framework_file": "framework_examples/11_context_quantity.py",
+    "module": "framework_examples.11_context_quantity",
+    "concept": "LangChain prompt-context growth",
+    "expected": null,
+    "limitation": "Character counts are an observation, not provider token counts or measured answer quality."
+  },
+  {
+    "experiment": 12,
+    "chapter": 6,
+    "name": "context_selection",
+    "file": "chapters/06/12_context_selection.py",
+    "framework_file": "framework_examples/12_context_selection.py",
+    "module": "framework_examples.12_context_selection",
+    "concept": "LangChain context-selection pipeline",
+    "expected": "relevant",
+    "limitation": ""
+  },
+  {
+    "experiment": 13,
+    "chapter": 7,
+    "name": "embeddings",
+    "file": "chapters/07/13_embeddings.py",
+    "framework_file": "framework_examples/13_embeddings.py",
+    "module": "framework_examples.13_embeddings",
+    "concept": "LangChain embeddings interface and vector retrieval",
+    "expected": "agent memory",
+    "limitation": "Character-count vectors are transparent fixtures, not semantic embeddings."
+  },
+  {
+    "experiment": 14,
+    "chapter": 7,
+    "name": "rag",
+    "file": "chapters/07/14_rag.py",
+    "framework_file": "framework_examples/14_rag.py",
+    "module": "framework_examples.14_rag",
+    "concept": "LangChain retriever-to-prompt RAG composition",
+    "expected": "Answer using: Pretoria is in South Africa.",
+    "limitation": "Retrieval and prompt grounding run locally; answer generation is not represented as a live model benchmark."
+  },
+  {
+    "experiment": 15,
+    "chapter": 7,
+    "name": "reranking",
+    "file": "chapters/07/15_reranking.py",
+    "framework_file": "framework_examples/15_reranking.py",
+    "module": "framework_examples.15_reranking",
+    "concept": "LangChain reranking stage",
+    "expected": "direct answer",
+    "limitation": "Scores are supplied fixtures; this does not call a learned cross-encoder."
+  },
+  {
+    "experiment": 16,
+    "chapter": 8,
+    "name": "working_memory",
+    "file": "chapters/08/16_working_memory.py",
+    "framework_file": "framework_examples/16_working_memory.py",
+    "module": "framework_examples.16_working_memory",
+    "concept": "LangGraph thread-scoped working memory",
+    "expected": "tool result: 42",
+    "limitation": "InMemorySaver is process-local; use a durable checkpointer for persistence across restarts."
+  },
+  {
+    "experiment": 17,
+    "chapter": 8,
+    "name": "long_term_memory",
+    "file": "chapters/08/17_long_term_memory.py",
+    "framework_file": "framework_examples/17_long_term_memory.py",
+    "module": "framework_examples.17_long_term_memory",
+    "concept": "LangGraph Long-term memory interface",
+    "expected": "user prefers concise examples",
+    "limitation": "InMemoryStore demonstrates the cross-thread store API, but is not durable storage or learned memory."
+  },
+  {
+    "experiment": 18,
+    "chapter": 8,
+    "name": "procedural_memory",
+    "file": "chapters/08/18_procedural_memory.py",
+    "framework_file": "framework_examples/18_procedural_memory.py",
+    "module": "framework_examples.18_procedural_memory",
+    "concept": "LangGraph Procedural memory interface",
+    "expected": "check denominator before division",
+    "limitation": "InMemoryStore demonstrates the cross-thread store API, but is not durable storage or learned memory."
+  },
+  {
+    "experiment": 19,
+    "chapter": 9,
+    "name": "context_compression",
+    "file": "chapters/09/19_context_compression.py",
+    "framework_file": "framework_examples/19_context_compression.py",
+    "module": "framework_examples.19_context_compression",
+    "concept": "LangChain compression stage",
+    "expected": 80,
+    "limitation": "Truncation can lose facts; this is not semantic summarization."
+  },
+  {
+    "experiment": 20,
+    "chapter": 9,
+    "name": "memory_consolidation",
+    "file": "chapters/09/20_memory_consolidation.py",
+    "framework_file": "framework_examples/20_memory_consolidation.py",
+    "module": "framework_examples.20_memory_consolidation",
+    "concept": "LangGraph memory-consolidation stages",
+    "expected": {
+      "A": "usually succeeds",
+      "B": "failed once"
+    },
+    "limitation": ""
+  },
+  {
+    "experiment": 21,
+    "chapter": 10,
+    "name": "mcp_calculator",
+    "file": "chapters/10/21_mcp_calculator.py",
+    "framework_file": "framework_examples/21_mcp_calculator.py",
+    "module": "framework_examples.21_mcp_calculator",
+    "concept": "LangChain local tool contract corresponding to MCP discovery",
+    "expected": {
+      "discovered": "calculator",
+      "schema": [
+        "a",
+        "b"
+      ],
+      "result": 42
+    },
+    "limitation": "This is a local framework tool, not an MCP server or protocol transport. An MCP adapter still needs discovery, connection, and trust-boundary checks."
+  },
+  {
+    "experiment": 22,
+    "chapter": 11,
+    "name": "react",
+    "file": "chapters/11/22_react.py",
+    "framework_file": "framework_examples/22_react.py",
+    "module": "framework_examples.22_react",
+    "concept": "LangGraph action/observation loop",
+    "expected": [
+      "",
+      "1554",
+      "37 x 42 = 1554."
+    ],
+    "limitation": "Scripted tool decisions exercise execution and observation without exposing or claiming private model reasoning."
+  },
+  {
+    "experiment": 23,
+    "chapter": 12,
+    "name": "planning",
+    "file": "chapters/12/23_planning.py",
+    "framework_file": "framework_examples/23_planning.py",
+    "module": "framework_examples.23_planning",
+    "concept": "LangChain runnable planning component",
+    "expected": [
+      "draft",
+      "review",
+      "revise",
+      "publish"
+    ],
+    "limitation": "The plan is scripted; its correctness remains an application evaluation problem."
+  },
+  {
+    "experiment": 24,
+    "chapter": 12,
+    "name": "plan_execute",
+    "file": "chapters/12/24_plan_execute.py",
+    "framework_file": "framework_examples/24_plan_execute.py",
+    "module": "framework_examples.24_plan_execute",
+    "concept": "LangGraph plan and execution stages",
+    "expected": "summary based on new evidence",
+    "limitation": ""
+  },
+  {
+    "experiment": 25,
+    "chapter": 13,
+    "name": "reflection",
+    "file": "chapters/13/25_reflection.py",
+    "framework_file": "framework_examples/25_reflection.py",
+    "module": "framework_examples.25_reflection",
+    "concept": "LangGraph draft/critique/revision workflow",
+    "expected": "The answer is 42",
+    "limitation": "A scripted critic illustrates orchestration, not independently validated model self-correction."
+  },
+  {
+    "experiment": 26,
+    "chapter": 14,
+    "name": "tree_reasoning",
+    "file": "chapters/14/26_tree_reasoning.py",
+    "framework_file": "framework_examples/26_tree_reasoning.py",
+    "module": "framework_examples.26_tree_reasoning",
+    "concept": "LangGraph parallel candidate expansion and selection",
+    "expected": "B",
+    "limitation": "This is one scored expansion step, not a complete tree-search algorithm."
+  },
+  {
+    "experiment": 27,
+    "chapter": 15,
+    "name": "routing",
+    "file": "chapters/15/27_routing.py",
+    "framework_file": "framework_examples/27_routing.py",
+    "module": "framework_examples.27_routing",
+    "concept": "LangGraph task routing",
+    "expected": "math_agent",
+    "limitation": ""
+  },
+  {
+    "experiment": 28,
+    "chapter": 15,
+    "name": "model_routing",
+    "file": "chapters/15/28_model_routing.py",
+    "framework_file": "framework_examples/28_model_routing.py",
+    "module": "framework_examples.28_model_routing",
+    "concept": "LangChain model-selection branch",
+    "expected": "strong",
+    "limitation": "Branches return provider labels; no paid model is invoked."
+  },
+  {
+    "experiment": 29,
+    "chapter": 16,
+    "name": "parallelism",
+    "file": "chapters/16/29_parallelism.py",
+    "framework_file": "framework_examples/29_parallelism.py",
+    "module": "framework_examples.29_parallelism",
+    "concept": "LangChain parallel runnable execution",
+    "expected": [
+      4,
+      9,
+      16
+    ],
+    "limitation": ""
+  },
+  {
+    "experiment": 30,
+    "chapter": 16,
+    "name": "fanout_fanin",
+    "file": "chapters/16/30_fanout_fanin.py",
+    "framework_file": "framework_examples/30_fanout_fanin.py",
+    "module": "framework_examples.30_fanout_fanin",
+    "concept": "LangGraph fan-out, reducer, and barrier join",
+    "expected": "fact A | fact B | fact C",
+    "limitation": ""
+  },
+  {
+    "experiment": 31,
+    "chapter": 17,
+    "name": "agent_as_tool",
+    "file": "chapters/17/31_agent_as_tool.py",
+    "framework_file": "framework_examples/31_agent_as_tool.py",
+    "module": "framework_examples.31_agent_as_tool",
+    "concept": "LangChain specialist runnable exposed as a tool",
+    "expected": 81,
+    "limitation": "The specialist is a deterministic runnable, not an autonomous model."
+  },
+  {
+    "experiment": 32,
+    "chapter": 18,
+    "name": "supervisor_workers",
+    "file": "chapters/18/32_supervisor_workers.py",
+    "framework_file": "framework_examples/32_supervisor_workers.py",
+    "module": "framework_examples.32_supervisor_workers",
+    "concept": "LangGraph supervisor dispatch to worker graphs",
+    "expected": [
+      [
+        "calculate",
+        "completed calculate"
+      ],
+      [
+        "research",
+        "completed research"
+      ],
+      [
+        "write",
+        "completed write"
+      ]
+    ],
+    "limitation": ""
+  },
+  {
+    "experiment": 33,
+    "chapter": 18,
+    "name": "hierarchy",
+    "file": "chapters/18/33_hierarchy.py",
+    "framework_file": "framework_examples/33_hierarchy.py",
+    "module": "framework_examples.33_hierarchy",
+    "concept": "LangGraph nested worker hierarchy",
+    "expected": "approved evidence",
+    "limitation": ""
+  },
+  {
+    "experiment": 34,
+    "chapter": 19,
+    "name": "voting",
+    "file": "chapters/19/34_voting.py",
+    "framework_file": "framework_examples/34_voting.py",
+    "module": "framework_examples.34_voting",
+    "concept": "LangGraph parallel voting with explicit aggregation",
+    "expected": "A",
+    "limitation": "Identical fixtures do not establish independence or reliability of real model votes."
+  },
+  {
+    "experiment": 35,
+    "chapter": 19,
+    "name": "debate_judge",
+    "file": "chapters/19/35_debate_judge.py",
+    "framework_file": "framework_examples/35_debate_judge.py",
+    "module": "framework_examples.35_debate_judge",
+    "concept": "LangGraph debate branches and judge stage",
+    "expected": "A",
+    "limitation": "The judge uses a fixed rubric; a real model judge still needs calibration and bias checks."
+  },
+  {
+    "experiment": 36,
+    "chapter": 20,
+    "name": "blackboard",
+    "file": "chapters/20/36_blackboard.py",
+    "framework_file": "framework_examples/36_blackboard.py",
+    "module": "framework_examples.36_blackboard",
+    "concept": "LangGraph shared-state blackboard",
+    "expected": {
+      "research": "evidence",
+      "writer": "draft based on evidence"
+    },
+    "limitation": ""
+  },
+  {
+    "experiment": 37,
+    "chapter": 21,
+    "name": "agent_to_agent",
+    "file": "chapters/21/37_agent_to_agent.py",
+    "framework_file": "framework_examples/37_agent_to_agent.py",
+    "module": "framework_examples.37_agent_to_agent",
+    "concept": "LangGraph agent-task lifecycle orchestration",
+    "expected": {
+      "from": "planner",
+      "to": "worker",
+      "task": "calculate",
+      "status": "completed",
+      "artifact": 42
+    },
+    "limitation": "A local graph is not an A2A protocol endpoint; authentication, discovery, networking, and interoperability are not implemented here."
+  },
+  {
+    "experiment": 38,
+    "chapter": 22,
+    "name": "evaluation",
+    "file": "chapters/22/38_evaluation.py",
+    "framework_file": "framework_examples/38_evaluation.py",
+    "module": "framework_examples.38_evaluation",
+    "concept": "LangChain composable exact-match evaluation",
+    "expected": true,
+    "limitation": ""
+  },
+  {
+    "experiment": 39,
+    "chapter": 22,
+    "name": "trajectory_eval",
+    "file": "chapters/22/39_trajectory_eval.py",
+    "framework_file": "framework_examples/39_trajectory_eval.py",
+    "module": "framework_examples.39_trajectory_eval",
+    "concept": "LangGraph reducer-backed trajectory evaluation",
+    "expected": true,
+    "limitation": ""
+  },
+  {
+    "experiment": 40,
+    "chapter": 22,
+    "name": "llm_judge",
+    "file": "chapters/22/40_llm_judge.py",
+    "framework_file": "framework_examples/40_llm_judge.py",
+    "module": "framework_examples.40_llm_judge",
+    "concept": "LangChain judge response parsing",
+    "expected": {
+      "score": 1,
+      "reason": "exact match"
+    },
+    "limitation": "The judge is fake; parsing a score does not establish judge validity or calibrated evaluation."
+  },
+  {
+    "experiment": 41,
+    "chapter": 23,
+    "name": "tracing",
+    "file": "chapters/23/41_tracing.py",
+    "framework_file": "framework_examples/41_tracing.py",
+    "module": "framework_examples.41_tracing",
+    "concept": "LangChain local lifecycle callbacks",
+    "expected": [
+      "start",
+      "end"
+    ],
+    "limitation": "Local callbacks need no LangSmith account; production traces should redact sensitive data."
+  },
+  {
+    "experiment": 42,
+    "chapter": 23,
+    "name": "cost_latency",
+    "file": "chapters/23/42_cost_latency.py",
+    "framework_file": "framework_examples/42_cost_latency.py",
+    "module": "framework_examples.42_cost_latency",
+    "concept": "LangChain invocation cost fixtures and elapsed measurement",
+    "expected": {
+      "fixture_cost": 0.04,
+      "elapsed_nonnegative": true
+    },
+    "limitation": "Fixture cost is not a provider invoice; elapsed time measures only this local runnable."
+  },
+  {
+    "experiment": 43,
+    "chapter": 24,
+    "name": "retry_fallback",
+    "file": "chapters/24/43_retry_fallback.py",
+    "framework_file": "framework_examples/43_retry_fallback.py",
+    "module": "framework_examples.43_retry_fallback",
+    "concept": "LangChain retry and fallback policy",
+    "expected": [
+      "success",
+      2
+    ],
+    "limitation": ""
+  },
+  {
+    "experiment": 44,
+    "chapter": 24,
+    "name": "idempotency",
+    "file": "chapters/24/44_idempotency.py",
+    "framework_file": "framework_examples/44_idempotency.py",
+    "module": "framework_examples.44_idempotency",
+    "concept": "LangGraph side-effect idempotency boundary",
+    "expected": [
+      "sent",
+      "duplicate suppressed"
+    ],
+    "limitation": "The application owns deduplication. The set is process-local; production needs an atomic durable idempotency record."
+  },
+  {
+    "experiment": 45,
+    "chapter": 24,
+    "name": "checkpoint_resume",
+    "file": "chapters/24/45_checkpoint_resume.py",
+    "framework_file": "framework_examples/45_checkpoint_resume.py",
+    "module": "framework_examples.45_checkpoint_resume",
+    "concept": "LangGraph checkpoint and continuation",
+    "expected": [
+      1,
+      2
+    ],
+    "limitation": "In-memory checkpoints survive this invocation sequence, not process restarts."
+  },
+  {
+    "experiment": 46,
+    "chapter": 25,
+    "name": "human_approval",
+    "file": "chapters/25/46_human_approval.py",
+    "framework_file": "framework_examples/46_human_approval.py",
+    "module": "framework_examples.46_human_approval",
+    "concept": "LangGraph interrupt and explicit human resume",
+    "expected": {
+      "paused": true,
+      "executed": true
+    },
+    "limitation": "Approval is supplied by a fixture; no email is sent. Real approval must bind to immutable action arguments and authenticated reviewer identity."
+  },
+  {
+    "experiment": 47,
+    "chapter": 25,
+    "name": "permissions",
+    "file": "chapters/25/47_permissions.py",
+    "framework_file": "framework_examples/47_permissions.py",
+    "module": "framework_examples.47_permissions",
+    "concept": "LangGraph authorization gate",
+    "expected": "denied",
+    "limitation": "A graph edge can enforce local policy; production authorization must also protect the actual capability boundary."
+  },
+  {
+    "experiment": 48,
+    "chapter": 26,
+    "name": "prompt_injection",
+    "file": "chapters/26/48_prompt_injection.py",
+    "framework_file": "framework_examples/48_prompt_injection.py",
+    "module": "framework_examples.48_prompt_injection",
+    "concept": "LangChain message roles with an application action gate",
+    "expected": {
+      "roles": [
+        "system",
+        "human"
+      ],
+      "action": "denied"
+    },
+    "limitation": "Role separation and substring filtering do not solve prompt injection; this is a narrow fixture with explicit action denial."
+  },
+  {
+    "experiment": 49,
+    "chapter": 26,
+    "name": "memory_poisoning",
+    "file": "chapters/26/49_memory_poisoning.py",
+    "framework_file": "framework_examples/49_memory_poisoning.py",
+    "module": "framework_examples.49_memory_poisoning",
+    "concept": "LangGraph memory provenance filter",
+    "expected": [
+      "trusted fact"
+    ],
+    "limitation": "Trust labels must come from authenticated provenance; user-provided labels are not evidence of trust."
+  },
+  {
+    "experiment": 50,
+    "chapter": 26,
+    "name": "sandboxing",
+    "file": "chapters/26/50_sandboxing.py",
+    "framework_file": "framework_examples/50_sandboxing.py",
+    "module": "framework_examples.50_sandboxing",
+    "concept": "LangChain capability-limited tool registry",
+    "expected": {
+      "shell_available": false,
+      "fixture": "safe fixture"
+    },
+    "limitation": "An allowlist is not an OS sandbox. No arbitrary executable tool is supplied; real isolation needs a separate process/container policy."
+  },
+  {
+    "experiment": 51,
+    "chapter": 27,
+    "name": "resource_budgets",
+    "file": "chapters/27/51_resource_budgets.py",
+    "framework_file": "framework_examples/51_resource_budgets.py",
+    "module": "framework_examples.51_resource_budgets",
+    "concept": "LangGraph application budgets and stopping edges",
+    "expected": {
+      "steps": 3,
+      "cost": 0.09
+    },
+    "limitation": "Cost is synthetic; real charging and admission control must account for the next action before execution."
+  },
+  {
+    "experiment": 52,
+    "chapter": 27,
+    "name": "autonomy_envelope",
+    "file": "chapters/27/52_autonomy_envelope.py",
+    "framework_file": "framework_examples/52_autonomy_envelope.py",
+    "module": "framework_examples.52_autonomy_envelope",
+    "concept": "LangGraph enforcement of an explicit autonomy envelope",
+    "expected": "denied",
+    "limitation": "This envelope is the book's conceptual policy, not a LangGraph security standard."
+  },
+  {
+    "experiment": 53,
+    "chapter": 28,
+    "name": "coding_agent",
+    "file": "chapters/28/53_coding_agent.py",
+    "framework_file": "framework_examples/53_coding_agent.py",
+    "module": "framework_examples.53_coding_agent",
+    "concept": "LangGraph inspect/edit/check workflow",
+    "expected": {
+      "code": "def add(a,b): return a+b",
+      "fixture_check_passed": true
+    },
+    "limitation": "This fixture inspects syntax, not behavior in a real repository. A production coding agent needs sandboxed tests and reviewable patches."
+  },
+  {
+    "experiment": 54,
+    "chapter": 28,
+    "name": "iterative_repair",
+    "file": "chapters/28/54_iterative_repair.py",
+    "framework_file": "framework_examples/54_iterative_repair.py",
+    "module": "framework_examples.54_iterative_repair",
+    "concept": "LangGraph feedback and bounded repair loop",
+    "expected": {
+      "attempts": 2,
+      "repaired": "return a+b"
+    },
+    "limitation": "A scripted success condition is not evidence that generated patches pass a real test suite."
+  },
+  {
+    "experiment": 55,
+    "chapter": 29,
+    "name": "computer_use",
+    "file": "chapters/29/55_computer_use.py",
+    "framework_file": "framework_examples/55_computer_use.py",
+    "module": "framework_examples.55_computer_use",
+    "concept": "LangGraph observe/validate computer-action workflow",
+    "expected": "reobserve",
+    "limitation": "Coordinates are an in-memory screen fixture. No browser, desktop, or actual computer-use backend is controlled."
+  },
+  {
+    "experiment": 56,
+    "chapter": 29,
+    "name": "multimodal",
+    "file": "chapters/29/56_multimodal.py",
+    "framework_file": "framework_examples/56_multimodal.py",
+    "module": "framework_examples.56_multimodal",
+    "concept": "LangChain multimodal message representation",
+    "expected": [
+      "text",
+      "image_url"
+    ],
+    "limitation": "The placeholder URL is never fetched. This tests the message structure, not visual perception or a multimodal model."
+  },
+  {
+    "experiment": 57,
+    "chapter": 30,
+    "name": "self_improvement",
+    "file": "chapters/30/57_self_improvement.py",
+    "framework_file": "framework_examples/57_self_improvement.py",
+    "module": "framework_examples.57_self_improvement",
+    "concept": "LangChain candidate-policy evaluation",
+    "expected": "verify",
+    "limitation": "Scores are fixtures; prompt selection is not weight training or proven self-improvement."
+  },
+  {
+    "experiment": 58,
+    "chapter": 30,
+    "name": "experience_learning",
+    "file": "chapters/30/58_experience_learning.py",
+    "framework_file": "framework_examples/58_experience_learning.py",
+    "module": "framework_examples.58_experience_learning",
+    "concept": "LangGraph experience store with a LangChain lesson-selection stage",
+    "expected": [
+      "task2"
+    ],
+    "limitation": "Selecting failures for review is not automatic validated learning; persistence and policy updates remain explicit."
+  },
+  {
+    "experiment": 59,
+    "chapter": 30,
+    "name": "reward_optimization",
+    "file": "chapters/30/59_reward_optimization.py",
+    "framework_file": "framework_examples/59_reward_optimization.py",
+    "module": "framework_examples.59_reward_optimization",
+    "concept": "LangChain composition of reward-scored policy candidates",
+    "expected": {
+      "selected": "short",
+      "scores": {
+        "long": 0.5,
+        "short": 0.8
+      }
+    },
+    "limitation": "This is a finite policy comparison, not reinforcement learning, gradient training, or online weight updates."
+  }
+]

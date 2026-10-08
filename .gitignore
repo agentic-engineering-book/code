@@ -10,3 +10,5 @@ venv/
 build/
 dist/
 *.egg-info/
+.venv*/
+.framework-run-results.txt

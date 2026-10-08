@@ -3,354 +3,413 @@
     "experiment": 1,
     "chapter": 1,
     "name": "llm_call",
-    "file": "chapters/01/01_llm_call.py"
+    "file": "chapters/01/01_llm_call.py",
+    "framework_file": "framework_examples/01_llm_call.py"
   },
   {
     "experiment": 2,
     "chapter": 1,
     "name": "llm_to_agent",
-    "file": "chapters/01/02_llm_to_agent.py"
+    "file": "chapters/01/02_llm_to_agent.py",
+    "framework_file": "framework_examples/02_llm_to_agent.py"
   },
   {
     "experiment": 3,
     "chapter": 2,
     "name": "structured_output",
-    "file": "chapters/02/03_structured_output.py"
+    "file": "chapters/02/03_structured_output.py",
+    "framework_file": "framework_examples/03_structured_output.py"
   },
   {
     "experiment": 4,
     "chapter": 2,
     "name": "validation",
-    "file": "chapters/02/04_validation.py"
+    "file": "chapters/02/04_validation.py",
+    "framework_file": "framework_examples/04_validation.py"
   },
   {
     "experiment": 5,
     "chapter": 3,
     "name": "agent_loop",
-    "file": "chapters/03/05_agent_loop.py"
+    "file": "chapters/03/05_agent_loop.py",
+    "framework_file": "framework_examples/05_agent_loop.py"
   },
   {
     "experiment": 6,
     "chapter": 3,
     "name": "stopping",
-    "file": "chapters/03/06_stopping.py"
+    "file": "chapters/03/06_stopping.py",
+    "framework_file": "framework_examples/06_stopping.py"
   },
   {
     "experiment": 7,
     "chapter": 4,
     "name": "workflow_vs_agent",
-    "file": "chapters/04/07_workflow_vs_agent.py"
+    "file": "chapters/04/07_workflow_vs_agent.py",
+    "framework_file": "framework_examples/07_workflow_vs_agent.py"
   },
   {
     "experiment": 8,
     "chapter": 5,
     "name": "tool_calling",
-    "file": "chapters/05/08_tool_calling.py"
+    "file": "chapters/05/08_tool_calling.py",
+    "framework_file": "framework_examples/08_tool_calling.py"
   },
   {
     "experiment": 9,
     "chapter": 5,
     "name": "multiple_tools",
-    "file": "chapters/05/09_multiple_tools.py"
+    "file": "chapters/05/09_multiple_tools.py",
+    "framework_file": "framework_examples/09_multiple_tools.py"
   },
   {
     "experiment": 10,
     "chapter": 5,
     "name": "tool_errors",
-    "file": "chapters/05/10_tool_errors.py"
+    "file": "chapters/05/10_tool_errors.py",
+    "framework_file": "framework_examples/10_tool_errors.py"
   },
   {
     "experiment": 11,
     "chapter": 6,
     "name": "context_quantity",
-    "file": "chapters/06/11_context_quantity.py"
+    "file": "chapters/06/11_context_quantity.py",
+    "framework_file": "framework_examples/11_context_quantity.py"
   },
   {
     "experiment": 12,
     "chapter": 6,
     "name": "context_selection",
-    "file": "chapters/06/12_context_selection.py"
+    "file": "chapters/06/12_context_selection.py",
+    "framework_file": "framework_examples/12_context_selection.py"
   },
   {
     "experiment": 13,
     "chapter": 7,
     "name": "embeddings",
-    "file": "chapters/07/13_embeddings.py"
+    "file": "chapters/07/13_embeddings.py",
+    "framework_file": "framework_examples/13_embeddings.py"
   },
   {
     "experiment": 14,
     "chapter": 7,
     "name": "rag",
-    "file": "chapters/07/14_rag.py"
+    "file": "chapters/07/14_rag.py",
+    "framework_file": "framework_examples/14_rag.py"
   },
   {
     "experiment": 15,
     "chapter": 7,
     "name": "reranking",
-    "file": "chapters/07/15_reranking.py"
+    "file": "chapters/07/15_reranking.py",
+    "framework_file": "framework_examples/15_reranking.py"
   },
   {
     "experiment": 16,
     "chapter": 8,
     "name": "working_memory",
-    "file": "chapters/08/16_working_memory.py"
+    "file": "chapters/08/16_working_memory.py",
+    "framework_file": "framework_examples/16_working_memory.py"
   },
   {
     "experiment": 17,
     "chapter": 8,
     "name": "long_term_memory",
-    "file": "chapters/08/17_long_term_memory.py"
+    "file": "chapters/08/17_long_term_memory.py",
+    "framework_file": "framework_examples/17_long_term_memory.py"
   },
   {
     "experiment": 18,
     "chapter": 8,
     "name": "procedural_memory",
-    "file": "chapters/08/18_procedural_memory.py"
+    "file": "chapters/08/18_procedural_memory.py",
+    "framework_file": "framework_examples/18_procedural_memory.py"
   },
   {
     "experiment": 19,
     "chapter": 9,
     "name": "context_compression",
-    "file": "chapters/09/19_context_compression.py"
+    "file": "chapters/09/19_context_compression.py",
+    "framework_file": "framework_examples/19_context_compression.py"
   },
   {
     "experiment": 20,
     "chapter": 9,
     "name": "memory_consolidation",
-    "file": "chapters/09/20_memory_consolidation.py"
+    "file": "chapters/09/20_memory_consolidation.py",
+    "framework_file": "framework_examples/20_memory_consolidation.py"
   },
   {
     "experiment": 21,
     "chapter": 10,
     "name": "mcp_calculator",
-    "file": "chapters/10/21_mcp_calculator.py"
+    "file": "chapters/10/21_mcp_calculator.py",
+    "framework_file": "framework_examples/21_mcp_calculator.py"
   },
   {
     "experiment": 22,
     "chapter": 11,
     "name": "react",
-    "file": "chapters/11/22_react.py"
+    "file": "chapters/11/22_react.py",
+    "framework_file": "framework_examples/22_react.py"
   },
   {
     "experiment": 23,
     "chapter": 12,
     "name": "planning",
-    "file": "chapters/12/23_planning.py"
+    "file": "chapters/12/23_planning.py",
+    "framework_file": "framework_examples/23_planning.py"
   },
   {
     "experiment": 24,
     "chapter": 12,
     "name": "plan_execute",
-    "file": "chapters/12/24_plan_execute.py"
+    "file": "chapters/12/24_plan_execute.py",
+    "framework_file": "framework_examples/24_plan_execute.py"
   },
   {
     "experiment": 25,
     "chapter": 13,
     "name": "reflection",
-    "file": "chapters/13/25_reflection.py"
+    "file": "chapters/13/25_reflection.py",
+    "framework_file": "framework_examples/25_reflection.py"
   },
   {
     "experiment": 26,
     "chapter": 14,
     "name": "tree_reasoning",
-    "file": "chapters/14/26_tree_reasoning.py"
+    "file": "chapters/14/26_tree_reasoning.py",
+    "framework_file": "framework_examples/26_tree_reasoning.py"
   },
   {
     "experiment": 27,
     "chapter": 15,
     "name": "routing",
-    "file": "chapters/15/27_routing.py"
+    "file": "chapters/15/27_routing.py",
+    "framework_file": "framework_examples/27_routing.py"
   },
   {
     "experiment": 28,
     "chapter": 15,
     "name": "model_routing",
-    "file": "chapters/15/28_model_routing.py"
+    "file": "chapters/15/28_model_routing.py",
+    "framework_file": "framework_examples/28_model_routing.py"
   },
   {
     "experiment": 29,
     "chapter": 16,
     "name": "parallelism",
-    "file": "chapters/16/29_parallelism.py"
+    "file": "chapters/16/29_parallelism.py",
+    "framework_file": "framework_examples/29_parallelism.py"
   },
   {
     "experiment": 30,
     "chapter": 16,
     "name": "fanout_fanin",
-    "file": "chapters/16/30_fanout_fanin.py"
+    "file": "chapters/16/30_fanout_fanin.py",
+    "framework_file": "framework_examples/30_fanout_fanin.py"
   },
   {
     "experiment": 31,
     "chapter": 17,
     "name": "agent_as_tool",
-    "file": "chapters/17/31_agent_as_tool.py"
+    "file": "chapters/17/31_agent_as_tool.py",
+    "framework_file": "framework_examples/31_agent_as_tool.py"
   },
   {
     "experiment": 32,
     "chapter": 18,
     "name": "supervisor_workers",
-    "file": "chapters/18/32_supervisor_workers.py"
+    "file": "chapters/18/32_supervisor_workers.py",
+    "framework_file": "framework_examples/32_supervisor_workers.py"
   },
   {
     "experiment": 33,
     "chapter": 18,
     "name": "hierarchy",
-    "file": "chapters/18/33_hierarchy.py"
+    "file": "chapters/18/33_hierarchy.py",
+    "framework_file": "framework_examples/33_hierarchy.py"
   },
   {
     "experiment": 34,
     "chapter": 19,
     "name": "voting",
-    "file": "chapters/19/34_voting.py"
+    "file": "chapters/19/34_voting.py",
+    "framework_file": "framework_examples/34_voting.py"
   },
   {
     "experiment": 35,
     "chapter": 19,
     "name": "debate_judge",
-    "file": "chapters/19/35_debate_judge.py"
+    "file": "chapters/19/35_debate_judge.py",
+    "framework_file": "framework_examples/35_debate_judge.py"
   },
   {
     "experiment": 36,
     "chapter": 20,
     "name": "blackboard",
-    "file": "chapters/20/36_blackboard.py"
+    "file": "chapters/20/36_blackboard.py",
+    "framework_file": "framework_examples/36_blackboard.py"
   },
   {
     "experiment": 37,
     "chapter": 21,
     "name": "agent_to_agent",
-    "file": "chapters/21/37_agent_to_agent.py"
+    "file": "chapters/21/37_agent_to_agent.py",
+    "framework_file": "framework_examples/37_agent_to_agent.py"
   },
   {
     "experiment": 38,
     "chapter": 22,
     "name": "evaluation",
-    "file": "chapters/22/38_evaluation.py"
+    "file": "chapters/22/38_evaluation.py",
+    "framework_file": "framework_examples/38_evaluation.py"
   },
   {
     "experiment": 39,
     "chapter": 22,
     "name": "trajectory_eval",
-    "file": "chapters/22/39_trajectory_eval.py"
+    "file": "chapters/22/39_trajectory_eval.py",
+    "framework_file": "framework_examples/39_trajectory_eval.py"
   },
   {
     "experiment": 40,
     "chapter": 22,
     "name": "llm_judge",
-    "file": "chapters/22/40_llm_judge.py"
+    "file": "chapters/22/40_llm_judge.py",
+    "framework_file": "framework_examples/40_llm_judge.py"
   },
   {
     "experiment": 41,
     "chapter": 23,
     "name": "tracing",
-    "file": "chapters/23/41_tracing.py"
+    "file": "chapters/23/41_tracing.py",
+    "framework_file": "framework_examples/41_tracing.py"
   },
   {
     "experiment": 42,
     "chapter": 23,
     "name": "cost_latency",
-    "file": "chapters/23/42_cost_latency.py"
+    "file": "chapters/23/42_cost_latency.py",
+    "framework_file": "framework_examples/42_cost_latency.py"
   },
   {
     "experiment": 43,
     "chapter": 24,
     "name": "retry_fallback",
-    "file": "chapters/24/43_retry_fallback.py"
+    "file": "chapters/24/43_retry_fallback.py",
+    "framework_file": "framework_examples/43_retry_fallback.py"
   },
   {
     "experiment": 44,
     "chapter": 24,
     "name": "idempotency",
-    "file": "chapters/24/44_idempotency.py"
+    "file": "chapters/24/44_idempotency.py",
+    "framework_file": "framework_examples/44_idempotency.py"
   },
   {
     "experiment": 45,
     "chapter": 24,
     "name": "checkpoint_resume",
-    "file": "chapters/24/45_checkpoint_resume.py"
+    "file": "chapters/24/45_checkpoint_resume.py",
+    "framework_file": "framework_examples/45_checkpoint_resume.py"
   },
   {
     "experiment": 46,
     "chapter": 25,
     "name": "human_approval",
-    "file": "chapters/25/46_human_approval.py"
+    "file": "chapters/25/46_human_approval.py",
+    "framework_file": "framework_examples/46_human_approval.py"
   },
   {
     "experiment": 47,
     "chapter": 25,
     "name": "permissions",
-    "file": "chapters/25/47_permissions.py"
+    "file": "chapters/25/47_permissions.py",
+    "framework_file": "framework_examples/47_permissions.py"
   },
   {
     "experiment": 48,
     "chapter": 26,
     "name": "prompt_injection",
-    "file": "chapters/26/48_prompt_injection.py"
+    "file": "chapters/26/48_prompt_injection.py",
+    "framework_file": "framework_examples/48_prompt_injection.py"
   },
   {
     "experiment": 49,
     "chapter": 26,
     "name": "memory_poisoning",
-    "file": "chapters/26/49_memory_poisoning.py"
+    "file": "chapters/26/49_memory_poisoning.py",
+    "framework_file": "framework_examples/49_memory_poisoning.py"
   },
   {
     "experiment": 50,
     "chapter": 26,
     "name": "sandboxing",
-    "file": "chapters/26/50_sandboxing.py"
+    "file": "chapters/26/50_sandboxing.py",
+    "framework_file": "framework_examples/50_sandboxing.py"
   },
   {
     "experiment": 51,
     "chapter": 27,
     "name": "resource_budgets",
-    "file": "chapters/27/51_resource_budgets.py"
+    "file": "chapters/27/51_resource_budgets.py",
+    "framework_file": "framework_examples/51_resource_budgets.py"
   },
   {
     "experiment": 52,
     "chapter": 27,
     "name": "autonomy_envelope",
-    "file": "chapters/27/52_autonomy_envelope.py"
+    "file": "chapters/27/52_autonomy_envelope.py",
+    "framework_file": "framework_examples/52_autonomy_envelope.py"
   },
   {
     "experiment": 53,
     "chapter": 28,
     "name": "coding_agent",
-    "file": "chapters/28/53_coding_agent.py"
+    "file": "chapters/28/53_coding_agent.py",
+    "framework_file": "framework_examples/53_coding_agent.py"
   },
   {
     "experiment": 54,
     "chapter": 28,
     "name": "iterative_repair",
-    "file": "chapters/28/54_iterative_repair.py"
+    "file": "chapters/28/54_iterative_repair.py",
+    "framework_file": "framework_examples/54_iterative_repair.py"
   },
   {
     "experiment": 55,
     "chapter": 29,
     "name": "computer_use",
-    "file": "chapters/29/55_computer_use.py"
+    "file": "chapters/29/55_computer_use.py",
+    "framework_file": "framework_examples/55_computer_use.py"
   },
   {
     "experiment": 56,
     "chapter": 29,
     "name": "multimodal",
-    "file": "chapters/29/56_multimodal.py"
+    "file": "chapters/29/56_multimodal.py",
+    "framework_file": "framework_examples/56_multimodal.py"
   },
   {
     "experiment": 57,
     "chapter": 30,
     "name": "self_improvement",
-    "file": "chapters/30/57_self_improvement.py"
+    "file": "chapters/30/57_self_improvement.py",
+    "framework_file": "framework_examples/57_self_improvement.py"
   },
   {
     "experiment": 58,
     "chapter": 30,
     "name": "experience_learning",
-    "file": "chapters/30/58_experience_learning.py"
+    "file": "chapters/30/58_experience_learning.py",
+    "framework_file": "framework_examples/58_experience_learning.py"
   },
   {
     "experiment": 59,
     "chapter": 30,
     "name": "reward_optimization",
-    "file": "chapters/30/59_reward_optimization.py"
+    "file": "chapters/30/59_reward_optimization.py",
+    "framework_file": "framework_examples/59_reward_optimization.py"
   }
 ]

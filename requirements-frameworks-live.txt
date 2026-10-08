@@ -1,0 +1,2 @@
+-r requirements-frameworks.txt
+langchain-openai==1.6.7

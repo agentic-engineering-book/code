@@ -1,0 +1,4 @@
+langchain-core==1.6.7
+langgraph==1.2.14
+numpy==2.5.3
+pytest==9.1.1
