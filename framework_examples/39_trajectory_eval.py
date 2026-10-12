@@ -1,13 +1,31 @@
-"""Experiment 39: LangGraph reducer-backed trajectory evaluation. See framework_examples/README.md."""
-from framework_examples.support import sequence, branch, parallel, bounded_loop
+"""Experiment 39: LangGraph trajectory recorded by a reducer, checked by
+invariants rather than one reference path."""
+from framework_examples.support import sequence
+
+AUTHORIZED_TOOLS = {"search", "retrieve", "calculator"}
+RELEVANT_TOOLS = {"retrieve", "calculator"}
+MAX_STEPS = 6
+
+
+def tool_node(name):
+    return name, lambda state: {"results": [name]}
+
+
+def invariants(path):
+    return {"required_tool": "calculator" in path,
+            "irrelevant": sum(t not in RELEVANT_TOOLS for t in path),
+            "unauthorized": sum(t not in AUTHORIZED_TOOLS for t in path),
+            "within_limit": len(path) <= MAX_STEPS}
 
 
 def run():
-    result = sequence([
-        ('search', lambda s: {'results': ['search']}),
-        ('calculator', lambda s: {'results': ['calculator']}),
-        ('answer', lambda s: {'results': ['answer']})], {'results': []})
-    return result['results'] == ['search', 'calculator', 'answer']
+    paths = {"wasteful": ["search", "weather", "calculator"],
+             "direct": ["calculator"]}
+    report = {}
+    for label, tools in paths.items():
+        state = sequence([tool_node(t) for t in tools], {"results": []})
+        report[label] = invariants(state["results"])
+    return report
 
 
 if __name__ == "__main__":

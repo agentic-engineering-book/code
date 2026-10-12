@@ -27,6 +27,9 @@ Run modules from the repository root. The book prints their code and links each
 example to its source. `manifest.json` maps experiment numbers, primitive files,
 framework files, behavioral contracts, and limitations. `support.py` contains
 the short shared StateGraph builders; read it alongside graph examples.
+The `.py` files are the source of truth: the book prints each file and the
+output captured by running it, and `tests/test_framework_examples.py` checks each
+result against `manifest.json`.
 
 ## Scope and limits
 
@@ -47,14 +50,16 @@ provider calls are not part of the offline test suite. A recursion ceiling and
 request timeout bound execution, but are not a monetary budget. See the
 [official integration guide](https://docs.langchain.com/oss/python/integrations/chat/openai).
 
-The local MCP tool-contract example (21) does not implement MCP transport.
-The A2A lifecycle graph (37) does not implement an A2A endpoint. The capability
-allowlist (50) does not provide an operating-system sandbox. Computer-use (55)
-uses screen fixtures; multimodal input (56) represents message blocks without
-fetching images. Policy evaluation (57–59) does not train weights. These
-boundaries are also stated in the book and manifest. The framework manages
-interfaces and orchestration; provider behavior, security, protocol transport,
-real environment control, and validated learning require additional systems.
+Each example states its boundary in the book and in `manifest.json`. In short:
+the MCP example (21) simulates protocol message shapes in process and does not
+use the MCP SDK or a transport; the A2A example (37) models the task lifecycle
+without an A2A endpoint; the code-execution examples (50, 53) use a child
+process with a timeout and an empty environment, which is NOT a sandbox;
+computer use (55) uses screen fixtures; multimodal input (56) represents
+message blocks without fetching images; and policy selection (57-59) does not
+train weights. The framework manages interfaces and orchestration; provider
+behavior, security, protocol transport, real environment control, and
+validated learning require additional systems.
 
 Working memory and stores use in-memory implementations. They demonstrate APIs,
 not restart-safe storage. Fixtures make comparisons reproducible, but are not

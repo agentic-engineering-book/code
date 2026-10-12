@@ -1,11 +1,13 @@
-# Chapter 02 experiments
+# Chapter 02: Structured Decisions
 
-- `03_structured_output.py` - structured output
-- `04_validation.py` - validation
+Run from the repository root after `python -m pip install -e .`:
+
+- `03_structured_output.py` - Experiment 3: Structured output. `python chapters/02/03_structured_output.py`
+- `04_validation.py` - Experiment 4: Reject an invalid decision. `python chapters/02/04_validation.py`
 
 ## Framework companions
 
-Install `requirements-frameworks.txt` from the repository root. See [setup and boundaries](../../framework_examples/README.md).
+Install `requirements-frameworks.txt` from the repository root (Python 3.12+). See [setup and boundaries](../../framework_examples/README.md).
 
-- [03: LangChain structured-output parsing](../../framework_examples/03_structured_output.py) ? `python -m framework_examples.03_structured_output`
-- [04: LangChain tool argument validation](../../framework_examples/04_validation.py) ? `python -m framework_examples.04_validation`
+- [03: Structured output](../../framework_examples/03_structured_output.py) - `python -m framework_examples.03_structured_output`
+- [04: Reject an invalid decision](../../framework_examples/04_validation.py) - `python -m framework_examples.04_validation`

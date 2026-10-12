@@ -1,6 +1,15 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name="agentic-engineering-experiments"
-version="0.1.0"
-requires-python=">=3.10"
+name = "agentic-engineering-experiments"
+version = "0.2.0"
+description = "Companion code for Agentic Engineering from First Principles"
+requires-python = ">=3.10"
+
+[tool.setuptools]
+packages = ["agentic"]
+
 [tool.pytest.ini_options]
-pythonpath=["."]
+pythonpath = ["."]

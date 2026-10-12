@@ -1,22 +1,47 @@
-"""Experiment 45: LangGraph checkpoint and continuation. See framework_examples/README.md."""
-from langgraph.graph import StateGraph, START, END
+"""Experiment 45: LangGraph checkpoints let a failed run resume mid-graph."""
+import operator
+from typing import Annotated, TypedDict
+
 from langgraph.checkpoint.memory import InMemorySaver
-from typing import TypedDict
+from langgraph.graph import END, START, StateGraph
+
+STEPS = ["retrieve", "analyze", "draft", "verify", "submit"]
+
+
+class State(TypedDict):
+    done: Annotated[list, operator.add]
 
 
 def run():
-    class State(TypedDict):
-        step: int
+    executions = []
+    crash = {"verify": True}  # verify fails once, as if the process died
+
+    def step(name):
+        def node(state):
+            executions.append(name)
+            if crash.pop(name, False):
+                raise RuntimeError(f"crash during {name}")
+            return {"done": [name]}
+        return node
+
     builder = StateGraph(State)
-    builder.add_node('first', lambda s: {'step': 1})
-    builder.add_node('second', lambda s: {'step': 2})
-    builder.add_edge(START, 'first'); builder.add_edge('first', 'second'); builder.add_edge('second', END)
-    app = builder.compile(checkpointer=InMemorySaver(), interrupt_before=['second'])
-    config = {'configurable': {'thread_id': 'resume-demo'}}
-    app.invoke({'step': 0}, config)
-    paused = app.get_state(config).values['step']
-    completed = app.invoke(None, config)['step']
-    return [paused, completed]
+    previous = START
+    for name in STEPS:
+        builder.add_node(name, step(name))
+        builder.add_edge(previous, name)
+        previous = name
+    builder.add_edge(previous, END)
+    graph = builder.compile(checkpointer=InMemorySaver())
+    config = {"configurable": {"thread_id": "task-T42"}}
+    try:
+        graph.invoke({"done": []}, config)
+    except RuntimeError:
+        pass
+    first_run = list(executions)
+    final = graph.invoke(None, config)  # resume from the last checkpoint
+    return {"first_run": first_run,
+            "resumed": executions[len(first_run):],
+            "done": final["done"]}
 
 
 if __name__ == "__main__":
