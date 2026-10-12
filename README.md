@@ -20,6 +20,23 @@ model so the mechanism, not model variance, is what you observe. They do not
 measure any real model. To use one, give the loop an object with the same
 `generate(messages)` method.
 
+## Live-model experiments
+
+`agentic/live.py` connects the same `Agent` loop to a real model through any
+OpenAI-compatible Chat Completions endpoint (OpenAI, or a local server such as
+Ollama). `live/` repeats nine of the book's questions against pinned model
+snapshots and records each run in `live/results/` (model, date, token use, and
+95% Wilson intervals). These runs make paid requests and are optional.
+
+```bash
+python -m pip install openai
+# set OPENAI_API_KEY in your environment (never commit it)
+python -m live.ch01_tool_vs_no_tool
+```
+
+A recorded run is evidence about one model on one day, not a general property
+of the model. Rerunning will give somewhat different numbers.
+
 ## Framework implementations
 
 All 59 experiments also have runnable LangChain core / LangGraph companions.
