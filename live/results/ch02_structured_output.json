@@ -1,0 +1,366 @@
+{
+  "experiment": "ch02_structured_output",
+  "chapter": 2,
+  "question": "How often does a small model's decision parse, match the schema, and compute the right value when JSON is requested in the prompt versus enforced with a strict JSON Schema?",
+  "models": [
+    "gpt-5.4-nano-2026-03-17"
+  ],
+  "date_utc": "2026-10-12",
+  "openai_sdk": "2.16.0",
+  "settings": "provider defaults (no temperature or seed set)",
+  "metrics": [
+    {
+      "metric": "Parses, prompted",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    },
+    {
+      "metric": "Schema-valid, prompted",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    },
+    {
+      "metric": "Computes the right value, prompted",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    },
+    {
+      "metric": "Parses, strict schema",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    },
+    {
+      "metric": "Schema-valid, strict schema",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    },
+    {
+      "metric": "Computes the right value, strict schema",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    }
+  ],
+  "usage": {
+    "requests": 40,
+    "input_tokens": 3258,
+    "output_tokens": 811,
+    "mean_seconds": 0.87
+  },
+  "notes": "",
+  "trials": {
+    "prompted": [
+      {
+        "task": "Work out 37 times 42.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"37*42\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Add 18 and 7, then multiply by 3.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"(18+7)*3\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "What is 12 squared minus 5?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"12**2-5\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Divide 144 by 12.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"144/12\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Take 15% of 80.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"15/100*80\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "What is 2 to the power 10?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"2**10\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Subtract 999 from 1234.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"1234-999\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Half of 86, plus 7.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"(86/2)+7\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Three dozen eggs: how many eggs?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"3*12\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "What is 7 * 8 * 9?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"7*8*9\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Average of 10, 20 and 60?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"(10+20+60)/3\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "1000 minus 7, times 2.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"(1000-7)*2\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "How many minutes are in 3.5 hours?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"3.5*60\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Twelve and a half percent of 640?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"(12.5/100)*640\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Product of 25 and 16?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"25*16\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "19 plus 23 plus 58?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"19+23+58\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "What is 81 divided by 9, squared?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"(81/9)**2\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Five times the sum of 3 and 4?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"5*(3+4)\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "One third of 297?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"297/3\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "A dozen boxes of 24 items: how many items?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"12*24\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      }
+    ],
+    "strict": [
+      {
+        "task": "Work out 37 times 42.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"37*42\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Add 18 and 7, then multiply by 3.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"(18+7)*3\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "What is 12 squared minus 5?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"12**2-5\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Divide 144 by 12.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"144/12\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Take 15% of 80.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"0.15*80\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "What is 2 to the power 10?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"2**10\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Subtract 999 from 1234.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"1234-999\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Half of 86, plus 7.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"(86/2)+7\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Three dozen eggs: how many eggs?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"3*12\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "What is 7 * 8 * 9?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"7*8*9\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Average of 10, 20 and 60?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"(10+20+60)/3\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "1000 minus 7, times 2.",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"(1000-7)*2\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "How many minutes are in 3.5 hours?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"3.5*60\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Twelve and a half percent of 640?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"0.125*640\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Product of 25 and 16?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"25*16\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "19 plus 23 plus 58?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"19+23+58\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "What is 81 divided by 9, squared?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"(81/9)**2\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "Five times the sum of 3 and 4?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"5*(3+4)\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "One third of 297?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"297/3\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      },
+      {
+        "task": "A dozen boxes of 24 items: how many items?",
+        "output": "{\"action\":\"calculator\",\"arguments\":{\"expression\":\"12*24\"}}",
+        "parsed": true,
+        "valid": true,
+        "correct": true
+      }
+    ]
+  }
+}

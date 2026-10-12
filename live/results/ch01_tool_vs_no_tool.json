@@ -1,0 +1,276 @@
+{
+  "experiment": "ch01_tool_vs_no_tool",
+  "chapter": 1,
+  "question": "Does giving a real model a calculator tool change exact-answer accuracy on five-digit by four-digit multiplication?",
+  "models": [
+    "gpt-5.4-mini-2026-03-17"
+  ],
+  "date_utc": "2026-10-12",
+  "openai_sdk": "2.16.0",
+  "settings": "provider defaults (no temperature or seed set)",
+  "metrics": [
+    {
+      "metric": "Exact answer, model alone",
+      "successes": 0,
+      "n": 20,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.161
+      ]
+    },
+    {
+      "metric": "Exact answer, model + calculator",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    },
+    {
+      "metric": "Runs that called the calculator",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    }
+  ],
+  "usage": {
+    "requests": 60,
+    "input_tokens": 7238,
+    "output_tokens": 993,
+    "mean_seconds": 1.1
+  },
+  "notes": "",
+  "trials": {
+    "model_alone": [
+      {
+        "task": "27611*2033",
+        "answer": "56120063",
+        "correct": false
+      },
+      {
+        "task": "43432*2931",
+        "answer": "127149792",
+        "correct": false
+      },
+      {
+        "task": "74937*8364",
+        "answer": "626931468",
+        "correct": false
+      },
+      {
+        "task": "71898*7219",
+        "answer": "519764862",
+        "correct": false
+      },
+      {
+        "task": "37519*2537",
+        "answer": "95125703",
+        "correct": false
+      },
+      {
+        "task": "73944*1464",
+        "answer": "108284736",
+        "correct": false
+      },
+      {
+        "task": "61093*8090",
+        "answer": "494462270",
+        "correct": false
+      },
+      {
+        "task": "89618*1034",
+        "answer": "92733612",
+        "correct": false
+      },
+      {
+        "task": "68377*5363",
+        "answer": "366499351",
+        "correct": false
+      },
+      {
+        "task": "39984*2674",
+        "answer": "106885416",
+        "correct": false
+      },
+      {
+        "task": "51606*1501",
+        "answer": "77405606",
+        "correct": false
+      },
+      {
+        "task": "12925*1416",
+        "answer": "18288600",
+        "correct": false
+      },
+      {
+        "task": "95137*9870",
+        "answer": "938492190",
+        "correct": false
+      },
+      {
+        "task": "11206*7245",
+        "answer": "81154670",
+        "correct": false
+      },
+      {
+        "task": "99978*4548",
+        "answer": "454701144",
+        "correct": false
+      },
+      {
+        "task": "65327*1475",
+        "answer": "96338725",
+        "correct": false
+      },
+      {
+        "task": "79157*4632",
+        "answer": "366627624",
+        "correct": false
+      },
+      {
+        "task": "67394*9123",
+        "answer": "614604162",
+        "correct": false
+      },
+      {
+        "task": "82464*4818",
+        "answer": "397198752",
+        "correct": false
+      },
+      {
+        "task": "55311*4782",
+        "answer": "264852402",
+        "correct": false
+      }
+    ],
+    "with_calculator": [
+      {
+        "task": "27611*2033",
+        "answer": "27611 \u00d7 2033 = 56,133,163",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "43432*2931",
+        "answer": "43432 \u00d7 2931 = **127,299,192**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "74937*8364",
+        "answer": "74937 \u00d7 8364 = **626,773,068**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "71898*7219",
+        "answer": "71898 \u00d7 7219 = **519,031,662**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "37519*2537",
+        "answer": "37519 \u00d7 2537 = **95,185,703**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "73944*1464",
+        "answer": "73944 \u00d7 1464 = **108,254,016**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "61093*8090",
+        "answer": "61093 \u00d7 8090 = **494,242,370**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "89618*1034",
+        "answer": "89618 \u00d7 1034 = **92,665,012**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "68377*5363",
+        "answer": "68377 \u00d7 5363 = **366,705,851**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "39984*2674",
+        "answer": "39984 \u00d7 2674 = 106,917,216",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "51606*1501",
+        "answer": "51606 \u00d7 1501 = **77,460,606**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "12925*1416",
+        "answer": "12925 \u00d7 1416 = **18,301,800**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "95137*9870",
+        "answer": "95137 \u00d7 9870 = **939002190**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "11206*7245",
+        "answer": "11206 \u00d7 7245 = **81,187,470**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "99978*4548",
+        "answer": "99978 \u00d7 4548 = 454,699,944",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "65327*1475",
+        "answer": "65327 \u00d7 1475 = 96,357,325",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "79157*4632",
+        "answer": "79157 \u00d7 4632 = **366,655,224**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "67394*9123",
+        "answer": "67394 \u00d7 9123 = **614,835,462**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "82464*4818",
+        "answer": "82464 \u00d7 4818 = **397,311,552**",
+        "tool_calls": 1,
+        "correct": true
+      },
+      {
+        "task": "55311*4782",
+        "answer": "55311 \u00d7 4782 = 264,497,202",
+        "tool_calls": 1,
+        "correct": true
+      }
+    ]
+  }
+}

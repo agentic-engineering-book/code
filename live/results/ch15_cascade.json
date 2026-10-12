@@ -1,0 +1,813 @@
+{
+  "experiment": "ch15_cascade",
+  "chapter": 15,
+  "question": "Can a cascade that asks a small model twice, and escalates to a larger model only when the two answers disagree, match the larger model's accuracy while sending it fewer requests?",
+  "models": [
+    "gpt-5.4-nano-2026-03-17",
+    "gpt-5.4-mini-2026-03-17"
+  ],
+  "date_utc": "2026-10-12",
+  "openai_sdk": "2.16.0",
+  "settings": "provider defaults (no temperature or seed set)",
+  "metrics": [
+    {
+      "metric": "Correct, small model only",
+      "successes": 26,
+      "n": 30,
+      "rate": 0.867,
+      "ci95": [
+        0.703,
+        0.947
+      ]
+    },
+    {
+      "metric": "Correct, large model only",
+      "successes": 29,
+      "n": 30,
+      "rate": 0.967,
+      "ci95": [
+        0.833,
+        0.994
+      ]
+    },
+    {
+      "metric": "Correct, cascade",
+      "successes": 29,
+      "n": 30,
+      "rate": 0.967,
+      "ci95": [
+        0.833,
+        0.994
+      ]
+    },
+    {
+      "metric": "Escalated to large model",
+      "successes": 7,
+      "n": 30,
+      "rate": 0.233,
+      "ci95": [
+        0.118,
+        0.409
+      ]
+    },
+    {
+      "metric": "Small samples agreed but were wrong",
+      "successes": 0,
+      "n": 30,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.114
+      ]
+    },
+    {
+      "metric": "Small model's stated number matched its own expression",
+      "successes": 3,
+      "n": 60,
+      "rate": 0.05,
+      "ci95": [
+        0.017,
+        0.137
+      ]
+    },
+    {
+      "metric": "Large model's stated number matched its own expression",
+      "successes": 1,
+      "n": 30,
+      "rate": 0.033,
+      "ci95": [
+        0.006,
+        0.167
+      ]
+    }
+  ],
+  "usage": {
+    "requests": 90,
+    "input_tokens": 9264,
+    "output_tokens": 2283,
+    "mean_seconds": 0.94
+  },
+  "notes": "Values are computed by the calculator from each model's expression. A first version accepted the model's stated number; both models stated wrong numbers for correct expressions, so that design escalated everything.",
+  "trials": [
+    {
+      "problem": "A train covers 131 km per hour for 78 hours, then 15 km per hour for 25 hours. How many kilometres does it travel in total?",
+      "expected": 10593,
+      "small_a": {
+        "value": 10593,
+        "stated": 10413,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 10593,
+        "stated": 10428,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 10593,
+        "stated": 10413,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 137 km per hour for 19 hours, then 29 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "expected": 3763,
+      "small_a": {
+        "value": 3763,
+        "stated": 6573,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 3763,
+        "stated": 7563,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 3763,
+        "stated": 3433,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 239 km per hour for 55 hours, then 70 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "expected": 15945,
+      "small_a": {
+        "value": 15945,
+        "stated": 16685,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 15945,
+        "stated": 17845,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 15945,
+        "stated": 15205,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A shop buys 521 items at 45 dollars each and sells them at 61 dollars each, but 95 items are unsold. What is the profit in dollars?",
+      "expected": 2541,
+      "small_a": {
+        "value": 2541,
+        "stated": -5975,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": -2541,
+        "stated": -12409,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 2541,
+        "stated": 3391,
+        "stated_matches_expression": false
+      },
+      "escalated": true,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A shop buys 348 items at 51 dollars each and sells them at 68 dollars each, but 78 items are unsold. What is the profit in dollars?",
+      "expected": 612,
+      "small_a": {
+        "value": 612,
+        "stated": 5790,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 4590,
+        "stated": 3912,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 612,
+        "stated": 4590,
+        "stated_matches_expression": false
+      },
+      "escalated": true,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A shop buys 830 items at 69 dollars each and sells them at 103 dollars each, but 14 items are unsold. What is the profit in dollars?",
+      "expected": 26778,
+      "small_a": {
+        "value": 57270,
+        "stated": 53970,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 26778,
+        "stated": 41608,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 26778,
+        "stated": 21662,
+        "stated_matches_expression": false
+      },
+      "escalated": true,
+      "small_correct": false,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 263 km per hour for 80 hours, then 33 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "expected": 23515,
+      "small_a": {
+        "value": 23515,
+        "stated": 26855,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 23515,
+        "stated": 27265,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 23515,
+        "stated": 23985,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A warehouse has 524 boxes with 18 items each. 312 items are damaged. 60% of the undamaged items are shipped. How many items are shipped?",
+      "expected": 5472,
+      "small_a": {
+        "value": 5472.0,
+        "stated": 563.2,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 3648.0,
+        "stated": 1346,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 5472.0,
+        "stated": 5563.2,
+        "stated_matches_expression": false
+      },
+      "escalated": true,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A shop buys 185 items at 17 dollars each and sells them at 36 dollars each, but 15 items are unsold. What is the profit in dollars?",
+      "expected": 2975,
+      "small_a": {
+        "value": 2975,
+        "stated": 2965,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 2975,
+        "stated": 3245,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 2975,
+        "stated": 2715,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A shop buys 177 items at 50 dollars each and sells them at 72 dollars each, but 40 items are unsold. What is the profit in dollars?",
+      "expected": 1014,
+      "small_a": {
+        "value": 880,
+        "stated": 880,
+        "stated_matches_expression": true
+      },
+      "small_b": {
+        "value": -1014,
+        "stated": -1430,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 1014,
+        "stated": 2002,
+        "stated_matches_expression": false
+      },
+      "escalated": true,
+      "small_correct": false,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A shop buys 751 items at 61 dollars each and sells them at 73 dollars each, but 69 items are unsold. What is the profit in dollars?",
+      "expected": 3975,
+      "small_a": {
+        "value": 3975,
+        "stated": 9192,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 3975,
+        "stated": 7370,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 3975,
+        "stated": 4474,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 630 km per hour for 77 hours, then 53 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "expected": 50630,
+      "small_a": {
+        "value": 50630,
+        "stated": 51410,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 50630,
+        "stated": 53190,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 50630,
+        "stated": 51910,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 820 km per hour for 87 hours, then 51 km per hour for 60 hours. How many kilometres does it travel in total?",
+      "expected": 74400,
+      "small_a": {
+        "value": 74400,
+        "stated": 74640,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 74400,
+        "stated": 73440,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 74400,
+        "stated": 74520,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A shop buys 122 items at 89 dollars each and sells them at 113 dollars each, but 8 items are unsold. What is the profit in dollars?",
+      "expected": 2024,
+      "small_a": {
+        "value": -2024,
+        "stated": -3380,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 2024,
+        "stated": 2024,
+        "stated_matches_expression": true
+      },
+      "large": {
+        "value": 2928,
+        "stated": 2928,
+        "stated_matches_expression": true
+      },
+      "escalated": true,
+      "small_correct": false,
+      "large_correct": false,
+      "cascade_correct": false,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 776 km per hour for 76 hours, then 24 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "expected": 60776,
+      "small_a": {
+        "value": 60776,
+        "stated": 62452,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 60776,
+        "stated": 61076,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 60776,
+        "stated": 59776,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A shop buys 497 items at 63 dollars each and sells them at 99 dollars each, but 165 items are unsold. What is the profit in dollars?",
+      "expected": 1557,
+      "small_a": {
+        "value": 1557,
+        "stated": 17184,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 1557,
+        "stated": 9558,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 1557,
+        "stated": 17820,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 181 km per hour for 71 hours, then 85 km per hour for 25 hours. How many kilometres does it travel in total?",
+      "expected": 14976,
+      "small_a": {
+        "value": 14976,
+        "stated": 14116,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 14976,
+        "stated": 15476,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 14976,
+        "stated": 14356,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 354 km per hour for 53 hours, then 31 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "expected": 21087,
+      "small_a": {
+        "value": 21087,
+        "stated": 20457,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 21087,
+        "stated": 23107,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 21087,
+        "stated": 20547,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 501 km per hour for 84 hours, then 29 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "expected": 44259,
+      "small_a": {
+        "value": 44259,
+        "stated": 46709,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 44259,
+        "stated": 47604,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 44259,
+        "stated": 43299,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 610 km per hour for 72 hours, then 70 km per hour for 60 hours. How many kilometres does it travel in total?",
+      "expected": 48120,
+      "small_a": {
+        "value": 48120,
+        "stated": 49260,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 48120,
+        "stated": 51720,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 48120,
+        "stated": 44400,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 562 km per hour for 20 hours, then 65 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "expected": 13840,
+      "small_a": {
+        "value": 13840,
+        "stated": 21640,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 13840,
+        "stated": 16540,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 13840,
+        "stated": 13880,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A shop buys 580 items at 73 dollars each and sells them at 105 dollars each, but 138 items are unsold. What is the profit in dollars?",
+      "expected": 4070,
+      "small_a": {
+        "value": 4070,
+        "stated": 6846,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 4070,
+        "stated": 11474,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 4070,
+        "stated": 10286,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A shop buys 580 items at 44 dollars each and sells them at 73 dollars each, but 35 items are unsold. What is the profit in dollars?",
+      "expected": 14265,
+      "small_a": {
+        "value": 14265,
+        "stated": 11580,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 14265,
+        "stated": 3663,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 14265,
+        "stated": 15795,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A shop buys 825 items at 40 dollars each and sells them at 79 dollars each, but 138 items are unsold. What is the profit in dollars?",
+      "expected": 21273,
+      "small_a": {
+        "value": 33000,
+        "stated": 33000,
+        "stated_matches_expression": true
+      },
+      "small_b": {
+        "value": 21273,
+        "stated": 16531,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 21273,
+        "stated": 21473,
+        "stated_matches_expression": false
+      },
+      "escalated": true,
+      "small_correct": false,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A shop buys 275 items at 69 dollars each and sells them at 87 dollars each, but 24 items are unsold. What is the profit in dollars?",
+      "expected": 2862,
+      "small_a": {
+        "value": 2862,
+        "stated": 2442,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 2862,
+        "stated": 2886,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 2862,
+        "stated": 1602,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 524 km per hour for 66 hours, then 39 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "expected": 37509,
+      "small_a": {
+        "value": 37509,
+        "stated": 38439,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 37509,
+        "stated": 41214,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 37509,
+        "stated": 36759,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A shop buys 953 items at 64 dollars each and sells them at 92 dollars each, but 245 items are unsold. What is the profit in dollars?",
+      "expected": 4144,
+      "small_a": {
+        "value": 4144,
+        "stated": 31674,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 4144,
+        "stated": 9745,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 4144,
+        "stated": 9768,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 449 km per hour for 60 hours, then 56 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "expected": 29180,
+      "small_a": {
+        "value": 29180,
+        "stated": 31040,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 29180,
+        "stated": 31940,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 29180,
+        "stated": 28660,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 828 km per hour for 79 hours, then 50 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "expected": 67412,
+      "small_a": {
+        "value": 67412,
+        "stated": 70682,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 67412,
+        "stated": 70222,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 67412,
+        "stated": 65812,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    },
+    {
+      "problem": "A train covers 364 km per hour for 75 hours, then 43 km per hour for 60 hours. How many kilometres does it travel in total?",
+      "expected": 29880,
+      "small_a": {
+        "value": 29880,
+        "stated": 33150,
+        "stated_matches_expression": false
+      },
+      "small_b": {
+        "value": 29880,
+        "stated": 31950,
+        "stated_matches_expression": false
+      },
+      "large": {
+        "value": 29880,
+        "stated": 29340,
+        "stated_matches_expression": false
+      },
+      "escalated": false,
+      "small_correct": true,
+      "large_correct": true,
+      "cascade_correct": true,
+      "agreed_but_wrong": false
+    }
+  ]
+}

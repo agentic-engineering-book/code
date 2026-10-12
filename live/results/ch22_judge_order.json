@@ -1,0 +1,342 @@
+{
+  "experiment": "ch22_judge_order",
+  "chapter": 22,
+  "question": "When the same two answers are shown in both orders, how often does an LLM judge pick the correct one, and how often does its verdict change with the order?",
+  "models": [
+    "gpt-5.4-mini-2026-03-17"
+  ],
+  "date_utc": "2026-10-12",
+  "openai_sdk": "2.16.0",
+  "settings": "provider defaults (no temperature or seed set)",
+  "metrics": [
+    {
+      "metric": "Picked the correct answer (all verdicts)",
+      "successes": 17,
+      "n": 40,
+      "rate": 0.425,
+      "ci95": [
+        0.285,
+        0.578
+      ]
+    },
+    {
+      "metric": "Same correct verdict in both orders",
+      "successes": 2,
+      "n": 20,
+      "rate": 0.1,
+      "ci95": [
+        0.028,
+        0.301
+      ]
+    },
+    {
+      "metric": "Verdict flipped with the order",
+      "successes": 13,
+      "n": 20,
+      "rate": 0.65,
+      "ci95": [
+        0.433,
+        0.819
+      ]
+    },
+    {
+      "metric": "Chose position A",
+      "successes": 33,
+      "n": 40,
+      "rate": 0.825,
+      "ci95": [
+        0.68,
+        0.913
+      ]
+    }
+  ],
+  "usage": {
+    "requests": 40,
+    "input_tokens": 3620,
+    "output_tokens": 400,
+    "mean_seconds": 0.99
+  },
+  "notes": "Wrong answers are the true answer plus about 7%; the judge sees no worked solution.",
+  "trials": [
+    {
+      "problem": "A train covers 368 km per hour for 15 hours, then 89 km per hour for 60 hours. How many kilometres does it travel in total?",
+      "right_first": true,
+      "verdict": "B",
+      "picked_right": false,
+      "picked_first": false
+    },
+    {
+      "problem": "A train covers 368 km per hour for 15 hours, then 89 km per hour for 60 hours. How many kilometres does it travel in total?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 838 km per hour for 27 hours, then 94 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 838 km per hour for 27 hours, then 94 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A warehouse has 357 boxes with 46 items each. 317 items are damaged. 40% of the undamaged items are shipped. How many items are shipped?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A warehouse has 357 boxes with 46 items each. 317 items are damaged. 40% of the undamaged items are shipped. How many items are shipped?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 685 km per hour for 67 hours, then 17 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 685 km per hour for 67 hours, then 17 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 234 km per hour for 86 hours, then 78 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 234 km per hour for 86 hours, then 78 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 522 km per hour for 51 hours, then 94 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 522 km per hour for 51 hours, then 94 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 406 km per hour for 46 hours, then 96 km per hour for 25 hours. How many kilometres does it travel in total?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 406 km per hour for 46 hours, then 96 km per hour for 25 hours. How many kilometres does it travel in total?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A shop buys 526 items at 86 dollars each and sells them at 125 dollars each, but 157 items are unsold. What is the profit in dollars?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A shop buys 526 items at 86 dollars each and sells them at 125 dollars each, but 157 items are unsold. What is the profit in dollars?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A warehouse has 589 boxes with 36 items each. 569 items are damaged. 20% of the undamaged items are shipped. How many items are shipped?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A warehouse has 589 boxes with 36 items each. 569 items are damaged. 20% of the undamaged items are shipped. How many items are shipped?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 574 km per hour for 16 hours, then 19 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 574 km per hour for 16 hours, then 19 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 935 km per hour for 37 hours, then 94 km per hour for 20 hours. How many kilometres does it travel in total?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 935 km per hour for 37 hours, then 94 km per hour for 20 hours. How many kilometres does it travel in total?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 718 km per hour for 48 hours, then 71 km per hour for 60 hours. How many kilometres does it travel in total?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 718 km per hour for 48 hours, then 71 km per hour for 60 hours. How many kilometres does it travel in total?",
+      "right_first": false,
+      "verdict": "B",
+      "picked_right": true,
+      "picked_first": false
+    },
+    {
+      "problem": "A shop buys 219 items at 33 dollars each and sells them at 63 dollars each, but 39 items are unsold. What is the profit in dollars?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A shop buys 219 items at 33 dollars each and sells them at 63 dollars each, but 39 items are unsold. What is the profit in dollars?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 162 km per hour for 21 hours, then 35 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "right_first": true,
+      "verdict": "B",
+      "picked_right": false,
+      "picked_first": false
+    },
+    {
+      "problem": "A train covers 162 km per hour for 21 hours, then 35 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 143 km per hour for 47 hours, then 23 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 143 km per hour for 47 hours, then 23 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A warehouse has 872 boxes with 79 items each. 253 items are damaged. 20% of the undamaged items are shipped. How many items are shipped?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A warehouse has 872 boxes with 79 items each. 253 items are damaged. 20% of the undamaged items are shipped. How many items are shipped?",
+      "right_first": false,
+      "verdict": "B",
+      "picked_right": true,
+      "picked_first": false
+    },
+    {
+      "problem": "A tank holds 759 litres. It loses 16 litres per day for 37 days and is then refilled with 25 litres. How many litres are in it?",
+      "right_first": true,
+      "verdict": "B",
+      "picked_right": false,
+      "picked_first": false
+    },
+    {
+      "problem": "A tank holds 759 litres. It loses 16 litres per day for 37 days and is then refilled with 25 litres. How many litres are in it?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A shop buys 186 items at 84 dollars each and sells them at 107 dollars each, but 8 items are unsold. What is the profit in dollars?",
+      "right_first": true,
+      "verdict": "A",
+      "picked_right": true,
+      "picked_first": true
+    },
+    {
+      "problem": "A shop buys 186 items at 84 dollars each and sells them at 107 dollars each, but 8 items are unsold. What is the profit in dollars?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A tank holds 837 litres. It loses 15 litres per day for 46 days and is then refilled with 20 litres. How many litres are in it?",
+      "right_first": true,
+      "verdict": "B",
+      "picked_right": false,
+      "picked_first": false
+    },
+    {
+      "problem": "A tank holds 837 litres. It loses 15 litres per day for 46 days and is then refilled with 20 litres. How many litres are in it?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    },
+    {
+      "problem": "A train covers 767 km per hour for 69 hours, then 95 km per hour for 25 hours. How many kilometres does it travel in total?",
+      "right_first": true,
+      "verdict": "B",
+      "picked_right": false,
+      "picked_first": false
+    },
+    {
+      "problem": "A train covers 767 km per hour for 69 hours, then 95 km per hour for 25 hours. How many kilometres does it travel in total?",
+      "right_first": false,
+      "verdict": "A",
+      "picked_right": false,
+      "picked_first": true
+    }
+  ]
+}

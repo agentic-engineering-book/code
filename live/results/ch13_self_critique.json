@@ -1,0 +1,302 @@
+{
+  "experiment": "ch13_self_critique",
+  "chapter": 13,
+  "question": "When a small model reviews its own answer without any external check, how often does it fix a wrong answer, and how often does it break a right one?",
+  "models": [
+    "gpt-5.4-nano-2026-03-17"
+  ],
+  "date_utc": "2026-10-12",
+  "openai_sdk": "2.16.0",
+  "settings": "provider defaults (no temperature or seed set)",
+  "metrics": [
+    {
+      "metric": "Correct before review",
+      "successes": 28,
+      "n": 30,
+      "rate": 0.933,
+      "ci95": [
+        0.787,
+        0.982
+      ]
+    },
+    {
+      "metric": "Correct after review",
+      "successes": 30,
+      "n": 30,
+      "rate": 1.0,
+      "ci95": [
+        0.886,
+        1.0
+      ]
+    },
+    {
+      "metric": "Wrong to right (repaired)",
+      "successes": 2,
+      "n": 30,
+      "rate": 0.067,
+      "ci95": [
+        0.018,
+        0.213
+      ]
+    },
+    {
+      "metric": "Right to wrong (regressed)",
+      "successes": 0,
+      "n": 30,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.114
+      ]
+    }
+  ],
+  "usage": {
+    "requests": 60,
+    "input_tokens": 6707,
+    "output_tokens": 5506,
+    "mean_seconds": 1.25
+  },
+  "notes": "",
+  "trials": [
+    {
+      "problem": "A shop buys 417 items at 35 dollars each and sells them at 47 dollars each, but 62 items are unsold. What is the profit in dollars?",
+      "expected": 2090,
+      "first": 2090.0,
+      "revised": 2090.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 253 km per hour for 21 hours, then 79 km per hour for 25 hours. How many kilometres does it travel in total?",
+      "expected": 7288,
+      "first": 7288.0,
+      "revised": 7288.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 206 km per hour for 45 hours, then 68 km per hour for 60 hours. How many kilometres does it travel in total?",
+      "expected": 13350,
+      "first": 13350.0,
+      "revised": 13350.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 932 km per hour for 44 hours, then 56 km per hour for 25 hours. How many kilometres does it travel in total?",
+      "expected": 42408,
+      "first": 42408.0,
+      "revised": 42408.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A shop buys 560 items at 52 dollars each and sells them at 77 dollars each, but 157 items are unsold. What is the profit in dollars?",
+      "expected": 1911,
+      "first": 1911.0,
+      "revised": 1911.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 655 km per hour for 57 hours, then 43 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "expected": 39055,
+      "first": 39055.0,
+      "revised": 39055.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 711 km per hour for 74 hours, then 81 km per hour for 25 hours. How many kilometres does it travel in total?",
+      "expected": 54639,
+      "first": 54639.0,
+      "revised": 54639.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 319 km per hour for 58 hours, then 27 km per hour for 20 hours. How many kilometres does it travel in total?",
+      "expected": 19042,
+      "first": 19042.0,
+      "revised": 19042.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A shop buys 898 items at 56 dollars each and sells them at 92 dollars each, but 75 items are unsold. What is the profit in dollars?",
+      "expected": 25428,
+      "first": 25468.0,
+      "revised": 25428.0,
+      "before": false,
+      "after": true
+    },
+    {
+      "problem": "A train covers 860 km per hour for 75 hours, then 38 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "expected": 67350,
+      "first": 67350.0,
+      "revised": 67350.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A shop buys 306 items at 49 dollars each and sells them at 87 dollars each, but 19 items are unsold. What is the profit in dollars?",
+      "expected": 9975,
+      "first": 9975.0,
+      "revised": 9975.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 291 km per hour for 20 hours, then 65 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "expected": 10695,
+      "first": 10695.0,
+      "revised": 10695.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A shop buys 698 items at 88 dollars each and sells them at 124 dollars each, but 98 items are unsold. What is the profit in dollars?",
+      "expected": 12976,
+      "first": 12976.0,
+      "revised": 12976.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 484 km per hour for 43 hours, then 86 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "expected": 24252,
+      "first": 24252.0,
+      "revised": 24252.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A shop buys 963 items at 32 dollars each and sells them at 54 dollars each, but 313 items are unsold. What is the profit in dollars?",
+      "expected": 4284,
+      "first": 4284.0,
+      "revised": 4284.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A warehouse has 489 boxes with 74 items each. 458 items are damaged. 75% of the undamaged items are shipped. How many items are shipped?",
+      "expected": 26796,
+      "first": 26796.0,
+      "revised": 26796.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 942 km per hour for 18 hours, then 52 km per hour for 25 hours. How many kilometres does it travel in total?",
+      "expected": 18256,
+      "first": 18256.0,
+      "revised": 18256.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 125 km per hour for 43 hours, then 30 km per hour for 20 hours. How many kilometres does it travel in total?",
+      "expected": 5975,
+      "first": 5975.0,
+      "revised": 5975.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 168 km per hour for 42 hours, then 96 km per hour for 25 hours. How many kilometres does it travel in total?",
+      "expected": 9456,
+      "first": 9456.0,
+      "revised": 9456.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A warehouse has 979 boxes with 82 items each. 638 items are damaged. 20% of the undamaged items are shipped. How many items are shipped?",
+      "expected": 15928,
+      "first": 15928.0,
+      "revised": 15928.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 666 km per hour for 59 hours, then 79 km per hour for 60 hours. How many kilometres does it travel in total?",
+      "expected": 44034,
+      "first": 363396.0,
+      "revised": 44034.0,
+      "before": false,
+      "after": true
+    },
+    {
+      "problem": "A shop buys 402 items at 54 dollars each and sells them at 80 dollars each, but 111 items are unsold. What is the profit in dollars?",
+      "expected": 1572,
+      "first": 1572.0,
+      "revised": 1572.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 976 km per hour for 73 hours, then 63 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "expected": 73768,
+      "first": 73768.0,
+      "revised": 73768.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 592 km per hour for 86 hours, then 79 km per hour for 60 hours. How many kilometres does it travel in total?",
+      "expected": 55652,
+      "first": 55652.0,
+      "revised": 55652.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 904 km per hour for 60 hours, then 71 km per hour for 25 hours. How many kilometres does it travel in total?",
+      "expected": 56015,
+      "first": 56015.0,
+      "revised": 56015.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 225 km per hour for 12 hours, then 86 km per hour for 25 hours. How many kilometres does it travel in total?",
+      "expected": 4850,
+      "first": 4850.0,
+      "revised": 4850.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A shop buys 979 items at 31 dollars each and sells them at 66 dollars each, but 224 items are unsold. What is the profit in dollars?",
+      "expected": 19481,
+      "first": 19481.0,
+      "revised": 19481.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A shop buys 351 items at 74 dollars each and sells them at 83 dollars each, but 36 items are unsold. What is the profit in dollars?",
+      "expected": 171,
+      "first": 171.0,
+      "revised": 171.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A shop buys 788 items at 40 dollars each and sells them at 76 dollars each, but 223 items are unsold. What is the profit in dollars?",
+      "expected": 11420,
+      "first": 11420.0,
+      "revised": 11420.0,
+      "before": true,
+      "after": true
+    },
+    {
+      "problem": "A train covers 642 km per hour for 13 hours, then 23 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "expected": 9266,
+      "first": 9266.0,
+      "revised": 9266.0,
+      "before": true,
+      "after": true
+    }
+  ]
+}

@@ -1,0 +1,352 @@
+{
+  "experiment": "ch19_voting",
+  "chapter": 19,
+  "question": "Does a majority vote over five independent samples from a small model answer more problems correctly than a single sample?",
+  "models": [
+    "gpt-5.4-nano-2026-03-17"
+  ],
+  "date_utc": "2026-10-12",
+  "openai_sdk": "2.16.0",
+  "settings": "provider defaults (no temperature or seed set)",
+  "metrics": [
+    {
+      "metric": "Correct, single sample",
+      "successes": 18,
+      "n": 20,
+      "rate": 0.9,
+      "ci95": [
+        0.699,
+        0.972
+      ]
+    },
+    {
+      "metric": "Correct, majority of five (ties count as wrong)",
+      "successes": 18,
+      "n": 20,
+      "rate": 0.9,
+      "ci95": [
+        0.699,
+        0.972
+      ]
+    },
+    {
+      "metric": "At least one of five correct (oracle@5)",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    }
+  ],
+  "usage": {
+    "requests": 100,
+    "input_tokens": 5020,
+    "output_tokens": 8529,
+    "mean_seconds": 1.23
+  },
+  "notes": "",
+  "trials": [
+    {
+      "problem": "A warehouse has 923 boxes with 78 items each. 214 items are damaged. 75% of the undamaged items are shipped. How many items are shipped?",
+      "expected": 53835,
+      "votes": [
+        53835.0,
+        53835.0,
+        53835.0,
+        53844.0,
+        53880.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A train covers 729 km per hour for 45 hours, then 24 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "expected": 33765,
+      "votes": [
+        33765.0,
+        33765.0,
+        33765.0,
+        33765.0,
+        33765.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A warehouse has 675 boxes with 70 items each. 110 items are damaged. 20% of the undamaged items are shipped. How many items are shipped?",
+      "expected": 9428,
+      "votes": [
+        9428.0,
+        9428.0,
+        9428.0,
+        9428.0,
+        9428.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A train covers 930 km per hour for 64 hours, then 40 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "expected": 62520,
+      "votes": [
+        62520.0,
+        62520.0,
+        62520.0,
+        62520.0,
+        62520.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A train covers 761 km per hour for 75 hours, then 24 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "expected": 58875,
+      "votes": [
+        58875.0,
+        58875.0,
+        58875.0,
+        58875.0,
+        58875.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A tank holds 674 litres. It loses 35 litres per day for 11 days and is then refilled with 25 litres. How many litres are in it?",
+      "expected": 314,
+      "votes": [
+        314.0,
+        314.0,
+        314.0,
+        314.0,
+        314.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A shop buys 251 items at 72 dollars each and sells them at 100 dollars each, but 42 items are unsold. What is the profit in dollars?",
+      "expected": 2828,
+      "votes": [
+        5852.0,
+        5852.0,
+        2828.0,
+        2828.0,
+        2828.0
+      ],
+      "single_correct": false,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A train covers 592 km per hour for 68 hours, then 49 km per hour for 40 hours. How many kilometres does it travel in total?",
+      "expected": 42216,
+      "votes": [
+        42216.0,
+        42216.0,
+        42216.0,
+        42216.0,
+        42216.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A warehouse has 299 boxes with 67 items each. 48 items are damaged. 40% of the undamaged items are shipped. How many items are shipped?",
+      "expected": 7994,
+      "votes": [
+        7994.0,
+        7994.0,
+        7994.0,
+        7994.0,
+        7994.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A tank holds 971 litres. It loses 26 litres per day for 36 days and is then refilled with 75 litres. How many litres are in it?",
+      "expected": 110,
+      "votes": [
+        110.0,
+        110.0,
+        110.0,
+        110.0,
+        1832.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A shop buys 379 items at 38 dollars each and sells them at 61 dollars each, but 12 items are unsold. What is the profit in dollars?",
+      "expected": 7985,
+      "votes": [
+        7985.0,
+        7985.0,
+        7985.0,
+        7985.0,
+        7985.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A warehouse has 913 boxes with 47 items each. 75 items are damaged. 25% of the undamaged items are shipped. How many items are shipped?",
+      "expected": 10709,
+      "votes": [
+        10714.0,
+        10709.0,
+        10714.0,
+        10714.0,
+        10714.0
+      ],
+      "single_correct": false,
+      "majority_correct": false,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A train covers 420 km per hour for 79 hours, then 70 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "expected": 38430,
+      "votes": [
+        38430.0,
+        38430.0,
+        38430.0,
+        38430.0,
+        38430.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A train covers 451 km per hour for 77 hours, then 44 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "expected": 38027,
+      "votes": [
+        38027.0,
+        38027.0,
+        38027.0,
+        38027.0,
+        38017.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A shop buys 776 items at 79 dollars each and sells them at 118 dollars each, but 114 items are unsold. What is the profit in dollars?",
+      "expected": 16812,
+      "votes": [
+        16812.0,
+        16812.0,
+        16812.0,
+        16852.0,
+        16812.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A shop buys 854 items at 71 dollars each and sells them at 95 dollars each, but 194 items are unsold. What is the profit in dollars?",
+      "expected": 2066,
+      "votes": [
+        2066.0,
+        2066.0,
+        2086.0,
+        2086.0,
+        15840.0
+      ],
+      "single_correct": true,
+      "majority_correct": false,
+      "any_correct": true,
+      "tie": true
+    },
+    {
+      "problem": "A train covers 575 km per hour for 54 hours, then 23 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "expected": 32775,
+      "votes": [
+        32775.0,
+        32775.0,
+        32775.0,
+        32775.0,
+        32775.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A shop buys 567 items at 58 dollars each and sells them at 84 dollars each, but 16 items are unsold. What is the profit in dollars?",
+      "expected": 13398,
+      "votes": [
+        13398.0,
+        13398.0,
+        13398.0,
+        13398.0,
+        13398.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A shop buys 388 items at 47 dollars each and sells them at 75 dollars each, but 9 items are unsold. What is the profit in dollars?",
+      "expected": 10189,
+      "votes": [
+        10189.0,
+        10189.0,
+        10189.0,
+        10189.0,
+        10189.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    },
+    {
+      "problem": "A train covers 289 km per hour for 72 hours, then 95 km per hour for 75 hours. How many kilometres does it travel in total?",
+      "expected": 27933,
+      "votes": [
+        27933.0,
+        27933.0,
+        27933.0,
+        27933.0,
+        27933.0
+      ],
+      "single_correct": true,
+      "majority_correct": true,
+      "any_correct": true,
+      "tie": false
+    }
+  ]
+}

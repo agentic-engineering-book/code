@@ -1,0 +1,418 @@
+{
+  "experiment": "ch05_tool_selection",
+  "chapter": 5,
+  "question": "Does making tool descriptions overlap reduce a small model's tool selection accuracy when the functions themselves are unchanged?",
+  "models": [
+    "gpt-5.4-nano-2026-03-17"
+  ],
+  "date_utc": "2026-10-12",
+  "openai_sdk": "2.16.0",
+  "settings": "provider defaults (no temperature or seed set)",
+  "metrics": [
+    {
+      "metric": "Correct tool, clear descriptions",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    },
+    {
+      "metric": "Correct tool, overlapping descriptions",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    },
+    {
+      "metric": "Correct tool, overlapping, same argument name",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    }
+  ],
+  "usage": {
+    "requests": 60,
+    "input_tokens": 10900,
+    "output_tokens": 1318,
+    "mean_seconds": 0.87
+  },
+  "notes": "",
+  "trials": {
+    "clear": [
+      {
+        "task": "What is 18 times 7?",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "What's 15% of 240?",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "Split a 1,260 bill between 7 people.",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "How many seconds are in a week?",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "Convert 72 inches to feet.",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "Is it raining in Pretoria right now?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "What will the temperature be in Oslo tomorrow?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "Do I need an umbrella in London today?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "How windy is it in Cape Town at the moment?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "Current humidity in Singapore?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "Find information about agent evaluation methods.",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "Who proposed the ReAct prompting method?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "What is the population of Lisbon?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "What does the Model Context Protocol standardize?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "When was the city of Durban founded?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "Summarize research on retrieval-augmented generation.",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "What is the average annual rainfall in Nairobi?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "What is the current air quality in Delhi?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "Compute the compound growth of 1000 at 5% for 3 years.",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "What is the history of the Paris weather service?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      }
+    ],
+    "overlapping": [
+      {
+        "task": "What is 18 times 7?",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "What's 15% of 240?",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "Split a 1,260 bill between 7 people.",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "How many seconds are in a week?",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "Convert 72 inches to feet.",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "Is it raining in Pretoria right now?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "What will the temperature be in Oslo tomorrow?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "Do I need an umbrella in London today?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "How windy is it in Cape Town at the moment?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "Current humidity in Singapore?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "Find information about agent evaluation methods.",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "Who proposed the ReAct prompting method?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "What is the population of Lisbon?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "What does the Model Context Protocol standardize?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "When was the city of Durban founded?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "Summarize research on retrieval-augmented generation.",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "What is the average annual rainfall in Nairobi?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "What is the current air quality in Delhi?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "Compute the compound growth of 1000 at 5% for 3 years.",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "What is the history of the Paris weather service?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      }
+    ],
+    "same_argument_name": [
+      {
+        "task": "What is 18 times 7?",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "What's 15% of 240?",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "Split a 1,260 bill between 7 people.",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "How many seconds are in a week?",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "Convert 72 inches to feet.",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "Is it raining in Pretoria right now?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "What will the temperature be in Oslo tomorrow?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "Do I need an umbrella in London today?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "How windy is it in Cape Town at the moment?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "Current humidity in Singapore?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "Find information about agent evaluation methods.",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "Who proposed the ReAct prompting method?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "What is the population of Lisbon?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "What does the Model Context Protocol standardize?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "When was the city of Durban founded?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "Summarize research on retrieval-augmented generation.",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "What is the average annual rainfall in Nairobi?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      },
+      {
+        "task": "What is the current air quality in Delhi?",
+        "expected": "weather",
+        "chosen": "weather",
+        "correct": true
+      },
+      {
+        "task": "Compute the compound growth of 1000 at 5% for 3 years.",
+        "expected": "calculator",
+        "chosen": "calculator",
+        "correct": true
+      },
+      {
+        "task": "What is the history of the Paris weather service?",
+        "expected": "search",
+        "chosen": "search",
+        "correct": true
+      }
+    ]
+  }
+}

@@ -52,4 +52,4 @@ def execute(decision, tools=TOOLS):
     name = decision.get("action")
     if name not in tools:
         raise ValueError(f"unknown action: {name!r}")
-    return tools[name](**decision.get("arguments", {}))
+    return tools[name](**(decision.get("arguments") or {}))

@@ -1,0 +1,472 @@
+{
+  "experiment": "ch07_stale_evidence",
+  "chapter": 7,
+  "question": "When retrieval returns both a superseded and a current policy, how often does a small model answer with the current value, with and without effective-date metadata?",
+  "models": [
+    "gpt-5.4-nano-2026-03-17"
+  ],
+  "date_utc": "2026-10-12",
+  "openai_sdk": "2.16.0",
+  "settings": "provider defaults (no temperature or seed set)",
+  "metrics": [
+    {
+      "metric": "Current value only, no metadata",
+      "successes": 7,
+      "n": 20,
+      "rate": 0.35,
+      "ci95": [
+        0.181,
+        0.567
+      ]
+    },
+    {
+      "metric": "Current value only, metadata",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    },
+    {
+      "metric": "Current value only, current only",
+      "successes": 20,
+      "n": 20,
+      "rate": 1.0,
+      "ci95": [
+        0.839,
+        1.0
+      ]
+    }
+  ],
+  "usage": {
+    "requests": 60,
+    "input_tokens": 3852,
+    "output_tokens": 1014,
+    "mean_seconds": 0.86
+  },
+  "notes": "",
+  "trials": [
+    {
+      "question": "What is the refund window?",
+      "style": "no metadata",
+      "repeat": 0,
+      "answer": "The refund window is 30 days, according to Document 1.",
+      "current_only": false
+    },
+    {
+      "question": "What is the refund window?",
+      "style": "no metadata",
+      "repeat": 1,
+      "answer": "The refund window is 30 days (Document 1) or 14 days (Document 2).",
+      "current_only": false
+    },
+    {
+      "question": "How long is the warranty?",
+      "style": "no metadata",
+      "repeat": 0,
+      "answer": "The warranty is 1 year (according to Document 1).",
+      "current_only": false
+    },
+    {
+      "question": "How long is the warranty?",
+      "style": "no metadata",
+      "repeat": 1,
+      "answer": "The warranty is 1\u20132 years (Document 1 says 1 year and Document 2 says 2 years).",
+      "current_only": false
+    },
+    {
+      "question": "What is the free-shipping threshold?",
+      "style": "no metadata",
+      "repeat": 0,
+      "answer": "The free-shipping threshold is either over $50 (Document 1) or over $75 (Document 2).",
+      "current_only": false
+    },
+    {
+      "question": "What is the free-shipping threshold?",
+      "style": "no metadata",
+      "repeat": 1,
+      "answer": "The documents conflict: Document 1 says free shipping is over $50, while Document 2 says it is over $75.",
+      "current_only": false
+    },
+    {
+      "question": "How many vacation days do staff get?",
+      "style": "no metadata",
+      "repeat": 0,
+      "answer": "The documents conflict: one policy says staff get 18 annual leave days, while the other says they get 21 annual leave days.",
+      "current_only": false
+    },
+    {
+      "question": "How many vacation days do staff get?",
+      "style": "no metadata",
+      "repeat": 1,
+      "answer": "Staff get 21 days of annual leave.",
+      "current_only": true
+    },
+    {
+      "question": "What is the late-payment fee?",
+      "style": "no metadata",
+      "repeat": 0,
+      "answer": "The late-payment fee is $15 according to Document 1 and $25 according to Document 2.",
+      "current_only": false
+    },
+    {
+      "question": "What is the late-payment fee?",
+      "style": "no metadata",
+      "repeat": 1,
+      "answer": "The late-payment fee is either $15 or $25, depending on which policy document applies.",
+      "current_only": false
+    },
+    {
+      "question": "How long is the probation period?",
+      "style": "no metadata",
+      "repeat": 0,
+      "answer": "The documents conflict: Document 1 says the probation is 6 months, while Document 2 says it is 3 months.",
+      "current_only": false
+    },
+    {
+      "question": "How long is the probation period?",
+      "style": "no metadata",
+      "repeat": 1,
+      "answer": "The probation period is 3 months (Document 2).",
+      "current_only": true
+    },
+    {
+      "question": "What is the password rotation interval?",
+      "style": "no metadata",
+      "repeat": 0,
+      "answer": "The documents conflict: Document 1 states the password rotation interval is 90 days, while Document 2 states it is 180 days.",
+      "current_only": false
+    },
+    {
+      "question": "What is the password rotation interval?",
+      "style": "no metadata",
+      "repeat": 1,
+      "answer": "The password rotation interval is ambiguous because Document 1 states 90 days and Document 2 states 180 days.",
+      "current_only": false
+    },
+    {
+      "question": "What is the maximum expense claim without approval?",
+      "style": "no metadata",
+      "repeat": 0,
+      "answer": "The maximum expense claim without approval is $500.",
+      "current_only": true
+    },
+    {
+      "question": "What is the maximum expense claim without approval?",
+      "style": "no metadata",
+      "repeat": 1,
+      "answer": "The maximum expense claim without approval is $500.",
+      "current_only": true
+    },
+    {
+      "question": "How long are support tickets kept?",
+      "style": "no metadata",
+      "repeat": 0,
+      "answer": "Support tickets are kept for 24 months (per Document 2).",
+      "current_only": true
+    },
+    {
+      "question": "How long are support tickets kept?",
+      "style": "no metadata",
+      "repeat": 1,
+      "answer": "Support tickets are kept for 24 months (as stated in Document 2).",
+      "current_only": true
+    },
+    {
+      "question": "What is the minimum order quantity?",
+      "style": "no metadata",
+      "repeat": 0,
+      "answer": "The minimum order quantity is 25 units.",
+      "current_only": true
+    },
+    {
+      "question": "What is the minimum order quantity?",
+      "style": "no metadata",
+      "repeat": 1,
+      "answer": "The minimum order quantity is 10 units (Document 1) and 25 units (Document 2).",
+      "current_only": false
+    },
+    {
+      "question": "What is the refund window?",
+      "style": "metadata",
+      "repeat": 0,
+      "answer": "The refund window is 14 days (per Document 2 effective 2026-03-01).",
+      "current_only": true
+    },
+    {
+      "question": "What is the refund window?",
+      "style": "metadata",
+      "repeat": 1,
+      "answer": "The refund window is 14 days.",
+      "current_only": true
+    },
+    {
+      "question": "How long is the warranty?",
+      "style": "metadata",
+      "repeat": 0,
+      "answer": "The warranty is 2 years.",
+      "current_only": true
+    },
+    {
+      "question": "How long is the warranty?",
+      "style": "metadata",
+      "repeat": 1,
+      "answer": "The warranty is 2 years (per Document 2, effective 2026-03-01).",
+      "current_only": true
+    },
+    {
+      "question": "What is the free-shipping threshold?",
+      "style": "metadata",
+      "repeat": 0,
+      "answer": "The free-shipping threshold is $75.",
+      "current_only": true
+    },
+    {
+      "question": "What is the free-shipping threshold?",
+      "style": "metadata",
+      "repeat": 1,
+      "answer": "The free-shipping threshold is $75 (effective 2026-03-01).",
+      "current_only": true
+    },
+    {
+      "question": "How many vacation days do staff get?",
+      "style": "metadata",
+      "repeat": 0,
+      "answer": "Staff get 21 days of annual leave (vacation days).",
+      "current_only": true
+    },
+    {
+      "question": "How many vacation days do staff get?",
+      "style": "metadata",
+      "repeat": 1,
+      "answer": "Staff get 21 days of annual leave (effective 2026-03-01).",
+      "current_only": true
+    },
+    {
+      "question": "What is the late-payment fee?",
+      "style": "metadata",
+      "repeat": 0,
+      "answer": "The late-payment fee is $25.",
+      "current_only": true
+    },
+    {
+      "question": "What is the late-payment fee?",
+      "style": "metadata",
+      "repeat": 1,
+      "answer": "The late-payment fee is $25 (effective 2026-03-01).",
+      "current_only": true
+    },
+    {
+      "question": "How long is the probation period?",
+      "style": "metadata",
+      "repeat": 0,
+      "answer": "According to Document 2 (effective 2026-03-01, current), the probation period is 3 months.",
+      "current_only": true
+    },
+    {
+      "question": "How long is the probation period?",
+      "style": "metadata",
+      "repeat": 1,
+      "answer": "The probation period is 3 months.",
+      "current_only": true
+    },
+    {
+      "question": "What is the password rotation interval?",
+      "style": "metadata",
+      "repeat": 0,
+      "answer": "The password rotation interval is **180 days**.",
+      "current_only": true
+    },
+    {
+      "question": "What is the password rotation interval?",
+      "style": "metadata",
+      "repeat": 1,
+      "answer": "The password rotation interval is 180 days (per the policy effective 2026-03-01).",
+      "current_only": true
+    },
+    {
+      "question": "What is the maximum expense claim without approval?",
+      "style": "metadata",
+      "repeat": 0,
+      "answer": "The maximum expense claim without approval is $500.",
+      "current_only": true
+    },
+    {
+      "question": "What is the maximum expense claim without approval?",
+      "style": "metadata",
+      "repeat": 1,
+      "answer": "The maximum expense claim without approval is $500 (per the policy effective 2026-03-01).",
+      "current_only": true
+    },
+    {
+      "question": "How long are support tickets kept?",
+      "style": "metadata",
+      "repeat": 0,
+      "answer": "Support tickets are kept for 24 months.",
+      "current_only": true
+    },
+    {
+      "question": "How long are support tickets kept?",
+      "style": "metadata",
+      "repeat": 1,
+      "answer": "Support tickets are kept for 24 months.",
+      "current_only": true
+    },
+    {
+      "question": "What is the minimum order quantity?",
+      "style": "metadata",
+      "repeat": 0,
+      "answer": "The minimum order quantity is 25 units.",
+      "current_only": true
+    },
+    {
+      "question": "What is the minimum order quantity?",
+      "style": "metadata",
+      "repeat": 1,
+      "answer": "The minimum order quantity is 25 units (per the current policy effective 2026-03-01).",
+      "current_only": true
+    },
+    {
+      "question": "What is the refund window?",
+      "style": "current only",
+      "repeat": 0,
+      "answer": "The refund window is 14 days.",
+      "current_only": true
+    },
+    {
+      "question": "What is the refund window?",
+      "style": "current only",
+      "repeat": 1,
+      "answer": "The refund window is 14 days.",
+      "current_only": true
+    },
+    {
+      "question": "How long is the warranty?",
+      "style": "current only",
+      "repeat": 0,
+      "answer": "The warranty is 2 years.",
+      "current_only": true
+    },
+    {
+      "question": "How long is the warranty?",
+      "style": "current only",
+      "repeat": 1,
+      "answer": "The warranty is 2 years.",
+      "current_only": true
+    },
+    {
+      "question": "What is the free-shipping threshold?",
+      "style": "current only",
+      "repeat": 0,
+      "answer": "The free-shipping threshold is **$75**.",
+      "current_only": true
+    },
+    {
+      "question": "What is the free-shipping threshold?",
+      "style": "current only",
+      "repeat": 1,
+      "answer": "The free-shipping threshold is purchases over $75.",
+      "current_only": true
+    },
+    {
+      "question": "How many vacation days do staff get?",
+      "style": "current only",
+      "repeat": 0,
+      "answer": "Staff get 21 days of annual leave.",
+      "current_only": true
+    },
+    {
+      "question": "How many vacation days do staff get?",
+      "style": "current only",
+      "repeat": 1,
+      "answer": "Staff get 21 days of annual leave.",
+      "current_only": true
+    },
+    {
+      "question": "What is the late-payment fee?",
+      "style": "current only",
+      "repeat": 0,
+      "answer": "The late-payment fee is $25.",
+      "current_only": true
+    },
+    {
+      "question": "What is the late-payment fee?",
+      "style": "current only",
+      "repeat": 1,
+      "answer": "The late-payment fee is $25.",
+      "current_only": true
+    },
+    {
+      "question": "How long is the probation period?",
+      "style": "current only",
+      "repeat": 0,
+      "answer": "The probation period is 3 months.",
+      "current_only": true
+    },
+    {
+      "question": "How long is the probation period?",
+      "style": "current only",
+      "repeat": 1,
+      "answer": "The probation period is 3 months.",
+      "current_only": true
+    },
+    {
+      "question": "What is the password rotation interval?",
+      "style": "current only",
+      "repeat": 0,
+      "answer": "The password rotation interval is 180 days.",
+      "current_only": true
+    },
+    {
+      "question": "What is the password rotation interval?",
+      "style": "current only",
+      "repeat": 1,
+      "answer": "The password rotation interval is 180 days.",
+      "current_only": true
+    },
+    {
+      "question": "What is the maximum expense claim without approval?",
+      "style": "current only",
+      "repeat": 0,
+      "answer": "The maximum expense claim without approval is **$500**.",
+      "current_only": true
+    },
+    {
+      "question": "What is the maximum expense claim without approval?",
+      "style": "current only",
+      "repeat": 1,
+      "answer": "The maximum expense claim without approval is **$500**.",
+      "current_only": true
+    },
+    {
+      "question": "How long are support tickets kept?",
+      "style": "current only",
+      "repeat": 0,
+      "answer": "Support tickets are kept for 24 months.",
+      "current_only": true
+    },
+    {
+      "question": "How long are support tickets kept?",
+      "style": "current only",
+      "repeat": 1,
+      "answer": "Support tickets are kept for 24 months.",
+      "current_only": true
+    },
+    {
+      "question": "What is the minimum order quantity?",
+      "style": "current only",
+      "repeat": 0,
+      "answer": "The minimum order quantity is 25 units.",
+      "current_only": true
+    },
+    {
+      "question": "What is the minimum order quantity?",
+      "style": "current only",
+      "repeat": 1,
+      "answer": "The minimum order quantity is 25 units.",
+      "current_only": true
+    }
+  ]
+}
