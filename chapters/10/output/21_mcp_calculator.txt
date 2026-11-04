@@ -1,0 +1,17 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-04
+SERVER: calc-server | version: 2025-06-18 | capabilities: ['tools']
+TOOL: calculator | requires: ['expression']
+TASK: What is 27611 times 2033?
+  CALL: calculator {"expression": "27611*2033"}
+    content: [{"type": "text", "text": "56133163"}]
+    isError: false
+TASK: Delete invoice 7.
+  MODEL ANSWERED: I can’t delete invoices directly from here, but if you
+    want, I can help you draft the exact command or API call to remove
+    invoice 7 in your system.
+HAND-WRITTEN PROPOSALS
+  CALL: calculator {"expression": "delete all invoices"}
+    content: [{"type": "text", "text": "invalid arithmetic expression"}]
+    isError: true
+  CALL: delete_invoice {"id": 7}
+    protocol error: {"code": -32602, "message": "Unknown tool: delete_invoice"}

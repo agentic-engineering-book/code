@@ -1,7 +1,9 @@
 """Experiment 21 (Chapter 10): A minimal MCP-shaped calculator."""
 import json
+import textwrap
 
 from agentic import calculator
+from agentic.live import OpenAIModel
 
 PROTOCOL_VERSION = "2025-06-18"
 TOOLS = [{
@@ -74,19 +76,36 @@ for tool in available:
     print("TOOL:", tool["name"], "| requires:",
           tool["inputSchema"]["required"])
 
-# The model sees `available` and proposes:
-decision = {"name": "calculator", "arguments": {"expression": "18*7"}}
-proposals = [
-    decision,
-    {"name": "calculator",
-     "arguments": {"expression": "delete all invoices"}},
-    {"name": "delete_invoice", "arguments": {"id": 7}},
-]
-for proposal in proposals:
+
+
+def call(proposal):
     response = send("tools/call", proposal)
-    print("CALL:", proposal["name"], json.dumps(proposal["arguments"]))
+    print("  CALL:", proposal["name"], json.dumps(proposal["arguments"]))
     if "error" in response:
-        print("  protocol error:", json.dumps(response["error"]))
+        print("    protocol error:", json.dumps(response["error"]))
     else:
-        print("  content:", json.dumps(response["result"]["content"]))
-        print("  isError:", json.dumps(response["result"]["isError"]))
+        print("    content:", json.dumps(response["result"]["content"]))
+        print("    isError:", json.dumps(response["result"]["isError"]))
+
+
+# The host turns the listed tools into the model's tool descriptions.
+model = OpenAIModel(tools=[{"name": tool["name"],
+                            "description": tool["description"],
+                            "parameters": tool["inputSchema"]}
+                           for tool in available],
+                    system="Answer in at most two sentences.")
+for task in ["What is 27611 times 2033?", "Delete invoice 7."]:
+    print("TASK:", task)
+    decision = model.generate([{"role": "user", "content": task}])
+    if decision.get("done"):
+        print(textwrap.fill(decision["answer"], 76,
+                            initial_indent="  MODEL ANSWERED: ",
+                            subsequent_indent="    "))
+    else:
+        call({"name": decision["action"],
+              "arguments": decision["arguments"]})
+
+print("HAND-WRITTEN PROPOSALS")
+call({"name": "calculator",
+      "arguments": {"expression": "delete all invoices"}})
+call({"name": "delete_invoice", "arguments": {"id": 7}})
