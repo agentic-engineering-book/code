@@ -1,0 +1,17 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-04
+NAIVE, durable memories:
+  I prefer concise explanations.
+  Use pirate language for this one joke.
+  Remember that my project uses Python 3.12.
+  Answer in French today, I'm practising.
+  Can you show me a Python example of RAG?
+  NEXT WEEK: En bref, **un embedding** est une représentation numérique d’u...
+VAGUE JUDGE, durable memories:
+  I prefer concise explanations.
+  Remember that my project uses Python 3.12.
+  Answer in French today, I'm practising.
+  NEXT WEEK: Un **embedding** est une représentation numérique d’un objet (...
+EXPLICIT JUDGE, durable memories:
+  I prefer concise explanations.
+  Remember that my project uses Python 3.12.
+  NEXT WEEK: An embedding is a way to turn something like a word, sentence,...
