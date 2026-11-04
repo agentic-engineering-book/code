@@ -1,0 +1,6 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-04
+SIMILARITY: 0.71, 0.71
+TOP CANDIDATE ONLY           answers: 30 days, 30 days, 30 days
+BOTH, OLD POLICY FIRST       answers: 14 days, 14 days, 14 days
+BOTH, NEW POLICY FIRST       answers: 30 days, no number, 30 days
+BOTH, NEW FIRST, WITH DATES  answers: 14 days, 14 days, 14 days

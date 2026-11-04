@@ -1,8 +1,11 @@
 """Experiment 14 (Chapter 7): The smallest RAG pipeline."""
 import re
 
-from agentic import PolicyModel
 from agentic.context import retrieve
+from agentic.live import OpenAIModel
+
+model = OpenAIModel(system="Answer the question from the evidence only. "
+                           "Reply in one short sentence.")
 
 documents = [
     {"text": "Refund window is 30 days.", "effective_year": 2025},
@@ -10,30 +13,28 @@ documents = [
 ]
 QUESTION = "What is the current refund window?"
 
-
-def answer_from_context(messages):
-    """Stand-in generator: quotes the number of days in its evidence."""
-    days = re.search(r"(\d+) days", messages[-1]["content"])
-    return {"done": True, "answer": f"{days.group(1)} days" if days
-            else "not in evidence"}
+scored = retrieve(QUESTION, documents, k=2, text=lambda doc: doc["text"])
+print("SIMILARITY:", ", ".join(f"{score:.2f}" for score, doc in scored))
+old, new = [doc for score, doc in scored]  # equal scores: list order
 
 
-model = PolicyModel(answer_from_context)
+def dated(doc):
+    return f"[effective {doc['effective_year']}] {doc['text']}"
 
 
-def generate(doc):
-    prompt = f"Evidence: {doc['text']}\nQuestion: {QUESTION}"
-    answer = model.generate([{"role": "user", "content": prompt}])
-    print("  ANSWER:", answer["answer"])
-    print("  SOURCE: policy effective", doc["effective_year"])
+EVIDENCE = {
+    "TOP CANDIDATE ONLY": old["text"],
+    "BOTH, OLD POLICY FIRST": old["text"] + "\n" + new["text"],
+    "BOTH, NEW POLICY FIRST": new["text"] + "\n" + old["text"],
+    "BOTH, NEW FIRST, WITH DATES": dated(new) + "\n" + dated(old),
+}
 
-
-candidates = [doc for score, doc in retrieve(
-    "current refund window", documents, k=2, text=lambda d: d["text"])]
-print("CANDIDATES:", len(candidates), "(equal similarity)")
-
-print("Naive: take the top-ranked candidate")
-generate(candidates[0])
-
-print("Metadata: take the newest effective policy")
-generate(max(candidates, key=lambda doc: doc["effective_year"]))
+for name, evidence in EVIDENCE.items():
+    prompt = f"Evidence:\n{evidence}\n\nQuestion: {QUESTION}"
+    messages = [{"role": "user", "content": prompt}]
+    answers = []
+    for trial in range(3):
+        answer = model.generate(messages)["answer"]
+        days = re.search(r"(\d+) days", answer)
+        answers.append(days.group(0) if days else "no number")
+    print(f"{name:<28} answers: {', '.join(answers)}")

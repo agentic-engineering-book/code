@@ -1,0 +1,13 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-04
+FIRST STAGE (word overlap):
+  1. history   0.7
+  2. current   0.41
+  3. shipping  0.0
+RERANKED (model):
+  1. current   7/10
+  2. history   2/10
+  3. shipping  0/10
+FIRST STAGE WITH k=1:
+  1. history   0.7
+RERANKED (model):
+  1. history   2/10

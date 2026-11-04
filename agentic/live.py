@@ -11,6 +11,8 @@ import time
 # The pinned snapshot the book's examples were run with. Set BOOK_MODEL to
 # run them with another model, for example a local one.
 MODEL = os.environ.get("BOOK_MODEL", "gpt-5.4-mini-2026-03-17")
+EMBEDDING_MODEL = os.environ.get("BOOK_EMBEDDING_MODEL",
+                                 "text-embedding-3-small")
 
 
 class OpenAIModel:
@@ -112,3 +114,12 @@ def schema(name, description, **parameters):
             "additionalProperties": False,
         },
     }
+
+
+def embed(texts, model=EMBEDDING_MODEL, client=None):
+    """One embedding vector per text, from an embeddings API."""
+    if client is None:
+        from openai import OpenAI  # optional dependency
+        client = OpenAI()
+    response = client.embeddings.create(model=model, input=list(texts))
+    return [item.embedding for item in response.data]

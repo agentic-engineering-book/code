@@ -1,0 +1,13 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-04
+QUERY: refund days
+  word counts  1.00  Refunds are accepted within 30 days.
+  embeddings   0.49  Refunds are accepted within 30 days.
+QUERY: Can I get my money back?
+  word counts  0.00  (no word in common)
+  embeddings   0.44  Refunds are accepted within 30 days.
+QUERY: How long until my parcel arrives?
+  word counts  0.00  (no word in common)
+  embeddings   0.44  Shipping usually takes 3 to 5 days.
+QUERY: Do I pay for postage?
+  word counts  0.00  (no word in common)
+  embeddings   0.31  Gold customers receive free delivery.

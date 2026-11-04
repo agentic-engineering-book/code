@@ -1,28 +1,46 @@
 """Experiment 15 (Chapter 7): Reranking."""
-history = {"id": "history", "text": "Refund policy history ... 30 days"}
-current = {"id": "current", "text": "Current refund window: 14 days"}
-shipping = {"id": "shipping", "text": "Shipping takes 3-5 days"}
+from agentic.context import retrieve
+from agentic.live import OpenAIModel
+
+judge = OpenAIModel(system="Rate how well the passage answers the "
+                           "question, from 0 (not at all) to 10 (fully). "
+                           "Reply with the number only.")
+
+documents = {
+    "history": "Refund window history: the refund window was 30 days "
+               "when the refund window was introduced in 2025.",
+    "current": "Current policy: claims must be made within 14 days.",
+    "shipping": "Shipping takes 3 to 5 days.",
+}
+QUESTION = "What is the current refund window?"
 
 
-def rerank_score(doc):
-    score = 0
-    if "refund" in doc["text"].lower():
-        score += 1
-    if "current" in doc["text"].lower():
-        score += 2
-    return score
+def first_stage(k):
+    """Fast retrieval by word overlap: the candidate set."""
+    return [(round(score, 2), name) for score, name in
+            retrieve(QUESTION, documents, k=k, text=documents.get)]
 
 
-def show(title, docs):
+def rerank(candidates):
+    """Slow, task-aware scoring: the model reads question and passage."""
+    scored = []
+    for _, name in candidates:
+        prompt = f"Question: {QUESTION}\nPassage: {documents[name]}"
+        reply = judge.generate([{"role": "user", "content": prompt}])
+        scored.append((int(reply["answer"]), name))
+    return sorted(scored, reverse=True)
+
+
+def show(title, ranking, unit=""):
     print(title)
-    for rank, doc in enumerate(docs, start=1):
-        print(f"{rank}. {doc['id']}")
+    for rank, (score, name) in enumerate(ranking, start=1):
+        print(f"  {rank}. {name:<9} {score}{unit}")
 
 
-retrieved = [history, current, shipping]
-show("BEFORE:", retrieved)
-show("AFTER:", sorted(retrieved, key=rerank_score, reverse=True))
+candidates = first_stage(k=3)
+show("FIRST STAGE (word overlap):", candidates)
+show("RERANKED (model):", rerank(candidates), "/10")
 
-retrieved = [history, shipping]
-show("ZERO RECALL, AFTER:", sorted(retrieved, key=rerank_score,
-                                  reverse=True))
+candidates = first_stage(k=1)
+show("FIRST STAGE WITH k=1:", candidates)
+show("RERANKED (model):", rerank(candidates), "/10")
