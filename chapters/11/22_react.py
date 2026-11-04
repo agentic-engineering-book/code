@@ -1,51 +1,48 @@
 """Experiment 22 (Chapter 11): ReAct as feedback control."""
-from agentic import PolicyModel, ScriptedModel, calculator, execute
+import textwrap
 
-GOAL = "Find the current value of X, then calculate X * 1.15."
-ENVIRONMENT = {"X": 80}
+from agentic import calculator, execute
+from agentic.live import CALCULATOR_SCHEMA, OpenAIModel, schema
 
-
-def lookup(key):
-    return ENVIRONMENT[key]
-
-
-TOOLS = {"lookup": lookup, "calculator": calculator}
+GOAL = "Find the current price of item A17, then add 15% VAT."
+PRICES = {"A17": 80}  # the environment: only a lookup can reveal it
 
 
-def react_policy(messages):
-    """Stand-in model: its next decision depends on what it has observed."""
-    seen = [m["content"] for m in messages if m["role"] == "tool"]
-    if not seen:
-        return {"action": "lookup", "arguments": {"key": "X"}}
-    if len(seen) == 1:
-        expression = f"{seen[0]} * 1.15"
-        return {"action": "calculator",
-                "arguments": {"expression": expression}}
-    return {"done": True, "answer": seen[-1]}
+def lookup_price(item):
+    return PRICES[item]
+
+
+TOOLS = {"lookup_price": lookup_price, "calculator": calculator}
+SCHEMAS = [schema("lookup_price", "Look up the current price of an item.",
+                  item="the item code"), CALCULATOR_SCHEMA]
+
+
+def show(label, text):
+    print(textwrap.fill(" ".join(text.split()), 76,
+                        initial_indent=f"STEP {label} ",
+                        subsequent_indent="    "))
 
 
 def run(model, feed_back=True, max_steps=4):
     messages = [{"role": "user", "content": GOAL}]
     for step in range(1, max_steps + 1):
         decision = model.generate(messages)
-        messages.append({"role": "assistant", "content": decision})
         if decision.get("done"):
-            print(f"STEP {step} DONE: {decision['answer']}")
-            return decision["answer"]
+            return show(f"{step} DONE:", decision["answer"])
         observation = execute(decision, tools=TOOLS)
         print(f"STEP {step} ACTION: {decision['action']}"
               f"({decision['arguments']}) OBSERVATION: {observation}")
         if feed_back:
-            messages.append({"role": "tool", "content": str(observation)})
-    print(f"STOPPED: step limit after {model.calls} model calls")
-    return None
+            messages += [{"role": "assistant", "content": decision},
+                         {"role": "tool", "content": str(observation)}]
+    print(f"STOPPED: step limit after {len(model.calls)} model calls")
 
 
-print("== One-shot: no tools, so X must be guessed (here X = 100) ==")
-run(ScriptedModel([{"done": True, "answer": "115.0"}]))
+print("== One-shot: no tools, so the price is not observable ==")
+run(OpenAIModel(system="Answer in at most two sentences."))
 
 print("== ReAct: each observation is appended to the messages ==")
-run(PolicyModel(react_policy))
+run(OpenAIModel(tools=SCHEMAS))
 
 print("== BREAK: the lookup runs but its result is never fed back ==")
-run(PolicyModel(react_policy), feed_back=False)
+run(OpenAIModel(tools=SCHEMAS), feed_back=False)

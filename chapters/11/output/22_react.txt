@@ -1,0 +1,16 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-04
+== One-shot: no tools, so the price is not observable ==
+STEP 1 DONE: I can do that, but I don’t have access to a live catalog or
+    pricing source here. If you share the current price of item A17, I’ll
+    add 15% VAT right away.
+== ReAct: each observation is appended to the messages ==
+STEP 1 ACTION: lookup_price({'item': 'A17'}) OBSERVATION: 80
+STEP 2 ACTION: calculator({'expression': '80*1.15'}) OBSERVATION: 92.0
+STEP 3 DONE: Item A17 currently costs 80. Adding 15% VAT gives a total of
+    92.0.
+== BREAK: the lookup runs but its result is never fed back ==
+STEP 1 ACTION: lookup_price({'item': 'A17'}) OBSERVATION: 80
+STEP 2 ACTION: lookup_price({'item': 'A17'}) OBSERVATION: 80
+STEP 3 ACTION: lookup_price({'item': 'A17'}) OBSERVATION: 80
+STEP 4 ACTION: lookup_price({'item': 'A17'}) OBSERVATION: 80
+STOPPED: step limit after 4 model calls

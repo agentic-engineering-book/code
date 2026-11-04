@@ -1,12 +1,10 @@
-# Chapter 11 experiments
+# Chapter 11: ReAct
 
-Run from the repository root, for example:
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. The experiment calls a real model (about eight requests, a fraction of a cent), so your output will differ from the recorded run in [output/](output/). Set `BOOK_MODEL` to use another model.
 
-    PYTHONPATH=. python chapters/11/22_react.py
+- `22_react.py` - Experiment 22: ReAct as feedback control. The same price-plus-VAT task without tools, in the ReAct loop, and with observations never fed back. `python chapters/11/22_react.py`
 
-(On Windows PowerShell: `$env:PYTHONPATH='.'; python chapters/11/22_react.py`.)
-
-- `22_react.py` - ReAct as feedback control: one-shot guess, ReAct loop, and the same loop with the observation disconnected
+Kernel modules used: `agentic/tools.py`, `agentic/live.py`.
 
 ## Framework companions
 
