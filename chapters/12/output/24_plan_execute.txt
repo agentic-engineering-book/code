@@ -1,0 +1,14 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-04
+reactive: success=True plans=0 actions=3 wasted=1
+    take_route {'route': 'A'} -> Route A is blocked
+    take_route {'route': 'B'} -> on Route B
+    continue_to {'destination': 'D'} -> arrived at D
+plan-first: success=False plans=1 actions=4 wasted=4
+    take_route {'route': 'A'} -> Route A is blocked
+    take_route {'route': 'A'} -> Route A is blocked
+    take_route {'route': 'A'} -> Route A is blocked
+    take_route {'route': 'A'} -> Route A is blocked
+plan+replan: success=True plans=2 actions=3 wasted=1
+    take_route {'route': 'A'} -> Route A is blocked
+    take_route {'route': 'B'} -> on Route B
+    continue_to {'destination': 'D'} -> arrived at D

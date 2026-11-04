@@ -1,0 +1,9 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-04
+GOAL: ...then compute the total.
+  3 valid steps; last: total = 3*10 + 2*7
+  3 valid steps; last: total = 3 * 10 + 2 * 7
+  3 valid steps; last: total = 3 * 10 + 2 * 7
+GOAL: ...then compute the total in US dollars.
+  4 valid steps; last: total_usd = 44 * 1.0
+  3 valid steps; last: total_eur = 3 * 10 + 2 * 7
+  4 valid steps; last: total_usd = 44

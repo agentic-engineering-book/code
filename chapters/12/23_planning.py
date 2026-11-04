@@ -1,7 +1,10 @@
 """Experiment 23 (Chapter 12): Planning."""
-from agentic import calculator
+import json
 
-PRICES = {"A": 10, "B": 7}
+from agentic import calculator
+from agentic.live import OpenAIModel
+
+PRICES = {"A": 10, "B": 7}  # unit prices in euros
 
 
 def lookup_price(product):
@@ -10,17 +13,12 @@ def lookup_price(product):
 
 TOOLS = {"lookup_price": lookup_price, "calculator": calculator}
 
-# The goal: price 3 units of A and 2 units of B, then compute the total.
-PLAN = [
-    {"tool": "lookup_price", "args": {"product": "A"}, "save_as": "A"},
-    {"tool": "lookup_price", "args": {"product": "B"}, "save_as": "B"},
-    {"tool": "calculator", "args": {"expression": "3*{A} + 2*{B}"},
-     "save_as": "total"},
-]
-BAD_PLAN = PLAN[:2] + [
-    {"tool": "currency_converter", "args": {"amount": "{A}"},
-     "save_as": "A_usd"},
-] + PLAN[2:]
+planner = OpenAIModel(system="""You are a planner. Tools available:
+- lookup_price(product): the unit price of a product, in euros
+- calculator(expression): evaluate arithmetic
+Reply with a JSON list of steps only, no prose. Each step is
+{"tool": ..., "args": {...}, "save_as": ...}; write {name} inside an
+argument to use the result an earlier step saved as name.""")
 
 
 def validate(plan, tools):
@@ -33,21 +31,26 @@ def validate(plan, tools):
 
 
 def execute_plan(plan, tools):
+    """Run each step; placeholders such as {price_a} name dependencies."""
     state = {}
     for step in plan:
-        # Placeholders such as {A} make each dependency explicit.
-        arguments = {name: value.format(**state)
+        arguments = {name: str(value).format(**state)
                      for name, value in step["args"].items()}
-        result = tools[step["tool"]](**arguments)
-        state[step["save_as"]] = result
-        print(f"{step['tool']}({arguments}) -> {step['save_as']} = {result}")
-    return state
+        state[step["save_as"]] = tools[step["tool"]](**arguments)
+    return step, arguments
 
 
-for name, plan in [("plan", PLAN), ("bad plan", BAD_PLAN)]:
-    problems = validate(plan, TOOLS)
-    if problems:
-        print(f"{name}: rejected before execution: {problems}")
-        continue
-    print(f"{name}: valid, executing")
-    print(f"total = {execute_plan(plan, TOOLS)['total']}")
+for goal in ["the total.", "the total in US dollars."]:
+    print("GOAL: ...then compute " + goal)
+    request = ("Find the price of 3 units of product A and 2 units of "
+               "product B, then compute " + goal)
+    for trial in range(3):
+        reply = planner.generate([{"role": "user", "content": request}])
+        plan = json.loads(reply["answer"])
+        problems = validate(plan, TOOLS)
+        if problems:
+            print("  rejected before execution:", problems)
+            continue
+        last, arguments = execute_plan(plan, TOOLS)
+        print(f"  {len(plan)} valid steps; last: {last['save_as']} = "
+              f"{arguments['expression']}")

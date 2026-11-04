@@ -1,13 +1,11 @@
-# Chapter 12 experiments
+# Chapter 12: Planning
 
-Run from the repository root, for example:
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. Both experiments call a real model (about fifteen requests in all, a fraction of a cent), so your output will differ from the recorded runs in [output/](output/). Set `BOOK_MODEL` to use another model.
 
-    PYTHONPATH=. python chapters/12/23_planning.py
+- `23_planning.py` - Experiment 23: Planning. The model writes JSON plans for a euro total and a dollar total; each plan is validated and executed. `python chapters/12/23_planning.py`
+- `24_plan_execute.py` - Experiment 24: Plan, execute, replan. Reactive, plan-first and plan-plus-replan controllers meet a blocked route. `python chapters/12/24_plan_execute.py`
 
-(On Windows PowerShell: `$env:PYTHONPATH='.'; python chapters/12/23_planning.py`.)
-
-- `23_planning.py` - a dependency-explicit plan, validated against available tools, then executed
-- `24_plan_execute.py` - reactive, fixed plan-first, and plan-plus-replan controllers on a blocked route
+Kernel modules used: `agentic/tools.py`, `agentic/live.py`.
 
 ## Framework companions
 
