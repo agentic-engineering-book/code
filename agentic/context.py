@@ -1,4 +1,4 @@
-"""Context selection, retrieval and compression helpers (Chapters 6, 7, 9)."""
+"""Context selection and retrieval helpers (Chapters 6 and 7)."""
 import math
 import re
 
@@ -40,8 +40,3 @@ def retrieve(query, documents, k=3, text=lambda doc: doc):
               for doc in documents]
     scored.sort(key=lambda pair: pair[0], reverse=True)
     return scored[:k]
-
-
-def compress(context, keep):
-    """Keep only the fields declared necessary for the next phase."""
-    return {key: value for key, value in context.items() if key in keep}

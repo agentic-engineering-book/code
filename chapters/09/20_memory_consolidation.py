@@ -1,43 +1,42 @@
 """Experiment 20 (Chapter 9): Memory consolidation."""
+import textwrap
+
+from agentic.live import OpenAIModel
+
+PLAIN = ("Write one durable fact about the user's preferences, based on "
+         "these past episodes. Reply with the fact only.")
+GUARDED = PLAIN + (" If fewer than two episodes support it, or the "
+                   "episodes conflict, reply NONE.")
 MIN_EPISODES = 2
 
+EPISODES = {
+    "CONSISTENT": ["User requested a concise answer.",
+                   "User asked to shorten the explanation.",
+                   "User selected the concise version."],
+    "CONFLICTING": ["User requested a concise answer.",
+                    "User requested a detailed technical explanation."],
+    "ONE EPISODE": ["User requested a concise answer."],
+}
 
-def preference(episode):
-    text = episode.lower()
-    if "concise" in text or "shorten" in text:
-        return "concise"
-    if "detailed" in text:
-        return "detailed"
-    return None
-
-
-def blind_consolidate(episodes):
-    return "User prefers concise responses."
+plain, guarded = OpenAIModel(system=PLAIN), OpenAIModel(system=GUARDED)
 
 
-def consolidate(episodes):
-    """Write a fact only with enough agreeing, non-conflicting evidence."""
-    votes = [preference(e) for e in episodes if preference(e)]
-    if len(set(votes)) > 1:
-        counts = {v: votes.count(v) for v in sorted(set(votes))}
-        return f"No fact: conflicting episodes {counts}"
-    if len(votes) < MIN_EPISODES:
-        return "No fact: not enough evidence"
-    return f"User prefers {votes[0]} responses."
+def consolidate(model, episodes):
+    reply = model.generate([{"role": "user", "content": "\n".join(episodes)}])
+    return reply["answer"]
 
 
-consistent = [
-    "User requested a concise answer.",
-    "User asked to shorten the explanation.",
-    "User selected the concise version.",
-]
-conflicting = [
-    "User requested a concise answer.",
-    "User requested a detailed technical explanation.",
-]
+def checked(episodes):
+    """The threshold is counted in code; the model judges the conflict."""
+    if len(episodes) < MIN_EPISODES:
+        return "NONE (not enough episodes)"
+    return consolidate(guarded, episodes)
 
-for label, episodes in [("CONSISTENT", consistent),
-                        ("CONFLICTING", conflicting)]:
+
+for label, episodes in EPISODES.items():
     print(label)
-    print("  blind:  ", blind_consolidate(episodes))
-    print("  guarded:", consolidate(episodes))
+    for name, result in [("plain", consolidate(plain, episodes)),
+                         ("guarded", consolidate(guarded, episodes)),
+                         ("checked", checked(episodes))]:
+        print(textwrap.fill(result, 76, initial_indent=f"  {name:<8} ",
+                            subsequent_indent=" " * 11))

@@ -1,0 +1,14 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-04
+CONSISTENT
+  plain    The user prefers concise answers.
+  guarded  User prefers concise answers.
+  checked  User prefers concise answers.
+CONFLICTING
+  plain    The user prefers concise answers unless they explicitly ask for a
+           detailed technical explanation.
+  guarded  NONE
+  checked  NONE
+ONE EPISODE
+  plain    User prefers concise answers.
+  guarded  User prefers concise answers.
+  checked  NONE (not enough episodes)
