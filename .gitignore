@@ -12,3 +12,6 @@ dist/
 *.egg-info/
 .venv*/
 .framework-run-results.txt
+
+# agentic search: saved sessions (cached pages, indexes, conversations)
+case_studies/agentic_search/sessions/
