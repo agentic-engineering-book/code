@@ -1,46 +1,25 @@
 """Experiment 5 (Chapter 3): The smallest agent loop."""
-from agentic.model import PolicyModel
+from agentic.live import CALCULATOR_SCHEMA, OpenAIModel
 from agentic.tools import execute
 
+model = OpenAIModel(tools=[CALCULATOR_SCHEMA])
 
-def policy(messages):
-    """Stand-in for a model: multiply, add 6 to what it observed, finish.
-    It decides from the observations in its context, nothing else."""
-    observations = [m["content"] for m in messages if m["role"] == "tool"]
-    if not observations:
-        expression = "12*7"
-    elif len(observations) == 1:
-        expression = observations[-1] + "+6"
-    else:
-        return {"done": True,
-                "answer": f"The answer is {observations[-1]}."}
-    return {"done": False,
-            "action": "calculator",
-            "arguments": {"expression": expression}}
-
-
-model = PolicyModel(policy)
-
-messages = [
-    {"role": "user",
-     "content": "Multiply 12 by 7, then add 6."}
-]
+goal = ("Multiply 27611 by 2033. If the result is even, add 6; "
+        "otherwise subtract 6.")
+messages = [{"role": "user", "content": goal}]
 
 for step in range(1, 11):
     decision = model.generate(messages)
+    messages.append({"role": "assistant", "content": decision})
     print("STEP", step)
 
-    if decision["done"]:
+    if decision.get("done"):
         print("DONE:", decision["answer"])
         break
 
-    expression = decision["arguments"]["expression"]
-    print(f'ACTION: calculator("{expression}")')
+    print("ACTION:", decision["action"], decision["arguments"])
     observation = execute(decision)
     print("OBSERVATION:", observation)
     print()
 
-    messages.append({
-        "role": "tool",
-        "content": str(observation)
-    })
+    messages.append({"role": "tool", "content": str(observation)})

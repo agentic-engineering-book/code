@@ -1,0 +1,6 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-04
+RUN 1: STOPPED by the step limit after 4 checks
+RUN 2: STOPPED by the step limit after 4 checks
+RUN 3: STOPPED by the step limit after 4 checks
+RUN 4: STOPPED by the step limit after 4 checks
+RUN 5: STOPPED by the step limit after 4 checks
