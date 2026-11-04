@@ -7,6 +7,7 @@ name = "agentic-engineering-experiments"
 version = "0.2.0"
 description = "Companion code for Agentic Engineering from First Principles"
 requires-python = ">=3.10"
+dependencies = ["openai>=2.0"]
 
 [tool.setuptools]
 packages = ["agentic"]

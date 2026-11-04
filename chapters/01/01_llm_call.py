@@ -1,16 +1,13 @@
 """Experiment 1 (Chapter 1): A model call."""
-from agentic.model import ScriptedModel
+from agentic.live import OpenAIModel
 
-model = ScriptedModel([
-    "37 x 42 is approximately 1,500."
-])
+model = OpenAIModel()
 
-messages = [
-    {"role": "user", "content": "What is 37 * 42?"}
-]
+question = "What is 27611 * 2033? Reply with the number only."
+messages = [{"role": "user", "content": question}]
 
-answer = model.generate(messages)
+answer = model.generate(messages)["answer"]
 
 print("MODEL:", answer)
-print("GROUND TRUTH:", 37 * 42)
-print("CORRECT:", str(37 * 42) in answer)
+print("GROUND TRUTH:", 27611 * 2033)
+print("CORRECT:", str(27611 * 2033) in answer.replace(",", ""))

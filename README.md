@@ -9,16 +9,23 @@ chapter, together with its real output.
 ```bash
 python -m pip install -e .          # the agentic kernel (Python 3.10+)
 python -m pip install -r requirements.txt
+# set OPENAI_API_KEY in your environment (never commit it)
 python chapters/01/01_llm_call.py
 python chapters/03/05_agent_loop.py
 python -m pytest
 ```
 
-The experiments are deterministic. `ScriptedModel` replays fixed responses and
-`PolicyModel` decides from the messages it receives; both stand in for a real
-model so the mechanism, not model variance, is what you observe. They do not
-measure any real model. To use one, give the loop an object with the same
-`generate(messages)` method.
+Experiments that import `agentic.live` call a real model (Chapter 1 so far).
+They make paid requests of a fraction of a cent, and their output changes from
+run to run, so the book prints one recorded run, kept in the chapter's
+`output/` folder. `python tools/record_output.py chapters/01/01_llm_call.py`
+records a new one. Set `BOOK_MODEL` to use another model; the tests run these
+experiments only when `BOOK_LIVE_TESTS=1`.
+
+The other experiments are deterministic. `ScriptedModel` replays fixed
+responses and `PolicyModel` decides from the messages it receives; both stand
+in for a real model so the mechanism, not model variance, is what you observe.
+They do not measure any real model.
 
 ## Live-model experiments
 

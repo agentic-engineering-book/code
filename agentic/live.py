@@ -5,13 +5,19 @@ including OpenAI and local servers such as Ollama
 (client=OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")).
 """
 import json
+import os
 import time
+
+# The pinned snapshot the book's examples were run with. Set BOOK_MODEL to
+# run them with another model, for example a local one.
+MODEL = os.environ.get("BOOK_MODEL", "gpt-5.4-mini-2026-03-17")
 
 
 class OpenAIModel:
     """A real model with the same generate(messages) as the stand-ins."""
 
-    def __init__(self, model, tools=(), system=None, client=None, **settings):
+    def __init__(self, model=MODEL, tools=(), system=None, client=None,
+                 **settings):
         if client is None:
             from openai import OpenAI  # optional dependency
             client = OpenAI()
