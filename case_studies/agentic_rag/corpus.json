@@ -14,7 +14,7 @@
   "chapter": null,
   "edition": "2026-10",
   "title": "About the book (current edition, October 2026)",
-  "text": "Agentic Engineering from First Principles has 30 chapters in six parts, a case study, and 59 executable experiments. The complete edition of October 2026 has 529 pages and includes a briefing for executives.",
+  "text": "Agentic Engineering from First Principles has 30 chapters in six parts, a case study, and 59 executable experiments. The complete edition of October 2026 has 529 pages and includes a briefing for executives. Its author is Christiaan M. van der Walt, PhD, and its website is agentic-engineering-book.com.",
   "trusted": true
  },
  {
@@ -59,7 +59,7 @@
   "kind": "takeaways",
   "chapter": 1,
   "title": "Chapter 1, From an LLM to an Agent: key takeaways",
-  "text": "An LLM call is not, by itself, an agent. A tool is a capability; software still executes it. The critical transition: Decision $ $ Action $ $ Observation $ $ Next decision. Agent = Model + Context + Actions + State + Control. System quality depends on both the model and the harness around it. itemize",
+  "text": "An LLM call is not, by itself, an agent. A tool is a capability; software still executes it. The critical transition: Decision $ $ Action $ $ Observation $ $ Next decision. Agent = Model + Context + Actions + State + Control. System quality depends on both the model and the harness around it.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -104,7 +104,7 @@
   "kind": "takeaways",
   "chapter": 2,
   "title": "Chapter 2, Structured Decisions: key takeaways",
-  "text": "Natural language is useful for humans but brittle as a software control interface. Parseable output is not necessarily valid output. Schema, semantic and capability validity, and authorization, are different concerns. A model output remains a proposal until deterministic software accepts it. Strict structured generation guarantees shape, not correctness or authority. itemize",
+  "text": "Natural language is useful for humans but brittle as a software control interface. Parseable output is not necessarily valid output. Schema, semantic and capability validity, and authorization, are different concerns. A model output remains a proposal until deterministic software accepts it. Strict structured generation guarantees shape, not correctness or authority.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -149,7 +149,7 @@
   "kind": "takeaways",
   "chapter": 3,
   "title": "Chapter 3, The Agent Loop: key takeaways",
-  "text": "An agent loop feeds action consequences back into later decisions. State is what lets a later decision differ because of an earlier event. Valid individual steps can still form a defective trajectory. Stopping conditions are part of control, not optional cleanup. The harness owns execution, validation, state updates, and termination. itemize",
+  "text": "An agent loop feeds action consequences back into later decisions. State is what lets a later decision differ because of an earlier event. Valid individual steps can still form a defective trajectory. Stopping conditions are part of control, not optional cleanup. The harness owns execution, validation, state updates, and termination.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -194,7 +194,7 @@
   "kind": "takeaways",
   "chapter": 4,
   "title": "Chapter 4, Workflows vs Agents: key takeaways",
-  "text": "A workflow substantially predetermines the control path; an agent delegates meaningful runtime control decisions. Runtime discretion buys adaptability but adds cost, latency, variance, and failure trajectories. Simple stable conditions should usually remain deterministic. Hybrids concentrate model reasoning where semantic uncertainty actually exists. Use the least autonomy necessary for the task. itemize",
+  "text": "A workflow substantially predetermines the control path; an agent delegates meaningful runtime control decisions. Runtime discretion buys adaptability but adds cost, latency, variance, and failure trajectories. Simple stable conditions should usually remain deterministic. Hybrids concentrate model reasoning where semantic uncertainty actually exists. Use the least autonomy necessary for the task.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -230,7 +230,7 @@
   "kind": "takeaways",
   "chapter": 5,
   "title": "Chapter 5, Tools: key takeaways",
-  "text": "A tool's executable capability and its model-facing description are different objects. Tool use is selection plus correct invocation. Tool descriptions and schemas shape model behaviour. A correct decision can still meet an execution failure; return it as a structured observation. Expanding the action space also expands the risk surface. itemize",
+  "text": "A tool's executable capability and its model-facing description are different objects. Tool use is selection plus correct invocation. Tool descriptions and schemas shape model behaviour. A correct decision can still meet an execution failure; return it as a structured observation. Expanding the action space also expands the risk surface.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -284,7 +284,7 @@
   "kind": "takeaways",
   "chapter": 6,
   "title": "Chapter 6, Context Engineering: key takeaways",
-  "text": "Information can exist in the system without being visible to the model. Context engineering is broader than prompt wording. Context must be sufficient before it can be considered efficient. Selection policies can cause failures independently of model reasoning. Ordering, provenance, trust, and budget are part of context design. itemize",
+  "text": "Information can exist in the system without being visible to the model. Context engineering is broader than prompt wording. Context must be sufficient before it can be considered efficient. Selection policies can cause failures independently of model reasoning. Ordering, provenance, trust, and budget are part of context design.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -329,7 +329,7 @@
   "kind": "takeaways",
   "chapter": 7,
   "title": "Chapter 7, Retrieval and RAG: key takeaways",
-  "text": "Retrieval generates candidate evidence; it does not generate the final answer. RAG couples retrieval, context construction, and generation. Similarity does not establish relevance, authority, currency, or truth. Reranking cannot recover a relevant item absent from the candidate set. Measure retrieval failures and generation failures separately. Citations should support claims, not merely accompany them. itemize",
+  "text": "Retrieval generates candidate evidence; it does not generate the final answer. RAG couples retrieval, context construction, and generation. Similarity does not establish relevance, authority, currency, or truth. Reranking cannot recover a relevant item absent from the candidate set. Measure retrieval failures and generation failures separately. Citations should support claims, not merely accompany them.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -383,7 +383,7 @@
   "kind": "takeaways",
   "chapter": 8,
   "title": "Chapter 8, Memory: key takeaways",
-  "text": "Working memory preserves task state inside a trajectory. Episodic memory records events; semantic memory records durable facts; procedural memory records reusable methods. Persistence requires an explicit write policy. Recall is context selection over persisted state. Forgetting, expiry, and supersession are useful memory operations. The memory write policy is also a security boundary. itemize",
+  "text": "Working memory preserves task state inside a trajectory. Episodic memory records events; semantic memory records durable facts; procedural memory records reusable methods. Persistence requires an explicit write policy. Recall is context selection over persisted state. Forgetting, expiry, and supersession are useful memory operations. The memory write policy is also a security boundary.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -437,7 +437,7 @@
   "kind": "takeaways",
   "chapter": 9,
   "title": "Chapter 9, Context Compression: key takeaways",
-  "text": "Compression is a lossy transformation; evaluate it by downstream utility. Critical constraints, permissions, provenance, and uncertainty may need explicit preservation. Shorter context is not automatically better context. Compression and memory persistence solve different problems. Consolidation creates reusable abstractions from multiple experiences. Recoverable compression can preserve access to original evidence. itemize",
+  "text": "Compression is a lossy transformation; evaluate it by downstream utility. Critical constraints, permissions, provenance, and uncertainty may need explicit preservation. Shorter context is not automatically better context. Compression and memory persistence solve different problems. Consolidation creates reusable abstractions from multiple experiences. Recoverable compression can preserve access to original evidence.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -482,7 +482,7 @@
   "kind": "takeaways",
   "chapter": 10,
   "title": "Chapter 10, Model Context Protocol (MCP): key takeaways",
-  "text": "MCP standardizes an integration boundary; it is not itself an agent. MCP is JSON-RPC 2.0 with an initialize handshake, capability negotiation, and stdio or Streamable HTTP transports. Servers offer tools, resources, and prompts; clients may offer roots, sampling, and elicitation. A failed tool returns isError: true; an unprocessable request returns a JSON-RPC error. Protocol authorization governs access to a server; per-action permission remains host policy. Tool definitions are untrusted input: they can be poisoned, changed, or collide across servers. itemize",
+  "text": "MCP standardizes an integration boundary; it is not itself an agent. MCP is JSON-RPC 2.0 with an initialize handshake, capability negotiation, and stdio or Streamable HTTP transports. Servers offer tools, resources, and prompts; clients may offer roots, sampling, and elicitation. A failed tool returns isError: true; an unprocessable request returns a JSON-RPC error. Protocol authorization governs access to a server; per-action permission remains host policy. Tool definitions are untrusted input: they can be poisoned, changed, or collide across servers.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -518,7 +518,7 @@
   "kind": "takeaways",
   "chapter": 11,
   "title": "Chapter 11, ReAct: key takeaways",
-  "text": "ReAct alternates decisions, actions, and observations. Its value comes from new feedback that can change later decisions. The harness needs observable actions, observations, and state transitions; reasoning text, whether ReAct thoughts or hidden reasoning, is optional rather than an interface. A structurally valid loop can still ignore evidence or fail to make progress. Iterative reasoning adds model calls, cost, latency, and possible failure trajectories. Reasoning architectures should be tested against simpler baselines. itemize",
+  "text": "ReAct alternates decisions, actions, and observations. Its value comes from new feedback that can change later decisions. The harness needs observable actions, observations, and state transitions; reasoning text, whether ReAct thoughts or hidden reasoning, is optional rather than an interface. A structurally valid loop can still ignore evidence or fail to make progress. Iterative reasoning adds model calls, cost, latency, and possible failure trajectories. Reasoning architectures should be tested against simpler baselines.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -554,7 +554,7 @@
   "kind": "takeaways",
   "chapter": 12,
   "title": "Chapter 12, Planning: key takeaways",
-  "text": "Planning creates an intermediate representation of intended future work. Plans can expose dependencies, coverage, and opportunities for coordination. Validate a plan against known capabilities and constraints. Execution tests the assumptions embedded in a plan. Replanning needs an explicit trigger. Measure planning quality and execution quality separately. More planning is not automatically better. itemize",
+  "text": "Planning creates an intermediate representation of intended future work. Plans can expose dependencies, coverage, and opportunities for coordination. Validate a plan against known capabilities and constraints. Execution tests the assumptions embedded in a plan. Replanning needs an explicit trigger. Measure planning quality and execution quality separately. More planning is not automatically better.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -599,7 +599,7 @@
   "kind": "takeaways",
   "chapter": 13,
   "title": "Chapter 13, Reflection: key takeaways",
-  "text": "Reflection adds a critic and a revision stage; it does not guarantee improvement. A critic is fallible: measure its precision and recall. Critique proposes a defect; verification tests whether it is real. Reflection can regress already-correct outputs. Gate it. Reflection loops need budgets, stopping rules, and resource-equivalent baselines. itemize",
+  "text": "Reflection adds a critic and a revision stage; it does not guarantee improvement. A critic is fallible: measure its precision and recall. Critique proposes a defect; verification tests whether it is real. Reflection can regress already-correct outputs. Gate it. Reflection loops need budgets, stopping rules, and resource-equivalent baselines.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -635,7 +635,7 @@
   "kind": "takeaways",
   "chapter": 14,
   "title": "Chapter 14, Search and Tree Reasoning: key takeaways",
-  "text": "Search delays commitment by keeping several candidate paths open. It needs a state, a generator, an evaluator and a search policy, bounded by a budget. More candidates help only if viable alternatives are generated and can be evaluated. Pruning saves resources but can discard the eventual best branch. Best-of-N searches answers; trees search intermediate states. Prefer external verification; compare with simpler baselines. itemize",
+  "text": "Search delays commitment by keeping several candidate paths open. It needs a state, a generator, an evaluator and a search policy, bounded by a budget. More candidates help only if viable alternatives are generated and can be evaluated. Pruning saves resources but can discard the eventual best branch. Best-of-N searches answers; trees search intermediate states. Prefer external verification; compare with simpler baselines.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -671,7 +671,7 @@
   "kind": "takeaways",
   "chapter": 15,
   "title": "Chapter 15, Routing: key takeaways",
-  "text": "Routing allocates tasks to capabilities, workflows, models, or control paths. Routing errors can have asymmetric cost and risk. Router accuracy and end-to-end system quality are different metrics. Model routing trades quality against cost and latency. Cascades replace perfect prediction with failure detection and escalation. Compare with simple baselines: always-strong, deterministic rules. itemize",
+  "text": "Routing allocates tasks to capabilities, workflows, models, or control paths. Routing errors can have asymmetric cost and risk. Router accuracy and end-to-end system quality are different metrics. Model routing trades quality against cost and latency. Cascades replace perfect prediction with failure detection and escalation. Compare with simple baselines: always-strong, deterministic rules.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -716,7 +716,7 @@
   "kind": "takeaways",
   "chapter": 16,
   "title": "Chapter 16, Parallelism: key takeaways",
-  "text": "Parallelism is valid only where dependencies permit it. Concurrency can cut latency without reducing total work. Critical-path and straggler latency matter. Fan-out creates branches; fan-in defines how they become a result. Evaluate aggregation separately. Shared writes and side effects need stronger coordination. Parallel designs need limits, failure policies, cancellation and budgets. itemize",
+  "text": "Parallelism is valid only where dependencies permit it. Concurrency can cut latency without reducing total work. Critical-path and straggler latency matter. Fan-out creates branches; fan-in defines how they become a result. Evaluate aggregation separately. Shared writes and side effects need stronger coordination. Parallel designs need limits, failure policies, cancellation and budgets.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -761,7 +761,7 @@
   "kind": "takeaways",
   "chapter": 17,
   "title": "Chapter 17, An Agent Is Just Another Tool: key takeaways",
-  "text": "An agent can be exposed through the same invocation contract as a tool. Agent-tools differ operationally: their path, cost, latency and failures can vary. Delegated autonomy should include explicit budgets and permissions. Structured failure allows the parent to retain control. Delegation is also context engineering and a security boundary. Nested traces should expose the work hidden behind parent calls. itemize",
+  "text": "An agent can be exposed through the same invocation contract as a tool. Agent-tools differ operationally: their path, cost, latency and failures can vary. Delegated autonomy should include explicit budgets and permissions. Structured failure allows the parent to retain control. Delegation is also context engineering and a security boundary. Nested traces should expose the work hidden behind parent calls.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -797,7 +797,7 @@
   "kind": "takeaways",
   "chapter": 18,
   "title": "Chapter 18, Supervisor and Workers: key takeaways",
-  "text": "Supervision combines decomposition, assignment, scheduling, monitoring, integration and recovery. Worker competence cannot compensate for every supervisor error. Shared task state should preserve continuity without broadcasting unnecessary context. Hierarchy reduces coordination span by introducing abstraction boundaries, and those boundaries can lose critical information. Budgets, permissions, delegation depth and traces must stay enforceable across the hierarchy. itemize",
+  "text": "Supervision combines decomposition, assignment, scheduling, monitoring, integration and recovery. Worker competence cannot compensate for every supervisor error. Shared task state should preserve continuity without broadcasting unnecessary context. Hierarchy reduces coordination span by introducing abstraction boundaries, and those boundaries can lose critical information. Budgets, permissions, delegation depth and traces must stay enforceable across the hierarchy.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -842,7 +842,7 @@
   "kind": "takeaways",
   "chapter": 19,
   "title": "Chapter 19, Debate and Voting: key takeaways",
-  "text": "Voting aggregates positions; it does not establish truth. Consensus is valuable only to the extent that opinions contain useful independence. Shared evidence and shared blind spots can create false consensus. Debate can expose errors, but can also reward persuasion and create anchoring. A judge is another fallible evaluator; ground it where possible. Measure error correlation, Oracle@N, selection accuracy, regression, cost and latency. itemize",
+  "text": "Voting aggregates positions; it does not establish truth. Consensus is valuable only to the extent that opinions contain useful independence. Shared evidence and shared blind spots can create false consensus. Debate can expose errors, but can also reward persuasion and create anchoring. A judge is another fallible evaluator; ground it where possible. Measure error correlation, Oracle@N, selection accuracy, regression, cost and latency.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -887,7 +887,7 @@
   "kind": "takeaways",
   "chapter": 20,
   "title": "Chapter 20, Shared State: key takeaways",
-  "text": "Shared state and model context are different abstractions. A blackboard lets agents coordinate indirectly through persistent task state. Structured state should preserve provenance and uncertainty. Last-write-wins is not a truth-resolution policy. Versioning detects stale computations; task claims need concurrency control. Write permissions and validation make shared state a security boundary. itemize",
+  "text": "Shared state and model context are different abstractions. A blackboard lets agents coordinate indirectly through persistent task state. Structured state should preserve provenance and uncertainty. Last-write-wins is not a truth-resolution policy. Versioning detects stale computations; task claims need concurrency control. Write permissions and validation make shared state a security boundary.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -923,7 +923,7 @@
   "kind": "takeaways",
   "chapter": 21,
   "title": "Chapter 21, Agent-to-Agent Communication: key takeaways",
-  "text": "Agent-to-agent communication crosses an explicit agent/service boundary. Discovery describes capabilities; authorization decides whether they may be used. Tasks need lifecycle semantics; artifacts need structured, versioned contracts. Shared syntax and schema do not guarantee shared semantics. Delegation does not automatically transfer trust or authority. Remote outputs are untrusted inputs until validated at the receiving boundary. itemize",
+  "text": "Agent-to-agent communication crosses an explicit agent/service boundary. Discovery describes capabilities; authorization decides whether they may be used. Tasks need lifecycle semantics; artifacts need structured, versioned contracts. Shared syntax and schema do not guarantee shared semantics. Delegation does not automatically transfer trust or authority. Remote outputs are untrusted inputs until validated at the receiving boundary.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -959,7 +959,7 @@
   "kind": "takeaways",
   "chapter": 22,
   "title": "Chapter 22, Evaluation: key takeaways",
-  "text": "Begin with the engineering question being tested. Outcome, trajectory, component, resource and control are distinct layers. Use objective evaluators whenever practical; baselines and slices make comparisons meaningful. Prefer trajectory invariants over one supposedly perfect path. LLM-as-judge is a scalable evaluator, not ground truth: calibrate it and swap the order. Keep held-out tests and turn discovered failures into regression cases. itemize",
+  "text": "Begin with the engineering question being tested. Outcome, trajectory, component, resource and control are distinct layers. Use objective evaluators whenever practical; baselines and slices make comparisons meaningful. Prefer trajectory invariants over one supposedly perfect path. LLM-as-judge is a scalable evaluator, not ground truth: calibrate it and swap the order. Keep held-out tests and turn discovered failures into regression cases.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -1013,7 +1013,7 @@
   "kind": "takeaways",
   "chapter": 23,
   "title": "Chapter 23, Observability: key takeaways",
-  "text": "Logging records events; tracing preserves causal relationships. Trace meaningful actions and decisions, not hidden chain-of-thought. Keep nested agents, retries, state mutations and fallbacks visible. Distinguish inclusive from exclusive cost. Parallel latency follows the critical path; percentiles beat averages. Metrics summarize populations; traces diagnose individual executions. itemize",
+  "text": "Logging records events; tracing preserves causal relationships. Trace meaningful actions and decisions, not hidden chain-of-thought. Keep nested agents, retries, state mutations and fallbacks visible. Distinguish inclusive from exclusive cost. Parallel latency follows the critical path; percentiles beat averages. Metrics summarize populations; traces diagnose individual executions.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -1058,7 +1058,7 @@
   "kind": "takeaways",
   "chapter": 24,
   "title": "Chapter 24, Failure and Recovery: key takeaways",
-  "text": "Classify failure before selecting a recovery policy. Bound retries; use backoff for transient and capacity failures. Fallbacks help only when their failure modes are independent. Side-effecting retries need stable operation identity. Checkpoints preserve control state, and may need revalidation on resume. Keep recovery observable: reliability is a system property, not model accuracy. itemize",
+  "text": "Classify failure before selecting a recovery policy. Bound retries; use backoff for transient and capacity failures. Fallbacks help only when their failure modes are independent. Side-effecting retries need stable operation identity. Checkpoints preserve control state, and may need revalidation on resume. Keep recovery observable: reliability is a system property, not model accuracy.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -1112,7 +1112,7 @@
   "kind": "takeaways",
   "chapter": 25,
   "title": "Chapter 25, Human-in-the-Loop: key takeaways",
-  "text": "Capability, permission and approval are separate concepts. Approval is durable control state, bound to the exact action or scope reviewed. Too many approvals create fatigue and weaken oversight. Enforce permissions at capability boundaries, not only in prompts. Delegation never silently increases authority; revocation must take effect. Evaluate human oversight for correction quality, latency and workload. itemize",
+  "text": "Capability, permission and approval are separate concepts. Approval is durable control state, bound to the exact action or scope reviewed. Too many approvals create fatigue and weaken oversight. Enforce permissions at capability boundaries, not only in prompts. Delegation never silently increases authority; revocation must take effect. Evaluate human oversight for correction quality, latency and workload.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -1157,7 +1157,7 @@
   "kind": "takeaways",
   "chapter": 26,
   "title": "Chapter 26, Security: key takeaways",
-  "text": "External content is data, not trusted instruction; prompts must be backed by software controls. Tool authority comes from the trusted task, not from keyword filters over content. Private data, untrusted content and an outbound channel should not meet in one unconstrained agent. Retrieval does not sanitize content; memory write policy and provenance are security controls. Generated code runs with least privilege in a kernel- or hypervisor-enforced sandbox, never via eval or exec. Containment is not correctness; measure attack containment and retained utility. itemize",
+  "text": "External content is data, not trusted instruction; prompts must be backed by software controls. Tool authority comes from the trusted task, not from keyword filters over content. Private data, untrusted content and an outbound channel should not meet in one unconstrained agent. Retrieval does not sanitize content; memory write policy and provenance are security controls. Generated code runs with least privilege in a kernel- or hypervisor-enforced sandbox, never via eval or exec. Containment is not correctness; measure attack containment and retained utility.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -1211,7 +1211,7 @@
   "kind": "takeaways",
   "chapter": 27,
   "title": "Chapter 27, Budgets and Stopping: key takeaways",
-  "text": "Enforce budgets during execution: check before acting, not only afterwards. Step, cost, time, token, tool, and child-agent limits control different resources. Delegation must not create budget from nothing; reserve some for recovery. Stopping can depend on completion, verification, stability, marginal value, resources, or risk. A risk budget is distinct from a money budget, and the autonomy envelope can contract. Termination reasons should be explicit, observable, and evaluable. itemize",
+  "text": "Enforce budgets during execution: check before acting, not only afterwards. Step, cost, time, token, tool, and child-agent limits control different resources. Delegation must not create budget from nothing; reserve some for recovery. Stopping can depend on completion, verification, stability, marginal value, resources, or risk. A risk budget is distinct from a money budget, and the autonomy envelope can contract. Termination reasons should be explicit, observable, and evaluable.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -1256,7 +1256,7 @@
   "kind": "takeaways",
   "chapter": 28,
   "title": "Chapter 28, Coding Agents: key takeaways",
-  "text": "A coding agent is an ordinary agent loop over an executable environment. Select repository context; search before you edit; prefer patches. Tests are strong evidence, but not proof, and an agent can game them. Keep deciding tests out of its reach. Failures become observations; re-run the regression suite after every patch. Generated code is untrusted: sandbox it, and keep edit, test, push, and deploy as separate permissions. Repair loops need budgets, checkpoints, rollback, and no-progress detection. itemize",
+  "text": "A coding agent is an ordinary agent loop over an executable environment. Select repository context; search before you edit; prefer patches. Tests are strong evidence, but not proof, and an agent can game them. Keep deciding tests out of its reach. Failures become observations; re-run the regression suite after every patch. Generated code is untrusted: sandbox it, and keep edit, test, push, and deploy as separate permissions. Repair loops need budgets, checkpoints, rollback, and no-progress detection.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -1301,7 +1301,7 @@
   "kind": "takeaways",
   "chapter": 29,
   "title": "Chapter 29, Computer-Use and Multimodal Agents: key takeaways",
-  "text": "Computer use adds perception and grounding to the ordinary agent loop. Coordinates belong to one observed state and go stale. Re-ground just before acting. Verify semantic postconditions from a fresh observation. Perception, grounding, planning, execution, and verification fail separately. Fusion should keep provenance, disagreement, uncertainty, and unknowns. Visual content is untrusted data; prefer structured interfaces when they exist. itemize",
+  "text": "Computer use adds perception and grounding to the ordinary agent loop. Coordinates belong to one observed state and go stale. Re-ground just before acting. Verify semantic postconditions from a fresh observation. Perception, grounding, planning, execution, and verification fail separately. Fusion should keep provenance, disagreement, uncertainty, and unknowns. Visual content is untrusted data; prefer structured interfaces when they exist.",
   "edition": "2026-10",
   "trusted": true
  },
@@ -1346,7 +1346,7 @@
   "kind": "takeaways",
   "chapter": 30,
   "title": "Chapter 30, Self-Improving Agents and the Future: key takeaways",
-  "text": "Within-task adaptation and across-task learning are different mechanisms. Call a change an improvement only after independent, held-out comparison, with no unacceptable slice regression. Promoted prompts, memories, and policies need versions, lineage, and rollback. Lessons need evidence, provenance, scope, and forgetting. Proxy rewards get hacked under optimization; keep hard constraints in the harness. Self-improvement must never silently become self-authorization. itemize",
+  "text": "Within-task adaptation and across-task learning are different mechanisms. Call a change an improvement only after independent, held-out comparison, with no unacceptable slice regression. Promoted prompts, memories, and policies need versions, lineage, and rollback. Lessons need evidence, provenance, scope, and forgetting. Proxy rewards get hacked under optimization; keep hard constraints in the harness. Self-improvement must never silently become self-authorization.",
   "edition": "2026-10",
   "trusted": true
  },

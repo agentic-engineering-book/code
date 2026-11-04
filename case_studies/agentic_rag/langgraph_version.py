@@ -17,7 +17,8 @@ from langgraph.graph import END, START, StateGraph
 from agentic import PolicyModel
 from agentic.control import Budget
 
-from case_studies.agentic_rag.agent import RULES, check_answer, scripted_policy
+from case_studies.agentic_rag.agent import (
+    RULES, check_answer, check_decline, scripted_policy)
 from case_studies.agentic_rag.evaluate import evaluate, summary
 from case_studies.agentic_rag.rag import COSTS, read, search, validate
 
@@ -98,6 +99,9 @@ def build(model, rules=RULES, max_steps=10, max_cost=0.2):
                             'citations': decision['citations']}}
 
     def do_decline(state):
+        problems = check_decline(state['messages'], state['evidence'], rules)
+        if problems:
+            return tool_message('check', {'refused': problems})
         reason = state['decision']['reason']
         return {'outcome': {'status': 'declined', 'reason': reason}}
 
@@ -116,7 +120,9 @@ def build(model, rules=RULES, max_steps=10, max_cost=0.2):
     graph.add_conditional_edges(
         'answer', lambda s: END if s['outcome'] else 'propose',
         ['propose', END])
-    graph.add_edge('decline', END)
+    graph.add_conditional_edges(
+        'decline', lambda s: END if s['outcome'] else 'propose',
+        ['propose', END])
     return graph.compile()
 
 

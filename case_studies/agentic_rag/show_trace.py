@@ -13,7 +13,8 @@ from case_studies.agentic_rag.questions import QUESTIONS
 
 
 def wrapped(text, indent='     ', first=None):
-    return textwrap.fill(text, 78, initial_indent=indent if first is None else first,
+    first = indent if first is None else first
+    return textwrap.fill(text, 78, initial_indent=first,
                          subsequent_indent=indent)
 
 
@@ -27,6 +28,8 @@ def show(case):
             print(wrapped(f'-> {verdict}', '          '))
         else:
             print(wrapped(f'{step[0]:7s} {step[1]}', ' ' * 10, '  '))
+            if len(step) > 2 and step[2]:          # refused decline
+                print(wrapped(f'-> {"; ".join(step[2])}', ' ' * 10))
     final = outcome.get('answer') or outcome.get('reason')
     print(f'  => {outcome["status"]}:')
     print(wrapped(final))

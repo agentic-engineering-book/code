@@ -1,9 +1,9 @@
 """Plain RAG, the baseline: retrieve once, answer from the top document."""
-from case_studies.agentic_rag.rag import search, sentences, terms
+from case_studies.agentic_rag.rag import corpus, sentences, terms
 
 
-def naive_rag(question):
-    hits = search(question, k=1)
+def naive_rag(question, source='lectures'):
+    hits = corpus(source).search(question, k=1)
     if not hits:
         return {'status': 'declined', 'reason': 'nothing retrieved',
                 'citations': [], 'calls': 1}

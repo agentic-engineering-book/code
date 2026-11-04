@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ask the Book</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.9/standalone/umd/vis-network.min.js"></script>
+<style>
+:root {
+  --bg: #f7f8fa; --panel: #ffffff; --ink: #172033; --muted: #5f6b7a;
+  --accent: #315a8a; --pale: #eef4fb; --rule: #d8dee8; --code: #f4f5f7;
+  --ok: #1f7a4d; --ok-bg: #e8f5ee; --bad: #b3261e; --bad-bg: #fdecea;
+  --warn: #8a5a00; --warn-bg: #fff4e0;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f141c; --panel: #171e29; --ink: #e6ebf2; --muted: #9aa6b5;
+    --accent: #7fa8d8; --pale: #1c2838; --rule: #2a3442; --code: #121821;
+    --ok: #6fcf9a; --ok-bg: #16281f; --bad: #f28b82; --bad-bg: #2c1716;
+    --warn: #f0b860; --warn-bg: #2b2213;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1080px; margin: 0 auto; padding: 28px 16px 60px; }
+h1 { font-size: 26px; margin: 0 0 4px; }
+.sub { color: var(--muted); margin: 0 0 22px; }
+.panel { background: var(--panel); border: 1px solid var(--rule);
+  border-radius: 10px; padding: 16px 18px; margin-bottom: 16px; }
+.ask { display: flex; gap: 10px; }
+.ask input { flex: 1; min-width: 0; font: inherit; padding: 11px 13px;
+  border: 1px solid var(--rule); border-radius: 8px; background: var(--bg);
+  color: var(--ink); }
+button { font: inherit; cursor: pointer; border-radius: 8px; }
+.primary { background: var(--accent); color: #fff; border: 0;
+  padding: 10px 20px; font-weight: 600; }
+.primary:disabled { opacity: .55; cursor: wait; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.chip { background: var(--pale); color: var(--ink); border: 1px solid
+  var(--rule); padding: 4px 10px; font-size: 13px; text-align: left; }
+.chip b { color: var(--accent); margin-right: 4px; }
+.settings { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 14px;
+  font-size: 13.5px; color: var(--muted); align-items: center; }
+.settings label { display: inline-flex; gap: 5px; align-items: center; }
+.settings select { font: inherit; padding: 3px 6px; border-radius: 6px;
+  border: 1px solid var(--rule); background: var(--bg); color: var(--ink); }
+.grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
+@media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--muted); margin: 0 0 10px; }
+.status { display: inline-block; font-size: 12.5px; font-weight: 600;
+  padding: 2px 9px; border-radius: 99px; margin-bottom: 8px; }
+.answered { background: var(--ok-bg); color: var(--ok); }
+.declined { background: var(--warn-bg); color: var(--warn); }
+.stopped, .error { background: var(--bad-bg); color: var(--bad); }
+.answer { font-size: 16px; white-space: pre-wrap; }
+.verdict { display: flex; gap: 10px; align-items: baseline; margin: 2px 0 10px;
+  padding: 8px 11px; border-radius: 8px; font-size: 13.5px; }
+.verdict b { font-size: 14px; white-space: nowrap; }
+.verdict.correct { background: var(--ok-bg); color: var(--ok); }
+.verdict.wrong { background: var(--warn-bg); color: var(--warn); }
+.verdict.unsafe { background: var(--bad-bg); color: var(--bad); }
+.verdict.none { background: var(--code); color: var(--muted); }
+.verdict span { color: var(--ink); opacity: .85; }
+.cites { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.cite { font-size: 12.5px; background: var(--code); border: 1px solid
+  var(--rule); padding: 2px 8px; color: var(--accent); }
+.meta { margin-top: 12px; font-size: 12.5px; color: var(--muted); }
+ol.trace { list-style: none; padding: 0; margin: 0; }
+.trace li { border-left: 3px solid var(--rule); padding: 4px 0 8px 12px;
+  margin-left: 4px; }
+.trace li.refused { border-color: var(--bad); }
+.trace li.accepted { border-color: var(--ok); }
+.kind { font-weight: 700; font-size: 12px; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--accent); margin-right: 6px; }
+.why { color: var(--bad); font-size: 13.5px; margin-top: 2px; }
+.hits { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+.hits span { margin-right: 10px; white-space: nowrap; }
+.untrusted { color: var(--bad); }
+.hit { margin-top: 4px; }
+.via { font-size: 11.5px; color: var(--accent); }
+.snip { font-size: 12px; color: var(--muted); border-left: 2px solid var(--rule);
+  padding-left: 7px; margin: 2px 0 0 2px; }
+.doclink { color: var(--accent); cursor: pointer; text-decoration: underline
+  dotted; background: none; border: 0; padding: 0; font: inherit;
+  text-align: left; }
+.plain { font-size: 14px; }
+.doc { background: var(--code); border: 1px solid var(--rule);
+  border-radius: 8px; padding: 12px 14px; margin-top: 10px; font-size: 14px; }
+.doc h3 { margin: 0 0 4px; font-size: 14.5px; }
+.empty { color: var(--muted); }
+.spinner { color: var(--muted); }
+.thread-head { display: flex; justify-content: space-between; align-items: center; }
+.ghost { background: none; border: 1px solid var(--rule); color: var(--accent);
+  padding: 4px 11px; font-size: 13px; }
+.turn { border-top: 1px solid var(--rule); padding: 9px 0; font-size: 14px; }
+.turn:first-of-type { border-top: 0; }
+.turn .q { font-weight: 600; }
+.turn .rw { color: var(--muted); font-size: 12.5px; margin-top: 1px; }
+.turn .a { margin-top: 3px; }
+.turn .s { font-size: 11.5px; font-weight: 600; padding: 1px 7px;
+  border-radius: 99px; margin-right: 6px; }
+.rewrite { color: var(--muted); font-size: 13.5px; margin: -2px 0 8px; }
+.viz-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  justify-content: space-between; margin-bottom: 10px; }
+.viz-head h2 { margin: 0; }
+.viz-controls { display: flex; flex-wrap: wrap; gap: 6px; }
+.viz-grid { display: grid; grid-template-columns: 1fr 330px; gap: 14px; }
+@media (max-width: 900px) { .viz-grid { grid-template-columns: 1fr; } }
+#network { height: 560px; border: 1px solid var(--rule); border-radius: 8px;
+  background: var(--bg); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px;
+  color: var(--muted); margin-top: 8px; }
+.legend i { display: inline-block; width: 11px; height: 11px; border-radius: 3px;
+  margin-right: 4px; vertical-align: -1px; }
+.meter { font-size: 12.5px; color: var(--muted); margin-bottom: 8px; }
+.bar { height: 7px; background: var(--code); border-radius: 99px; overflow: hidden;
+  margin: 3px 0 7px; border: 1px solid var(--rule); }
+.bar span { display: block; height: 100%; background: var(--accent);
+  transition: width .35s; }
+ol.stages { list-style: none; padding: 0; margin: 0; max-height: 470px;
+  overflow: auto; font-size: 13px; }
+.stages li { border: 1px solid var(--rule); border-radius: 8px; padding: 7px 9px;
+  margin-bottom: 6px; opacity: .45; transition: opacity .25s; }
+.stages li.done { opacity: 1; }
+.stages li.now { opacity: 1; border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--pale); }
+.stages .pipe { color: var(--muted); font-size: 12px; margin-top: 3px; }
+.stages .pipe b { color: var(--ok); font-weight: 600; }
+.stages .pipe b.no { color: var(--bad); }
+.stages .t { font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ask the Book</h1>
+  <p class="sub">The Chapter 31 agent from <em>Agentic Engineering from First Principles</em>, answering from the book's own documents with every control on. Runs locally; your API key stays on this machine.</p>
+
+  <section class="panel">
+    <form class="ask" id="form">
+      <input id="question" autocomplete="off" placeholder="Ask a question about the book…" required>
+      <button class="primary" id="go">Ask</button>
+    </form>
+    <div class="chips" id="chips"></div>
+    <div class="settings">
+      <label>Corpus <select id="corpus"></select></label>
+      <label>Model <select id="model"></select></label>
+      <span>Controls:</span>
+      <span id="rules"></span>
+    </div>
+  </section>
+
+  <section class="panel" id="thread" hidden>
+    <div class="thread-head"><h2>Conversation so far</h2>
+      <button class="ghost" id="reset" type="button">New conversation</button></div>
+    <div id="turns"></div>
+  </section>
+
+  <div class="grid">
+    <div>
+      <section class="panel" id="result"><p class="empty">Ask a question, or pick one of the evaluation questions above. Switch a control off to see what it protects against.</p></section>
+      <section class="panel"><h2>Plain RAG, for comparison</h2><div id="plain" class="plain empty">Retrieve once, answer from the top document.</div></section>
+    </div>
+    <section class="panel"><h2>Trace</h2><div id="trace" class="empty">Every search, read and check appears here.</div><div id="doc"></div></section>
+  </div>
+
+  <section class="panel" id="viz">
+    <div class="viz-head">
+      <h2>Process and graph</h2>
+      <div class="viz-controls">
+        <button class="ghost" id="play" type="button">▶ Replay</button>
+        <button class="ghost" id="stepbtn" type="button">Step ›</button>
+        <button class="ghost" id="all" type="button">Show all</button>
+        <button class="ghost" id="browse" type="button">Browse the whole graph</button>
+        <label class="ghost" style="display:inline-flex;gap:5px;align-items:center;border-radius:8px">
+          <input type="checkbox" id="hits"> unread search hits</label>
+      </div>
+    </div>
+    <div class="viz-grid">
+      <div>
+        <div id="network"></div>
+        <div class="legend">
+          <span><i style="background:#315a8a"></i>chapter / part / book</span>
+          <span><i style="background:#1f7a4d"></i>principle</span>
+          <span><i style="background:#0f766e"></i>question / takeaways</span>
+          <span><i style="background:#7c3aed"></i>experiment</span>
+          <span><i style="background:#64748b"></i>section</span>
+          <span><i style="background:#c2410c"></i>concept</span>
+          <span><i style="background:#b3261e"></i>untrusted</span>
+          <span>faded = search hit only · solid = read · <b style="color:#16a34a">green ring</b> = cited · <b style="color:#dc2626">red dashes</b> = refused or superseded · <b style="color:#f59e0b">amber ring</b> = explored · dashed orange link = compiled relation</span>
+          <span>Click a node to read it; double-click to expand its links.</span>
+        </div>
+      </div>
+      <div>
+        <div class="meter" id="meter">Ask a question to see the loop run.</div>
+        <ol class="stages" id="stages"></ol>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g,
+  c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const MARKS = {correct: '✓ Correct', wrong: '✗ Wrong', unsafe: '⚠ Unsafe'};
+function verdictHtml(v) {
+  if (!v) return '<div class="verdict none"><b>Not scored</b><span>Not one of the nine evaluation questions, so there is no answer key: judge it yourself.</span></div>';
+  const note = v.label === 'unsafe' ? 'Cites a planted document or repeats the injected claim. ' : '';
+  return `<div class="verdict ${v.label}"><b>${MARKS[v.label]} (${esc(v.id)})</b><span>${note}Expected: ${esc(v.expected)}.</span></div>`;
+}
+const COLORS = {chapter: '#315a8a', part: '#315a8a', book: '#172033', person: '#172033',
+  principle: '#1f7a4d', question: '#0f766e', takeaways: '#0f766e', experiment: '#7c3aed',
+  section: '#64748b', concept: '#c2410c', glossary: '#c2410c', 'book-facts': '#334155',
+  'about-author': '#334155', 'reader-comment': '#b3261e'};
+let network = null, vnodes = null, vedges = null, stages = [], current = 0, timer = null;
+let COSTS = {}, LIMITS = {steps: 10, cost: 0.2};
+const dark = () => matchMedia('(prefers-color-scheme: dark)').matches;
+
+function shortLabel(n) {
+  const t = n.title || n.id;
+  if (n.kind === 'chapter') return t.replace(/^Chapter (\d+): /, 'Ch $1\n');
+  if (n.kind === 'part') return t.replace(': ', '\n');
+  if (['concept', 'person', 'book'].includes(n.kind)) return t.length > 28 ? t.slice(0, 26) + '…' : t;
+  return n.id;
+}
+function visNode(n) {
+  const roles = n.roles || [];
+  const color = n.trusted === false ? '#b3261e' : (COLORS[n.kind] || '#64748b');
+  const cited = roles.includes('cited'), refused = roles.includes('refused');
+  const explored = roles.includes('explored');
+  const faint = roles.length > 0 && roles.every(r => r === 'hit' || r === 'link');
+  const border = cited ? '#16a34a' : refused ? '#dc2626' : explored ? '#f59e0b' : color;
+  const shape = ['chapter', 'part', 'book', 'person'].includes(n.kind) ? 'ellipse'
+    : n.kind === 'concept' ? 'diamond' : 'box';
+  const tip = `${n.title}\n${n.kind}${roles.length ? ' · ' + roles.join(', ') : ''}` +
+    `${n.superseded ? ' · superseded' : ''}${n.trusted === false ? ' · UNTRUSTED' : ''}`;
+  return {id: n.id, label: shortLabel(n), shape, step: n.step || 0, title: tip,
+    color: {background: color, border, highlight: {background: color, border: '#f59e0b'}},
+    borderWidth: cited || refused || explored ? 4 : 1,
+    shapeProperties: {borderDashes: (refused && !cited) || n.superseded ? [5, 4] : false},
+    hitOnly: roles.length > 0 && roles.every(r => r === 'hit'),
+    opacity: faint ? 0.45 : 1, size: shape === 'diamond' ? 14 : undefined,
+    font: {color: shape === 'diamond' ? (dark() ? '#e6ebf2' : '#172033') : '#ffffff',
+           size: 12, face: 'system-ui'}};
+}
+function visEdge(e) {
+  const extracted = e.kind === 'extracted';
+  return {id: `${e.from}|${e.relation}|${e.to}`, from: e.from, to: e.to,
+    label: e.relation.replace(/_/g, ' '), arrows: 'to', dashes: extracted,
+    color: {color: extracted ? '#ea580c' : (dark() ? '#5b6b80' : '#9aa6b5')},
+    font: {size: 9, color: dark() ? '#9aa6b5' : '#5f6b7a', strokeWidth: 0, align: 'middle'}};
+}
+function ensureNetwork() {
+  if (network || !window.vis) return;
+  vnodes = new vis.DataSet(); vedges = new vis.DataSet();
+  network = new vis.Network($('network'), {nodes: vnodes, edges: vedges}, {
+    physics: {solver: 'forceAtlas2Based',
+              forceAtlas2Based: {gravitationalConstant: -70, springLength: 120},
+              stabilization: {iterations: 150}},
+    interaction: {hover: true, tooltipDelay: 120}, nodes: {margin: 7}});
+  network.on('click', p => { if (p.nodes.length) showDoc(p.nodes[0]); });
+  network.on('doubleClick', p => { if (p.nodes.length) expand(p.nodes[0]); });
+}
+async function expand(id) {
+  const r = await fetch('/api/neighbours?id=' + encodeURIComponent(id));
+  if (!r.ok) return;
+  const d = await r.json();
+  const step = stages.length ? stages[stages.length - 1].step : 0;
+  if (!vnodes.get(d.center.id)) vnodes.add(visNode({...d.center, roles: ['explored'], step}));
+  d.nodes.forEach(n => { if (!vnodes.get(n.id)) vnodes.add(visNode({...n, roles: ['link'], step})); });
+  d.edges.forEach(e => { const v = visEdge(e); if (!vedges.get(v.id)) vedges.add(v); });
+}
+
+function buildStages(d) {
+  const out = [];
+  if (d.rewritten) out.push({step: 0, cost: 0, title: 'Rewrite the follow-up',
+    pipe: `"${esc(d.asked)}" → "${esc(d.question)}" using the conversation`});
+  const ok = s => `<b>${s} ✓</b>`, no = s => `<b class="no">${s} ✗</b>`;
+  d.trace.forEach((s, i) => {
+    const cost = COSTS[s.kind] || 0, step = i + 1;
+    const gate = `model proposes → ${ok('contract')} → ${ok('budget')} → `;
+    if (s.kind === 'search') out.push({step, cost, title: `Search: ${esc(s.query)}`,
+      pipe: gate + `search tool → ${s.hits.length} hits` +
+            (s.hits.some(h => !h.trusted) ? ' (one untrusted)' : '')});
+    else if (s.kind === 'read') out.push({step, cost, title: `Read ${esc(s.id)}`,
+      pipe: gate + (s.trusted ? 'document added to evidence' : 'untrusted: given to the model as data')});
+    else if (s.kind === 'explore') out.push({step, cost, title: `Explore ${esc(s.node)}`,
+      pipe: gate + `graph → ${s.links.length} links (links are not evidence)`});
+    else if (s.kind === 'answer') out.push({step, cost,
+      title: `Answer citing ${s.citations.map(esc).join(', ')}`,
+      pipe: gate + (s.refused.length ? `${no('answer checks')}: ${s.refused.map(esc).join('; ')}`
+                                     : `${ok('answer checks')} → released`)});
+    else if (s.kind === 'decline') out.push({step, cost, title: 'Decline',
+      pipe: gate + (s.refused && s.refused.length
+        ? `${no('decline check')}: ${s.refused.map(esc).join('; ')}`
+        : `${ok('decline check')} → ${esc(s.reason)}`)});
+    else out.push({step, cost, title: esc(s.kind), pipe: `${no(s.kind)} ${esc(s.detail)}`});
+  });
+  return out;
+}
+function show(k) {
+  current = k;
+  const upto = stages[k].step;
+  const visible = new Set(vnodes.get({
+    filter: n => n.step <= upto && (!n.hitOnly || $('hits').checked)}).map(n => n.id));
+  vnodes.update(vnodes.get().map(n => ({id: n.id, hidden: !visible.has(n.id)})));
+  vedges.update(vedges.get().map(e => ({id: e.id, hidden: !(visible.has(e.from) && visible.has(e.to))})));
+  const spent = stages.slice(0, k + 1).reduce((a, s) => a + s.cost, 0);
+  const used = stages.slice(0, k + 1).filter(s => s.step > 0).length;
+  $('meter').innerHTML = `Actions: ${used} of at most ${LIMITS.steps}` +
+    `<div class="bar"><span style="width:${Math.min(100, used / LIMITS.steps * 100)}%"></span></div>` +
+    `Cost: ${spent.toFixed(2)} of at most ${LIMITS.cost} units` +
+    `<div class="bar"><span style="width:${Math.min(100, spent / LIMITS.cost * 100)}%"></span></div>`;
+  const items = document.querySelectorAll('#stages li');
+  items.forEach((li, i) => li.className = i < k ? 'done' : i === k ? 'now' : '');
+  if (items[k]) items[k].scrollIntoView({block: 'nearest'});
+  if (k === stages.length - 1) network.fit({animation: {duration: 400}});
+}
+function play() {
+  clearInterval(timer);
+  if (!stages.length) return;
+  show(0);
+  timer = setInterval(() => {
+    if (current >= stages.length - 1) return clearInterval(timer);
+    show(current + 1);
+  }, 900);
+}
+function renderViz(d) {
+  ensureNetwork();
+  if (!network) {
+    $('meter').textContent = 'The graph library could not load (it needs an internet connection).';
+    return;
+  }
+  LIMITS = d.limits || LIMITS;
+  vnodes.clear(); vedges.clear();
+  vnodes.add(d.graph.nodes.map(visNode));
+  vedges.add(d.graph.edges.map(visEdge));
+  stages = buildStages(d);
+  $('stages').innerHTML = stages.map(s =>
+    `<li><div class="t">${s.title}</div><div class="pipe">${s.pipe}</div></li>`).join('');
+  network.once('stabilizationIterationsDone', () => network.fit({animation: false}));
+  network.once('stabilized', () => network.fit({animation: {duration: 300}}));
+  play();
+}
+
+let history = [];          // earlier turns, sent with each follow-up
+function renderThread() {
+  $('thread').hidden = !history.length;
+  $('turns').innerHTML = history.map(h => `<div class="turn">
+    <div class="q">${esc(h.asked)}</div>
+    ${h.asked !== h.question ? `<div class="rw">searched as: ${esc(h.question)}</div>` : ''}
+    <div class="a"><span class="s status ${h.status}">${h.status}</span>${esc(h.answer)}</div></div>`).join('');
+  $('question').placeholder = history.length
+    ? 'Ask a follow-up (he, it, that chapter…) or a new question…'
+    : 'Ask a question about the book…';
+}
+const docLink = (id, title) =>
+  `<button class="doclink" data-doc="${esc(id)}">${esc(title || id)}</button>`;
+
+async function setup() {
+  const s = await (await fetch('/api/setup')).json();
+  COSTS = s.costs || {};
+  $('model').innerHTML = `<option value="${esc(s.model)}">${esc(s.model)} (OpenAI)</option>` +
+    '<option value="stand-in">deterministic stand-in</option>';
+  $('corpus').innerHTML =
+    `<option value="graph" selected>full book + knowledge graph: ${s.corpora.graph.nodes} nodes, ${s.corpora.graph.edges} links</option>` +
+    `<option value="hybrid">hybrid: ${esc(s.corpora.embedding)} vectors + graph search, fused</option>` +
+    `<option value="book">full book: ${s.corpora.book} documents incl. every section</option>` +
+    `<option value="lectures">lectures: ${s.corpora.lectures} short typed documents</option>`;
+  $('rules').innerHTML = s.rules.map(r =>
+    `<label><input type="checkbox" data-rule="${r}" checked>${r}</label>`).join(' ');
+  $('chips').innerHTML = s.questions.map(q =>
+    `<button class="chip" data-q="${esc(q.question)}"><b>${q.id}</b>${esc(q.type)}: ${esc(q.question)}</button>`).join('');
+}
+
+function renderStep(step) {
+  if (step.kind === 'search' && step.hybrid) {
+    const hits = step.hits.map(h => `<div class="hit"><span class="${h.trusted ? '' : 'untrusted'}">${docLink(h.id, h.id)}</span> <span class="via">${h.via.map(esc).join(' · ')}</span><div class="snip">${esc(h.snippet)}</div></div>`).join('');
+    const facts = step.facts.length ? `<div class="hits"><b>facts:</b> ${step.facts.map(f => `${esc(f.fact)} (${docLink(f.evidence)})`).join('; ')}</div>` : '';
+    return `<li><span class="kind">hybrid search</span>${esc(step.query)}<div class="hits">${hits || 'no results'}</div>${facts}</li>`;
+  }
+  if (step.kind === 'search') {
+    const hits = step.hits.map(h => `<span class="${h.trusted ? '' : 'untrusted'}">${esc(h.id)} ${h.score}</span>`).join('');
+    return `<li><span class="kind">search</span>${esc(step.query)}<div class="hits">${hits || 'no results'}</div></li>`;
+  }
+  if (step.kind === 'explore') {
+    const links = step.links.map(l => `<span class="${l.trusted ? '' : 'untrusted'}">${esc(l.relation)} → ${docLink(l.node, l.title)}${l.extracted ? ' *' : ''}</span>`).join('<br>');
+    return `<li><span class="kind">explore</span>${esc(step.node)}<div class="hits">${links || 'no matching node'}</div></li>`;
+  }
+  if (step.kind === 'read')
+    return `<li><span class="kind">read</span>${docLink(step.id, step.title)}${step.trusted ? '' : ' <span class="untrusted">(untrusted)</span>'}</li>`;
+  if (step.kind === 'answer' || step.kind === 'decline') {
+    const refused = step.refused && step.refused.length;
+    const what = step.kind === 'answer'
+      ? 'citing ' + step.citations.map(c => docLink(c)).join(', ')
+      : esc(step.reason);
+    const why = refused ? `<div class="why">refused: ${step.refused.map(esc).join('; ')}</div>` : '';
+    return `<li class="${refused ? 'refused' : 'accepted'}"><span class="kind">${step.kind}</span>${what}${why}</li>`;
+  }
+  return `<li class="refused"><span class="kind">${esc(step.kind)}</span>${esc(step.detail)}</li>`;
+}
+
+async function ask(question, fresh = false) {
+  if (fresh) { history = []; renderThread(); }
+  $('question').value = question;
+  $('go').disabled = true;
+  $('result').innerHTML = '<p class="spinner">Thinking: searching and reading the book…</p>';
+  $('trace').innerHTML = ''; $('doc').innerHTML = '';
+  const rules = {};
+  document.querySelectorAll('[data-rule]').forEach(b => rules[b.dataset.rule] = b.checked);
+  try {
+    const r = await fetch('/api/ask', {method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({question, model: $('model').value, corpus: $('corpus').value, rules,
+        history: history.map(h => ({question: h.question, answer: h.answer}))})});
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || r.statusText);
+    const text = d.answer || d.reason || '';
+    const cites = d.citations.map(c => `<span class="cite">${docLink(c.id, c.title)}</span>`).join('');
+    const tokens = d.input_tokens ? ` · ${d.input_tokens.toLocaleString()} in / ${d.output_tokens.toLocaleString()} out tokens` : '';
+    const rewrite = d.rewritten
+      ? `<div class="rewrite">Follow-up rewritten to stand alone: <b>${esc(d.question)}</b></div>` : '';
+    $('result').innerHTML = `<h2>Agentic RAG</h2>${rewrite}<span class="status ${d.status}">${d.status}</span>
+      ${verdictHtml(d.verdict)}<div class="answer">${esc(text)}</div><div class="cites">${cites}</div>
+      <div class="meta">${esc(d.model)} · ${esc(d.corpus)} corpus (${d.documents} documents) · ${d.steps} actions · ${d.cost_units} cost units${tokens} · ${d.seconds}s</div>`;
+    const first = d.rewritten
+      ? `<li><span class="kind">rewrite</span>"${esc(d.asked)}" → "${esc(d.question)}"<div class="hits">using the earlier conversation, before any search</div></li>` : '';
+    $('trace').innerHTML = `<ol class="trace">${first}${d.trace.map(renderStep).join('')}</ol>`;
+    history.push({asked: d.asked, question: d.question, answer: text, status: d.status});
+    renderViz(d);
+    renderThread();
+    $('question').value = ''; $('question').focus();
+    $('trace').classList.remove('empty');
+    $('plain').classList.remove('empty');
+    $('plain').innerHTML = `<span class="status ${d.plain.status}">${d.plain.status}</span>
+      ${verdictHtml(d.plain.verdict)}<div>${esc(d.plain.answer)}</div><div class="cites">${d.plain.citations.map(c => `<span class="cite">${docLink(c)}</span>`).join('')}</div>`;
+  } catch (e) {
+    $('result').innerHTML = `<span class="status error">error</span><div>${esc(e.message)}</div>`;
+  } finally {
+    $('go').disabled = false;
+  }
+}
+
+document.addEventListener('click', async e => {
+  const chip = e.target.closest('[data-q]');
+  if (chip) return ask(chip.dataset.q, true);   // evaluation questions start afresh
+  const link = e.target.closest('[data-doc]');
+  if (link) showDoc(link.dataset.doc);
+});
+async function showDoc(id) {
+  {
+    const d = await (await fetch('/api/doc?id=' + encodeURIComponent(id))).json();
+    $('doc').innerHTML = `<div class="doc"><h3>${esc(d.title)}</h3>
+      <div class="meta">${esc(d.id)} · ${esc(d.kind)} · edition ${esc(d.edition)} · ${d.trusted ? 'trusted' : '<span class="untrusted">untrusted</span>'}</div>
+      <p>${esc(d.text)}</p></div>`;
+    $('doc').scrollIntoView({behavior: 'smooth', block: 'nearest'});
+  }
+}
+$('play').addEventListener('click', play);
+$('hits').addEventListener('change', () => { if (stages.length) show(current); });
+$('stepbtn').addEventListener('click', () => {
+  clearInterval(timer);
+  if (stages.length) show(Math.min(current + 1, stages.length - 1));
+});
+$('all').addEventListener('click', () => {
+  clearInterval(timer);
+  if (stages.length) show(stages.length - 1);
+});
+$('browse').addEventListener('click', async () => {
+  clearInterval(timer); ensureNetwork(); if (!network) return;
+  vnodes.clear(); vedges.clear(); stages = []; $('stages').innerHTML = '';
+  $('meter').textContent = 'Browsing: double-click any node to expand its links; click to read it.';
+  await expand('book');
+  for (const part of ['part:I', 'part:II', 'part:III', 'part:IV', 'part:V', 'part:VI']) await expand(part);
+  network.once('stabilizationIterationsDone', () => network.fit({animation: false}));
+  network.stabilize(150);
+});
+$('reset').addEventListener('click', () => {
+  history = []; renderThread(); $('question').value = ''; $('question').focus();
+});
+$('form').addEventListener('submit', e => { e.preventDefault(); ask($('question').value.trim()); });
+setup().then(() => {
+  // ?q=...&model=stand-in asks straight away (handy for bookmarks).
+  const params = new URLSearchParams(location.search);
+  if (params.get('model')) $('model').value = params.get('model');
+  if (params.get('corpus')) $('corpus').value = params.get('corpus');
+  if (params.get('q')) ask(params.get('q'));
+});
+</script>
+</body>
+</html>
