@@ -1,6 +1,6 @@
 # Chapter 02: Structured Decisions
 
-Run from the repository root after `python -m pip install -e .`:
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. Both experiments call a real model (a fraction of a cent per run), so your output will differ from the recorded runs in [output/](output/). Set `BOOK_MODEL` to use another model.
 
 - `03_structured_output.py` - Experiment 3: Structured output. `python chapters/02/03_structured_output.py`
 - `04_validation.py` - Experiment 4: Reject an invalid decision. `python chapters/02/04_validation.py`

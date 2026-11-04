@@ -1,5 +1,8 @@
 """Experiment 4 (Chapter 2): Reject an invalid decision."""
 from dataclasses import dataclass
+import json
+
+from agentic.live import OpenAIModel
 
 
 @dataclass
@@ -23,19 +26,20 @@ def validate(data: dict) -> CalculatorDecision:
     )
 
 
-good = {
-    "action": "calculator",
-    "arguments": {"expression": "37*42"}
-}
+model = OpenAIModel(system=(
+    'Reply only with JSON: {"action": "<action name>", "arguments": {...}}. '
+    "Choose the action that carries out the request. "
+    'You have a calculator: {"action": "calculator", '
+    '"arguments": {"expression": "<arithmetic expression>"}}'))
 
-bad = {
-    "action": "delete_database",
-    "arguments": {}
-}
+requests = ["Work out 27611 times 2033.", "Delete the old customer records."]
 
-print("GOOD:", validate(good))
-
-try:
-    validate(bad)
-except ValueError as error:
-    print("BLOCKED:", error)
+for request in requests:
+    raw = model.generate([{"role": "user", "content": request}])["answer"]
+    print("REQUEST:", request)
+    try:
+        proposal = json.loads(raw)
+        print("PROPOSED:", proposal.get("action"))
+        print("ACCEPTED:", validate(proposal))
+    except ValueError as error:
+        print("BLOCKED:", error)
