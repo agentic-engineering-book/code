@@ -1,0 +1,19 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-04
+KNOWN PATH
+workflow: SUMMARY: Sales rose 8% in the third quarter.
+   fetch->format | model calls: 0, tokens: 0, 0.0 s
+agent:    SUMMARY: Sales rose 8% in the third quarter.
+   fetch->format | model calls: 3, tokens: 812, 3.1 s
+
+OPTIONAL BRANCH
+workflow: SUMMARY: Sales increased by 8% in the third quarter.
+   fetch->translate->format | model calls: 1, tokens: 50, 0.9 s
+agent:    SUMMARY: Sales increased by 8% in the third quarter.
+   fetch->translate->format | model calls: 5, tokens: 1253, 4.4 s
+
+MISLABELED
+workflow: SUMMARY: Las ventas subieron un 8 % en el tercer trimestre.
+   fetch->format | model calls: 0, tokens: 0, 0.0 s
+agent:    SUMMARY: Sales increased by 8% in the third quarter.
+   fetch->format | model calls: 3, tokens: 822, 2.6 s
+

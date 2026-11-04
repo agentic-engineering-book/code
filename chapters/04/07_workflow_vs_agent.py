@@ -1,24 +1,32 @@
 """Experiment 7 (Chapter 4): Workflow vs agent."""
-from agentic.model import PolicyModel
+from agentic.live import OpenAIModel, schema
 from agentic.tools import execute
 
 DOCUMENTS = {
-    "report-en": {"language": "English", "text": "Sales rose 8%."},
-    "report-fr": {"language": "French", "text": "Les ventes ont progresse."},
+    "report-en": {"language": "English",
+                  "text": "Sales rose 8% in the third quarter."},
+    "report-fr": {"language": "French",
+                  "text": "Les ventes ont progressé de 8 % au troisième "
+                          "trimestre."},
+    "report-es": {"language": "English",  # wrong: the text is Spanish
+                  "text": "Las ventas subieron un 8 % en el tercer "
+                          "trimestre."},
 }
-TRANSLATIONS = {"Les ventes ont progresse.": "Sales increased."}
+
+translator = OpenAIModel(system="Translate the user's text into English. "
+                                "Reply with the translation only.")
 
 
 def fetch(doc_id):
     return DOCUMENTS[doc_id]
 
 
-def translate(data):
-    return {"language": "English", "text": TRANSLATIONS[data["text"]]}
+def translate(text):
+    return translator.generate([{"role": "user", "content": text}])["answer"]
 
 
-def format_result(data):
-    return "SUMMARY: " + data["text"]
+def format_result(text):
+    return "SUMMARY: " + text
 
 
 TOOLS = {"fetch": fetch, "translate": translate, "format": format_result}
@@ -27,55 +35,56 @@ TOOLS = {"fetch": fetch, "translate": translate, "format": format_result}
 def workflow(doc_id, trace):
     """The programmer fixed the path; one explicit rule picks the branch."""
     trace.append("fetch")
-    data = fetch(doc_id)
-    if data["language"] != "English":
+    document = fetch(doc_id)
+    text = document["text"]
+    if document["language"] != "English":
         trace.append("translate")
-        data = translate(data)
+        text = translate(text)
     trace.append("format")
-    return format_result(data)
+    return format_result(text)
 
 
-def policy(messages):
-    """Stand-in for a model that chooses the next capability at runtime."""
-    seen = {m["name"]: m["content"] for m in messages if m["role"] == "tool"}
-    if "fetch" not in seen:
-        return {"action": "fetch",
-                "arguments": {"doc_id": messages[0]["content"]}}
-    data = seen.get("translate", seen["fetch"])
-    if data["language"] != "English":
-        return {"action": "translate", "arguments": {"data": data}}
-    if "format" not in seen:
-        return {"action": "format", "arguments": {"data": data}}
-    return {"done": True, "answer": seen["format"]}
+planner = OpenAIModel(tools=[
+    schema("fetch", "Fetch a document by id.", doc_id="the document id"),
+    schema("translate", "Translate text into English.", text="the text"),
+    schema("format", "Format English text as the final summary line.",
+           text="the English text"),
+], system="Produce the formatted English summary line for the document, "
+          "then reply with that line only.")
 
 
 def agent(doc_id, trace, max_steps=6):
-    model = PolicyModel(policy)
-    messages = [{"role": "user", "content": doc_id}]
+    """The model chooses every step at runtime."""
+    messages = [{"role": "user", "content": f"Document id: {doc_id}"}]
     for step in range(max_steps):
-        trace.append("model")
-        decision = model.generate(messages)
+        decision = planner.generate(messages)
+        messages.append({"role": "assistant", "content": decision})
         if decision.get("done"):
-            trace.append("done")
             return decision["answer"]
         trace.append(decision["action"])
         observation = execute(decision, tools=TOOLS)
-        messages.append({"role": "tool", "name": decision["action"],
-                         "content": observation})
+        messages.append({"role": "tool", "content": str(observation)})
     raise RuntimeError("Step limit reached")
 
 
+def cost(*models):
+    """Model calls, tokens and seconds since the counters were cleared."""
+    calls = [call for model in models for call in model.calls]
+    tokens = sum(c["input_tokens"] + c["output_tokens"] for c in calls)
+    seconds = sum(c["seconds"] for c in calls)
+    for model in models:
+        model.calls.clear()
+    return f"model calls: {len(calls)}, tokens: {tokens}, {seconds:.1f} s"
+
+
 for label, doc_id in [("KNOWN PATH", "report-en"),
-                      ("OPTIONAL BRANCH", "report-fr")]:
-    flow_trace, agent_trace = [], []
-    expected = workflow(doc_id, flow_trace)
-    answer = agent(doc_id, agent_trace)
-    model_calls = agent_trace.count("model")
-    tool_calls = len(agent_trace) - model_calls - 1
+                      ("OPTIONAL BRANCH", "report-fr"),
+                      ("MISLABELED", "report-es")]:
     print(label)
-    print("workflow:", "->".join(flow_trace))
-    print("agent:   ", "->".join(agent_trace))
-    print(f"same answer: {answer == expected}"
-          f" | model calls: 0 vs {model_calls}"
-          f" | tool calls: {len(flow_trace)} vs {tool_calls}")
+    trace = []
+    print("workflow:", workflow(doc_id, trace))
+    print("  ", "->".join(trace), "|", cost(translator))
+    trace = []
+    print("agent:   ", agent(doc_id, trace))
+    print("  ", "->".join(trace), "|", cost(planner, translator))
     print()

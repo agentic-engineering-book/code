@@ -93,3 +93,22 @@ CALCULATOR_SCHEMA = {
         "additionalProperties": False,
     },
 }
+
+
+def schema(name, description, **parameters):
+    """A tool schema whose parameters are all required strings.
+
+    schema("fetch", "Fetch a document.", doc_id="the document id") builds
+    the same kind of dictionary as CALCULATOR_SCHEMA.
+    """
+    return {
+        "name": name,
+        "description": description,
+        "parameters": {
+            "type": "object",
+            "properties": {key: {"type": "string", "description": text}
+                           for key, text in parameters.items()},
+            "required": list(parameters),
+            "additionalProperties": False,
+        },
+    }
