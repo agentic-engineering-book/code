@@ -1,0 +1,16 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-04
+HIDDEN_CALL
+  observation: None
+  answer: I’m sorry, but I couldn’t retrieve the current weather for
+    Pretoria right now.  If you want, I can still help by: - giving you a
+    general climate overview for Pretoria, or - suggesting a reliable
+    weather source to check quickly.
+
+STRUCTURED_CALL
+  observation: {'ok': False, 'error': 'timeout', 'retryable': True,
+    'message': 'weather service unavailable'}
+  answer: I couldn’t get the live weather for Pretoria right now because the
+    weather service timed out.  If you want, I can: - try again, - give you
+    a general seasonal expectation for Pretoria, or - help you find a
+    reliable weather source.
+

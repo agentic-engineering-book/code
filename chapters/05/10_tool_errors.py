@@ -1,4 +1,7 @@
 """Experiment 10 (Chapter 5): Tool failure."""
+import textwrap
+
+from agentic.live import OpenAIModel, schema
 
 
 def weather(city):
@@ -25,13 +28,19 @@ def structured_call(tool, arguments):
                 "retryable": False, "message": str(error)}
 
 
-decision = {
-    "action": "weather",
-    "arguments": {"city": "Pretoria"}
-}
+model = OpenAIModel(tools=[
+    schema("weather", "Get the current weather in a city.", city="the city")])
 
-print("HIDDEN:", hidden_call(weather, decision["arguments"]))
-print("STRUCTURED:")
-result = structured_call(weather, decision["arguments"])
-for key, value in result.items():
-    print(f"  {key}: {value}")
+for wrapper in (hidden_call, structured_call):
+    messages = [{"role": "user", "content": "What is the weather in Pretoria?"}]
+    decision = model.generate(messages)
+    observation = wrapper(weather, decision["arguments"])
+    messages.append({"role": "assistant", "content": decision})
+    messages.append({"role": "tool", "content": str(observation)})
+
+    answer = model.generate(messages)["answer"]
+    print(wrapper.__name__.upper())
+    for label, text in [("observation", observation), ("answer", answer)]:
+        print(textwrap.fill(f"{label}: {text}", 76, initial_indent="  ",
+                            subsequent_indent="    "))
+    print()

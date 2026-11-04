@@ -1,6 +1,6 @@
 # Chapter 05: Tools
 
-Run from the repository root after `python -m pip install -e .`:
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. All three experiments call a real model (about two dozen requests in all, a fraction of a cent), so your output will differ from the recorded runs in [output/](output/). Set `BOOK_MODEL` to use another model.
 
 - `08_tool_calling.py` - Experiment 8: One tool. `python chapters/05/08_tool_calling.py`
 - `09_multiple_tools.py` - Experiment 9: Tool selection. `python chapters/05/09_multiple_tools.py`
