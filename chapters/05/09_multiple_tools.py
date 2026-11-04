@@ -13,9 +13,6 @@ VARIANTS = {
         "search_docs", "Search the company's internal documents: "
                        "policies, HR rules and expense rules.",
         "search_web", "Search the public web for general knowledge."),
-    "SAME DESCRIPTIONS": search_tools(
-        "search_docs", "Search for information.",
-        "search_web", "Search for information."),
     "SAME DESCRIPTIONS, VAGUE NAMES": search_tools(
         "search_a", "Search for information.",
         "search_b", "Search for information."),

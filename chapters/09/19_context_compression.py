@@ -1,6 +1,4 @@
 """Experiment 19 (Chapter 9): Compress working context."""
-import textwrap
-
 from agentic.live import OpenAIModel, schema
 
 TRANSCRIPT = """\
@@ -19,8 +17,6 @@ user: Great, cite S3 in the report. By the way, did you see the game?
 assistant: I did not, but I hear it was close.
 user: It was! Anyway, email the report to the platform team when done."""
 
-summarizer = OpenAIModel(system="Summarize this conversation in at most "
-                                "25 words.")
 TOOLS = [schema("send_email", "Send an email.", to="the recipient"),
          schema("ask_approval", "Ask the user to approve an action.",
                 action="the action to approve")]
@@ -35,12 +31,7 @@ def last_six(transcript):
     return "\n".join(transcript.splitlines()[-6:])
 
 
-def summary(transcript):
-    reply = summarizer.generate([{"role": "user", "content": transcript}])
-    return reply["answer"]
-
-
-for compressor in (full, last_six, summary):
+for compressor in (full, last_six):
     actions = []
     for trial in range(3):
         context = compressor(TRANSCRIPT)
@@ -53,6 +44,3 @@ for compressor in (full, last_six, summary):
     print(f"{compressor.__name__.upper()}: {len(context)} of "
           f"{len(TRANSCRIPT)} characters")
     print("  next step: " + ", ".join(actions))
-    if compressor is summary:
-        print(textwrap.fill(context, 76, initial_indent="  last summary: ",
-                            subsequent_indent="    "))

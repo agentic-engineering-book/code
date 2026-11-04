@@ -8,15 +8,6 @@ CLEAR
   When was the telephone invented?               -> search_web  ok
   selection accuracy: 6/6
 
-SAME DESCRIPTIONS
-  What is our travel expense limit per night?    -> search_docs ok
-  How many vacation days do new employees get?   -> search_docs ok
-  Who approves overtime in our company?          -> search_docs ok
-  Who won the 2022 football World Cup?           -> search_web  ok
-  What is the population of Brazil?              -> search_web  ok
-  When was the telephone invented?               -> search_web  ok
-  selection accuracy: 6/6
-
 SAME DESCRIPTIONS, VAGUE NAMES
   What is our travel expense limit per night?    -> search_a    ok
   How many vacation days do new employees get?   -> search_a    ok
