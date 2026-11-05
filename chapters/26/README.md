@@ -1,16 +1,12 @@
-# Chapter 26 experiments: Security
+# Chapter 26: Security
 
-Run from the repository root with `PYTHONPATH=.` (or after `pip install -e .`).
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. All three experiments call a real model (about twenty requests in all, a fraction of a cent), so your output will differ from the recorded runs in [output/](output/). Set `BOOK_MODEL` to use another model.
 
-- `48_prompt_injection.py` - a scripted model obeys an injected web page and
-  proposes `send_email`; without a gate it runs, with a task-scoped tool
-  allowlist it is blocked and the summary still runs.
-- `49_memory_poisoning.py` - "store everything" persists an injected
-  preference that redirects a later report; a write policy that requires an
-  authenticated writer for preferences rejects it.
-- `50_sandboxing.py` - runs untrusted snippets in a child process with an
-  empty environment, a temp directory and a timeout. It contains the secret
-  and the runaway loop but NOT filesystem access: it is not a sandbox.
+- `48_prompt_injection.py` - Experiment 48: Prompt injection. A real model summarizes a page with an injected email instruction, without and with a task-scoped tool gate. `python chapters/26/48_prompt_injection.py`
+- `49_memory_poisoning.py` - Experiment 49: Memory poisoning. A real memory writer reads a session with a poisoned web page, without and with a write policy; a real agent later sends a report. `python chapters/26/49_memory_poisoning.py`
+- `50_sandboxing.py` - Experiment 50: Sandboxing. A real model writes three probes, run in a scrubbed child process with a timeout. `python chapters/26/50_sandboxing.py`
+
+Kernel modules used: `agentic/tools.py`, `agentic/live.py`.
 
 ## Framework companions
 
