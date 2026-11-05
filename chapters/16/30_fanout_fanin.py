@@ -1,35 +1,33 @@
 """Experiment 30 (Chapter 16): Fan-out/fan-in."""
 import asyncio
 
-PROPOSAL = "Open a second warehouse in Q3"
+from agentic.live import OpenAIModel
+
+PROPOSAL = ("Open a second warehouse in Q3. The budget assumes a 40% margin; "
+            "this year's margin is 22%. All stock comes from one supplier. "
+            "Signing a lease takes about four months.")
+REVIEWERS = {"financial": "You review proposals for financial problems.",
+             "risk": "You review proposals for business risks.",
+             "operations": "You review proposals for operational "
+                           "feasibility."}
 
 
-async def review_financials(proposal):
-    await asyncio.sleep(0)
-    return "margin assumption unsupported"
+async def review(name, proposal, timeout):
+    model = OpenAIModel(system=REVIEWERS[name])
+    messages = [{"role": "user", "content": proposal + "\nName the single "
+                 "most important issue in at most eight words."}]
+    reply = await asyncio.wait_for(
+        asyncio.to_thread(model.generate, messages), timeout)
+    return reply["answer"].strip()
 
 
-async def review_risks(proposal):
-    await asyncio.sleep(0)
-    return "dependency on one supplier"
-
-
-async def review_operations(proposal, available=True):
-    await asyncio.sleep(0)
-    if not available:
-        raise TimeoutError("operations reviewer timed out")
-    return "timeline infeasible"
-
-
-async def fan_out(proposal, operations_available=True):
-    names = ["financial", "risk", "operations"]
+async def fan_out(proposal, operations_timeout=60):
+    timeouts = {"financial": 60, "risk": 60, "operations": operations_timeout}
     results = await asyncio.gather(
-        review_financials(proposal),
-        review_risks(proposal),
-        review_operations(proposal, operations_available),
+        *(review(name, proposal, timeouts[name]) for name in REVIEWERS),
         return_exceptions=True,  # a failed branch becomes a result
     )
-    return dict(zip(names, results))
+    return dict(zip(REVIEWERS, results))
 
 
 def bad_fan_in(branches):
@@ -62,7 +60,7 @@ async def main():
     branches = await fan_out(PROPOSAL)
     print(f"bad fan-in: {bad_fan_in(branches)}")
     show("complete fan-in", complete_fan_in(branches))
-    degraded = await fan_out(PROPOSAL, operations_available=False)
+    degraded = await fan_out(PROPOSAL, operations_timeout=0.01)
     show("partial failure", complete_fan_in(degraded))
 
 

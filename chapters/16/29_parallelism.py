@@ -1,72 +1,61 @@
 """Experiment 29 (Chapter 16): Parallel execution."""
 import asyncio
+import time
 
-SCALE = 0.01  # real seconds per simulated second, so the demo runs quickly
-clock = {"now": 0}  # simulated seconds: deterministic, unlike a wall clock
-calls = []
+from agentic.live import OpenAIModel
+
+QUESTIONS = ["What is the capital of Peru? One word.",
+             "What is the largest planet? One word.",
+             "What is the chemical symbol for gold? One word."]
+model = OpenAIModel()
 rates = {}
 
 
-async def call_service(name, seconds):
-    calls.append(name)
-    start = clock["now"]
-    await asyncio.sleep(seconds * SCALE)  # waiting, not computing
-    clock["now"] = max(clock["now"], start + seconds)
-    return f"fact {name}"
-
-
-async def fetch_a():
-    return await call_service("A", 2)
-
-
-async def fetch_b():
-    return await call_service("B", 2)
-
-
-async def fetch_c():
-    return await call_service("C", 2)
+async def ask(question):
+    """Run the blocking model call in a thread, so waits can overlap."""
+    reply = await asyncio.to_thread(
+        model.generate, [{"role": "user", "content": question}])
+    return reply["answer"].strip()
 
 
 async def sequential():
-    a = await fetch_a()
-    b = await fetch_b()
-    c = await fetch_c()
-    return [a, b, c]
+    return [await ask(question) for question in QUESTIONS]
 
 
 async def concurrent():
-    return list(await asyncio.gather(fetch_a(), fetch_b(), fetch_c()))
+    return list(await asyncio.gather(*(ask(q) for q in QUESTIONS)))
 
 
 async def get_exchange_rate():
-    await asyncio.sleep(1 * SCALE)
-    rates["EUR"] = 0.9
+    await asyncio.sleep(1)  # a slow rate service
+    rates["EUR"] = 0.8731
     return rates["EUR"]
 
 
 async def convert_price(price):
-    rate = rates.get("EUR")
-    if rate is None:
-        raise RuntimeError("rate not available yet")
-    return round(price * rate, 2)
+    rate = rates.get("EUR", "not available")
+    return await ask(f"Convert {price} US dollars to euros. Exchange rate "
+                     f"(euros per dollar): {rate}. Reply with the amount only.")
 
 
 async def timed(label, workflow):
-    calls.clear()
-    clock["now"] = 0
-    results = await workflow()
-    print(f"{label}: {results} calls={len(calls)} time={clock['now']} s")
+    model.calls.clear()
+    start = time.perf_counter()
+    answers = await workflow()
+    seconds = time.perf_counter() - start
+    tokens = sum(c["input_tokens"] + c["output_tokens"] for c in model.calls)
+    print(f"{label}: {answers} calls={len(model.calls)} tokens={tokens} "
+          f"time={seconds:.1f} s")
 
 
 async def main():
     await timed("sequential", sequential)
     await timed("concurrent", concurrent)
-
-    rates.clear()
-    both = await asyncio.gather(get_exchange_rate(), convert_price(100),
-                                return_exceptions=True)
-    print(f"dependency parallelized: {both[1]!r}")
-
+    for trial in range(3):
+        rates.clear()
+        _, converted = await asyncio.gather(get_exchange_rate(),
+                                            convert_price(100))
+        print(f"dependency parallelized: {converted}")
     rates.clear()
     await get_exchange_rate()
     print(f"dependency respected: {await convert_price(100)}")

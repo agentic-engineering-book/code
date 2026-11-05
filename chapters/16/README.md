@@ -1,13 +1,11 @@
-# Chapter 16 experiments
+# Chapter 16: Parallelism
 
-Run from the repository root, for example:
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. Both experiments call a real model (about fifteen requests in all, a fraction of a cent), so your output and times will differ from the recorded runs in [output/](output/). Set `BOOK_MODEL` to use another model.
 
-```bash
-PYTHONPATH=. python chapters/16/29_parallelism.py
-```
+- `29_parallelism.py` - Experiment 29: Parallel execution. Three model calls made sequentially and concurrently (calls, tokens, wall-clock time), and an exchange-rate dependency run in parallel and in order. `python chapters/16/29_parallelism.py`
+- `30_fanout_fanin.py` - Experiment 30: Fan-out/fan-in. Three model reviewers run concurrently; an over-summarizing fan-in versus a complete one, then one reviewer times out. `python chapters/16/30_fanout_fanin.py`
 
-- `29_parallelism.py` - Experiment 29: Parallel execution - asyncio sequential vs concurrent timing (simulated seconds) and a violated vs respected dependency
-- `30_fanout_fanin.py` - Experiment 30: Fan-out/fan-in - three asyncio reviewers, a lossy vs complete fan-in, and partial failure via return_exceptions
+Kernel modules used: `agentic/live.py`.
 
 ## Framework companions
 

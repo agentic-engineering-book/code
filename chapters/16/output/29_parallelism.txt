@@ -1,0 +1,7 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+sequential: ['Lima', 'Jupiter', 'Au'] calls=3 tokens=62 time=2.7 s
+concurrent: ['Lima', 'Jupiter', 'Au'] calls=3 tokens=62 time=0.8 s
+dependency parallelized: 100 USD
+dependency parallelized: Not available
+dependency parallelized: Exchange rate unavailable
+dependency respected: 87.31
