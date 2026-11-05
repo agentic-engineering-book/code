@@ -1,14 +1,11 @@
-# Chapter 27 experiments: Budgets and Stopping
+# Chapter 27: Budgets and the autonomy envelope
 
-Run from the repository root with `PYTHONPATH=.` (or after `pip install -e .`).
-Both experiments use `agentic/control.py` (`Budget`).
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. Both experiments call a real model (about fifteen requests in all, a fraction of a cent), so your output will differ from the recorded runs in [output/](output/). Costs and risk scores are abstract units.
 
-- `51_resource_budgets.py` - an evidence loop that never finds enough runs
-  100 searches when unbounded; with a budget checked before each search it
-  stops with `BUDGET_EXHAUSTED` and an explicit reason.
-- `52_autonomy_envelope.py` - each action passes an independent risk check,
-  but a cumulative risk budget escalates `delete_record`; the envelope
-  contracts when sensitive data is detected.
+- `51_resource_budgets.py` - Experiment 51: Resource budgets. A real research agent that never finds its primary source, without a budget and under a cost and a step budget checked before each search. `python chapters/27/51_resource_budgets.py`
+- `52_autonomy_envelope.py` - Experiment 52: Risk budget and autonomy envelope. A real model writes the plan; independent checks versus an envelope with a cumulative risk budget. `python chapters/27/52_autonomy_envelope.py`
+
+Kernel modules used: `agentic/control.py`, `agentic/live.py`.
 
 ## Framework companions
 

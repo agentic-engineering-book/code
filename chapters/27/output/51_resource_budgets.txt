@@ -1,0 +1,9 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+no budget: COMPLETED 
+  searches 4
+answer: I couldn’t verify the claim from a primary study. [...]
+max 5 steps, max cost 0.10: COMPLETED 
+  searches 3, cost 0.09
+answer: I couldn’t verify that claim from a primary study. [...]
+max 2 steps, max cost 1.00: BUDGET_EXHAUSTED step_budget
+  searches 2, cost 0.06
