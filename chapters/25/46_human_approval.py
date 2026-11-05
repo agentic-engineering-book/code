@@ -2,6 +2,8 @@
 import hashlib
 import json
 
+from agentic.live import OpenAIModel, schema
+
 POLICY = {"search": "allow", "draft_email": "allow", "send_email": "approval"}
 APPROVAL_TTL_MINUTES = 15
 
@@ -35,8 +37,14 @@ def execute(action, approval, now):
     return "executed"
 
 
-action = {"tool": "send_email",
-          "args": {"to": "customer@example.com", "subject": "Proposal"}}
+SEND = schema("send_email", "Send an email.", to="recipient address",
+              subject="subject line", body="message body")
+proposal = OpenAIModel(tools=[SEND], tool_choice="required").generate(
+    [{"role": "user", "content": "Email our proposal summary to "
+      "customer@example.com: the new plan costs 40 dollars a month and "
+      "starts in June."}])
+action = {"tool": proposal["action"], "args": proposal["arguments"]}
+print("agent proposes:", action["tool"], "to", action["args"]["to"])
 approval = request_approval(action, now=0)
 print("proposed, state:", approval["state"], approval["action_hash"])
 print("before decision:", execute(action, approval, now=1))

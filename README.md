@@ -15,7 +15,7 @@ python chapters/03/05_agent_loop.py
 python -m pytest
 ```
 
-Experiments that import `agentic.live` call a real model (Chapters 1 to 24 so far).
+Experiments that import `agentic.live` call a real model (Chapters 1 to 25 so far).
 They make paid requests of a fraction of a cent, and their output changes from
 run to run, so the book prints one recorded run, kept in the chapter's
 `output/` folder. `python tools/record_output.py chapters/01/01_llm_call.py`

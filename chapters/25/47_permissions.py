@@ -1,4 +1,10 @@
 """Experiment 47 (Chapter 25): Permissions."""
+from agentic.live import OpenAIModel, schema
+
+SEND = schema("send_email", "Send an email.", to="recipient address",
+              subject="subject line", body="message body")
+DRAFT = schema("draft_email", "Save an email draft.", to="recipient address",
+               subject="subject line", body="message body")
 PARENT_PERMISSIONS = {
     "search": {"read"},
     "email": {"draft"},
@@ -28,10 +34,16 @@ for action in [("search", "read"), ("email", "draft"), ("email", "send")]:
     allowed = authorized(PARENT_PERMISSIONS, action)
     print(":".join(action), "->", "allowed" if allowed else "denied")
 
-try:
-    send_email(PARENT_PERMISSIONS, "draft-7")
-except PermissionError as error:
-    print("tool boundary:", error)
+# A real agent, told nothing about permissions, chooses a tool.
+decision = OpenAIModel(tools=[DRAFT, SEND], tool_choice="required").generate(
+    [{"role": "user", "content": "Email our proposal summary to "
+      "customer@example.com: the new plan costs 40 dollars a month."}])
+print("agent chooses:", decision["action"])
+if decision["action"] == "send_email":
+    try:
+        send_email(PARENT_PERMISSIONS, "draft-7")
+    except PermissionError as error:
+        print("tool boundary:", error)
 
 requested = {"search": {"read"}, "email": {"draft", "send"}}
 child = delegate(PARENT_PERMISSIONS, requested)

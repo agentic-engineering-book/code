@@ -1,0 +1,7 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+agent proposes: send_email to customer@example.com
+proposed, state: AWAITING_APPROVAL 7438566146c8
+before decision: blocked: not approved
+approved: executed
+mutated recipient: blocked: action changed after approval
+two hours later: blocked: approval expired

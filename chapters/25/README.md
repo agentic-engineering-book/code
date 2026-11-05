@@ -1,11 +1,11 @@
-# Chapter 25 experiments
+# Chapter 25: Human-in-the-loop
 
-- `46_human_approval.py` - Experiment 46: approval as a state transition
-  bound to a SHA-256 hash of the exact action, with expiry.
-- `47_permissions.py` - Experiment 47: permission checks at the tool
-  boundary, delegation that cannot exceed the parent, and revocation.
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. In both experiments a real model proposes the action (one request each, a fraction of a cent); approval and permissions are ordinary code. Your output may differ from the recorded runs in [output/](output/).
 
-Run from the repository root, e.g. `PYTHONPATH=. python chapters/25/46_human_approval.py`
+- `46_human_approval.py` - Experiment 46: Human approval. A real agent proposes `send_email`; approval bound to a hash of the exact action, with expiry and a hand-applied change of recipient. `python chapters/25/46_human_approval.py`
+- `47_permissions.py` - Experiment 47: Permissions. A real agent chooses between drafting and sending; the capability enforces `email:send`; delegation and revocation. `python chapters/25/47_permissions.py`
+
+Kernel modules used: `agentic/live.py`.
 
 ## Framework companions
 
