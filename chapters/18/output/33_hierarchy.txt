@@ -1,0 +1,13 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+flat: root span=4, messages=8, caveat reaches root=True
+hierarchy, 10-word leads: root span=2, messages=12, caveat reaches root=True
+  research lead: A cheaper but low confidence; B faster.
+hierarchy, 6-word leads: root span=2, messages=12, caveat reaches root=True
+  research lead: A cheaper, B faster; confidence low.
+hierarchy, 6-word leads: root span=2, messages=12, caveat reaches root=True
+  research lead: A cheaper; B faster; confidence low.
+hierarchy, 6-word leads: root span=2, messages=12, caveat reaches root=False
+  research lead: Option A cheaper; Option B faster.
+hierarchy, structured leads: root span=2, messages=12, caveat reaches root=True
+  research lead: A cheaper; B faster; confidence low.
+  caveats field: ['source confidence is low']

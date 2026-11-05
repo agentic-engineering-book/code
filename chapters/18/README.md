@@ -1,13 +1,11 @@
-# Chapter 18 experiments
+# Chapter 18: Supervisors and hierarchy
 
-Run from the repository root, for example:
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. Both experiments call a real model (about twenty requests in all, a fraction of a cent), so your output will differ from the recorded runs in [output/](output/). Set `BOOK_MODEL` to use another model.
 
-```bash
-PYTHONPATH=. python chapters/18/32_supervisor_workers.py
-```
+- `32_supervisor_workers.py` - Experiment 32: Supervisor and workers. A model supervisor's plan and a hand-written bad plan, run naively and with a dependency-aware supervisor; the analyst and writer are real models. `python chapters/18/32_supervisor_workers.py`
+- `33_hierarchy.py` - Experiment 33: Hierarchy. Flat team versus two-level hierarchy; model leads with a 10-word and a 6-word limit, and a structured caveats field. `python chapters/18/33_hierarchy.py`
 
-- `32_supervisor_workers.py` - Experiment 32: Supervisor and workers - good vs bad decomposition, and a dependency-aware supervisor
-- `33_hierarchy.py` - Experiment 33: Hierarchy - flat vs two-level team; lossy lead summaries drop a caveat, structured ones keep it
+Kernel modules used: `agentic/live.py`.
 
 ## Framework companions
 

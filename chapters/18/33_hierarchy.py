@@ -1,4 +1,6 @@
 """Experiment 33 (Chapter 18): Hierarchy."""
+from agentic.live import OpenAIModel
+
 REPORTS = {
     "R1": {"finding": "Option A is cheaper",
            "caveat": "source confidence is low"},
@@ -7,28 +9,42 @@ REPORTS = {
     "B2": {"finding": "Option B reuses the current stack", "caveat": None},
 }
 TEAMS = {"research_lead": ["R1", "R2"], "build_lead": ["B1", "B2"]}
+HEDGES = ("confidence", "uncertain", "unverified", "unreliable")
 
 
-def lossy_lead(reports):
-    return {"findings": [r["finding"] for r in reports]}
+def text(report):
+    caveat = f" Caveat: {report['caveat']}." if report["caveat"] else ""
+    return report["finding"] + "." + caveat
+
+
+def model_lead(words):
+    """A real model summarizes its workers' reports for the root."""
+    def lead(reports):
+        reply = OpenAIModel(system="You are a team lead. Summarize your "
+                            "workers' reports for the director in at most "
+                            f"{words} words.").generate(
+            [{"role": "user", "content": "\n".join(map(text, reports))}])
+        return {"summary": reply["answer"].strip()}
+    return lead
 
 
 def structured_lead(reports):
-    return {"findings": [r["finding"] for r in reports],
-            "caveats": [r["caveat"] for r in reports if r["caveat"]]}
+    """The summary may be lossy; code carries caveats in their own field."""
+    summary = model_lead(6)(reports)
+    summary["caveats"] = [r["caveat"] for r in reports if r["caveat"]]
+    return summary
 
 
-def root_decides(summaries):
-    caveats = [c for s in summaries for c in s.get("caveats", [])]
-    if caveats:
-        return "verify before choosing: " + "; ".join(caveats)
-    return "choose Option A"
+def reaches_root(summaries):
+    seen = " ".join(s["summary"] + " ".join(s.get("caveats", []))
+                    for s in summaries).lower()
+    return any(hedge in seen for hedge in HEDGES)
 
 
 def flat():
     messages = 2 * len(REPORTS)  # root -> worker -> root
-    summaries = [structured_lead([report]) for report in REPORTS.values()]
-    return len(REPORTS), messages, root_decides(summaries)
+    summaries = [{"summary": text(r)} for r in REPORTS.values()]
+    return len(REPORTS), messages, summaries
 
 
 def hierarchy(lead):
@@ -36,13 +52,19 @@ def hierarchy(lead):
     for workers in TEAMS.values():
         messages += 2 + 2 * len(workers)  # root <-> lead, lead <-> workers
         summaries.append(lead([REPORTS[w] for w in workers]))
-    return len(TEAMS), messages, root_decides(summaries)
+    return len(TEAMS), messages, summaries
 
 
-for label, (span, messages, decision) in [
-    ("flat", flat()),
-    ("hierarchy, lossy leads", hierarchy(lossy_lead)),
-    ("hierarchy, structured leads", hierarchy(structured_lead)),
-]:
-    print(f"{label}: root span={span}, messages={messages}")
-    print(f"  decision: {decision}")
+for label, lead in [("flat", None),
+                    ("hierarchy, 10-word leads", model_lead(10)),
+                    ("hierarchy, 6-word leads", model_lead(6)),
+                    ("hierarchy, 6-word leads", model_lead(6)),
+                    ("hierarchy, 6-word leads", model_lead(6)),
+                    ("hierarchy, structured leads", structured_lead)]:
+    span, messages, summaries = flat() if lead is None else hierarchy(lead)
+    print(f"{label}: root span={span}, messages={messages}, "
+          f"caveat reaches root={reaches_root(summaries)}")
+    if lead is not None:
+        print("  research lead:", summaries[0]["summary"])
+    if lead is structured_lead:
+        print("  caveats field:", summaries[0]["caveats"])

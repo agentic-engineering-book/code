@@ -1,0 +1,11 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+model supervisor's plan:
+  order: researcher -> analyst -> writer
+  draft: Product B costs 15 more than Product A and has a 0.5 higher rating.
+bad plan:
+  order: writer -> researcher -> analyst
+  draft: No analyst findings were provided, so I can’t compare products A
+         and B yet.
+bad plan, dependency-aware supervisor:
+  order: researcher -> analyst -> writer
+  draft: Product B costs 15 more than Product A and has a 0.5 higher rating.
