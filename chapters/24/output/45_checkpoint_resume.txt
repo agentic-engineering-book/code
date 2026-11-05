@@ -1,0 +1,6 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+first run: crash during verify, after 3 model calls
+resume: verify, submit (2 model calls)
+first run: crash during verify, after 3 model calls
+  stale checkpoint: source changed, restarting
+resume: retrieve, analyze, draft, verify, submit (5 model calls)

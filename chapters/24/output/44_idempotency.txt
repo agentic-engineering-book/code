@@ -1,0 +1,10 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+no key: charges [100, 100]
+  agent after the timeout: I attempted to charge $100, but the payment
+    service timed out.  If you want, I can try again or help draft a note to
+    the customer about the delay.
+with key: charges [100]
+  agent after the timeout: I couldn’t complete the charge because the
+    payment service timed out.  If you want, I can try again to charge $100
+    for order 42.
+key reused with a different amount: idempotency key reused for a new request

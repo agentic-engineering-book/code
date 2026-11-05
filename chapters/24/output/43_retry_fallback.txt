@@ -1,0 +1,5 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+fails twice: ('Lima', 3, [0.12, 0.21])
+permanent:   ('stopped: NotFoundError', 1, [])
+outage:      ('fallback: Lima', 3, [0.1, 0.23])
+no fallback: gave up after 3 attempts
