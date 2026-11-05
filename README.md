@@ -15,28 +15,25 @@ python chapters/03/05_agent_loop.py
 python -m pytest
 ```
 
-Experiments that import `agentic.live` call a real model (Chapters 1 to 30 so far).
-They make paid requests of a fraction of a cent, and their output changes from
+Every experiment calls a real model through `agentic.live`. Each makes paid
+requests of a fraction of a cent, and its output changes from
 run to run, so the book prints one recorded run, kept in the chapter's
 `output/` folder. `python tools/record_output.py chapters/01/01_llm_call.py`
 records a new one. Set `BOOK_MODEL` to use another model; the tests run these
 experiments only when `BOOK_LIVE_TESTS=1`.
 
-The other experiments are deterministic. `ScriptedModel` replays fixed
-responses and `PolicyModel` decides from the messages it receives; both stand
-in for a real model so the mechanism, not model variance, is what you observe.
-They do not measure any real model.
+`agentic/model.py` keeps two deterministic stand-ins, `ScriptedModel` and
+`PolicyModel`, for the offline tests. They do not measure any real model.
 
 ## Live-model experiments
 
 `agentic/live.py` connects the same `Agent` loop to a real model through any
 OpenAI-compatible Chat Completions endpoint (OpenAI, or a local server such as
-Ollama). `live/` repeats nine of the book's questions against pinned model
+Ollama). `live/` repeats six of the book's questions against pinned model
 snapshots and records each run in `live/results/` (model, date, token use, and
-95% Wilson intervals). These runs make paid requests and are optional.
+95% Wilson intervals). These runs make more paid requests and are optional.
 
 ```bash
-python -m pip install openai
 # set OPENAI_API_KEY in your environment (never commit it)
 python -m live.ch01_tool_vs_no_tool
 ```

@@ -13,5 +13,5 @@ Kernel modules used: `agentic/context.py`, `agentic/live.py`.
 Install `requirements-frameworks.txt` from the repository root. See [setup and boundaries](../../framework_examples/README.md).
 
 - [13: LangChain Embeddings interface and InMemoryVectorStore](../../framework_examples/13_embeddings.py) - `python -m framework_examples.13_embeddings`
-- [14: LangChain retriever, metadata selection, prompt and stand-in generator](../../framework_examples/14_rag.py) - `python -m framework_examples.14_rag`
+- [14: LangChain retriever, metadata selection, prompt and real model](../../framework_examples/14_rag.py) - `python -m framework_examples.14_rag`
 - [15: LangChain reranking runnable](../../framework_examples/15_reranking.py) - `python -m framework_examples.15_reranking`
