@@ -1,37 +1,49 @@
 """Experiment 42 (Chapter 23): Cost and latency."""
-# Fixture spans: (span_id, parent_id, name, start_ms, end_ms, cost).
-# The root's cost is inclusive (it already contains its children's cost);
-# every other cost is exclusive to its own span.
-SPANS = [
-    ("S1", None, "agent.run", 0, 1600, 0.010),
-    ("S2", "S1", "retrieve", 0, 300, 0.001),
-    ("S3", "S1", "model", 300, 1100, 0.004),
-    ("S4", "S1", "calculator", 1100, 1110, 0.000),
-    ("S5", "S1", "model", 1110, 1600, 0.005),
-]
-# Three research branches that run in parallel after "start".
-BRANCHES = {"A": 200, "B": 900, "C": 400}
+import asyncio
+import time
+
+from agentic.live import OpenAIModel
+
+# Three branches of very different length.
+BRANCHES = {"A": "Name one primary colour. One word.",
+            "B": "Explain in about 150 words how a refrigerator works.",
+            "C": "Explain in about 40 words what a compiler does."}
 
 
-def duration(span):
-    return span[4] - span[3]
+def call(question):
+    """One real model call: (milliseconds, tokens)."""
+    model = OpenAIModel()
+    start = time.perf_counter()
+    model.generate([{"role": "user", "content": question}])
+    used = model.calls[-1]
+    milliseconds = round((time.perf_counter() - start) * 1000)
+    return milliseconds, used["input_tokens"] + used["output_tokens"]
 
 
-print("span breakdown:")
-for span in SPANS:
-    indent = "" if span[1] is None else "  "
-    print(f"  {indent + span[2]:<13} {duration(span) / 1000:.2f} s "
-          f"${span[5]:.3f}")
+# Run the branches one after another. Child spans record exclusive tokens;
+# the root span records the inclusive total, as many tracers do.
+children = {name: call(question) for name, question in BRANCHES.items()}
+root_ms = sum(ms for ms, tokens in children.values())
+root_tokens = sum(tokens for ms, tokens in children.values())
+print("span breakdown (sequential):")
+print(f"  agent.run   {root_ms:>5} ms {root_tokens:>4} tokens (inclusive)")
+for name, (ms, tokens) in children.items():
+    print(f"    branch {name}  {ms:>5} ms {tokens:>4} tokens")
+print(f"naive sum of every span:   {2 * root_tokens} tokens (double-counted)")
+print(f"sum of exclusive children: {root_tokens} tokens")
 
-naive_cost = sum(span[5] for span in SPANS)
-leaf_cost = sum(span[5] for span in SPANS if span[1] is not None)
-print(f"naive sum of every span:    ${naive_cost:.3f}  (double-counted)")
-print(f"sum of exclusive children:  ${leaf_cost:.3f}")
 
-slowest = max(SPANS[1:], key=duration)
-print(f"largest child span: {slowest[2]} ({duration(slowest)} ms)")
+async def parallel():
+    start = time.perf_counter()
+    results = await asyncio.gather(
+        *(asyncio.to_thread(call, q) for q in BRANCHES.values()))
+    wall = round((time.perf_counter() - start) * 1000)
+    return dict(zip(BRANCHES, results)), wall
 
-work = sum(BRANCHES.values())
-critical = max(BRANCHES, key=BRANCHES.get)
-print(f"parallel branch work: {work} ms")
-print(f"wall-clock (critical path {critical}): {BRANCHES[critical]} ms")
+
+branches, wall = asyncio.run(parallel())
+critical = max(branches, key=lambda name: branches[name][0])
+print("parallel run:", {n: f"{ms} ms" for n, (ms, t) in branches.items()})
+print(f"  branch work: {sum(ms for ms, t in branches.values())} ms")
+print(f"  wall-clock:  {wall} ms (critical path {critical}: "
+      f"{branches[critical][0]} ms)")

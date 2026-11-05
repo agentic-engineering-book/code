@@ -1,0 +1,18 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+trace T-1042
+S1 agent.run 2763 ms ok {'goal': 'price of X plus 10%'}
+    S2 model 1174 ms ok {'tokens': 190}
+    S3 retrieve 0 ms ok {'key': 'X', 'result': 80}
+        S4 vector_search 0 ms ok {'query': 'X', 'result_count': 1}
+    S5 model 752 ms ok {'tokens': 223}
+    S6 calculator 0 ms ok {'expression': '80 * 1.1', 'result': 88.0}
+    S7 model 837 ms ok {'tokens': 261}
+
+same spans without parent links:
+  agent.run       2763 ms
+  calculator         0 ms
+  model           1174 ms
+  model            752 ms
+  model            837 ms
+  retrieve           0 ms
+  vector_search      0 ms

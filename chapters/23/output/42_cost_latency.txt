@@ -1,0 +1,11 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+span breakdown (sequential):
+  agent.run    4050 ms  279 tokens (inclusive)
+    branch A   1156 ms   18 tokens
+    branch B   1471 ms  197 tokens
+    branch C   1423 ms   64 tokens
+naive sum of every span:   558 tokens (double-counted)
+sum of exclusive children: 279 tokens
+parallel run: {'A': '1256 ms', 'B': '1809 ms', 'C': '916 ms'}
+  branch work: 3981 ms
+  wall-clock:  2370 ms (critical path B: 1809 ms)
