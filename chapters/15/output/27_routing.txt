@@ -1,0 +1,7 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+  'Calculate 3 + 4' -> write (should be math)
+  'Write a reply telling the customer whether t' -> write (should be policy)
+rules: accuracy 5/7, misroute cost 6
+  'Write a reply telling the customer whether t' -> write (should be policy)
+model, plain routes: accuracy 6/7, misroute cost 5
+model, sharper routes: accuracy 7/7, misroute cost 0

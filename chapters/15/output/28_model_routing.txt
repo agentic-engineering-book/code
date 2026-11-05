@@ -1,0 +1,6 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+always fast          solved 3/5  cost 5
+always strong        solved 5/5  cost 50
+oracle               solved 5/5  cost 23
+length router        solved 5/5  cost 32
+cheap-first cascade  solved 5/5  cost 25

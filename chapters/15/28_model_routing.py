@@ -1,28 +1,29 @@
 """Experiment 28 (Chapter 15): Model routing."""
 from agentic import calculator
+from agentic.live import OpenAIModel
 
-FAST, STRONG = "fast_model", "strong_model"
-COST = {FAST: 1, STRONG: 10}
-# (task, difficulty). The labels are the experiment's ground truth.
+FAST, STRONG = "gpt-5.4-nano-2026-03-17", "gpt-5.4-mini-2026-03-17"
+COST = {FAST: 1, STRONG: 10}  # illustrative units, not prices
+# (task, difficulty). Measured beforehand: FAST failed every trial on the
+# hard tasks and none on the easy ones. Only the oracle reads the labels.
 TASKS = [
     ("12 + 30", "easy"),
-    ("17 * 6", "easy"),
+    ("37 * 43", "easy"),
+    ("64 * 25 + 7", "easy"),
     ("(48 - 6) * (9 + 4)", "hard"),
-    ("2 ** 10 - 3 * 7", "hard"),
-    ("99 * 99", "hard"),
+    ("(17 + 8) * (31 - 6)", "hard"),
 ]
 
 
-def call_model(model, task, difficulty):
-    """Assumption: FAST is right on easy tasks only, STRONG on all."""
-    correct = calculator(task)
-    if model == FAST and difficulty == "hard":
-        return correct + 1
-    return correct
+def call_model(model, task):
+    reply = OpenAIModel(model).generate([{"role": "user", "content":
+                                          f"What is {task}? Reply with the "
+                                          "number only."}])
+    return reply["answer"].strip().replace(",", "")
 
 
 def verify(task, answer):
-    return answer == calculator(task)      # an exact, reliable verifier
+    return answer == str(calculator(task))    # an exact, reliable verifier
 
 
 def choose_model(task):
@@ -33,14 +34,14 @@ def choose_model(task):
 def single_route(pick):
     def strategy(task, difficulty):
         model = pick(task, difficulty)
-        return call_model(model, task, difficulty), COST[model]
+        return call_model(model, task), COST[model]
     return strategy
 
 
 def cascade(task, difficulty):
-    answer, cost = call_model(FAST, task, difficulty), COST[FAST]
+    answer, cost = call_model(FAST, task), COST[FAST]
     if not verify(task, answer):                  # escalate on failure
-        answer = call_model(STRONG, task, difficulty)
+        answer = call_model(STRONG, task)
         cost += COST[STRONG]
     return answer, cost
 
