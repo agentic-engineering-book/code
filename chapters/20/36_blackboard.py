@@ -1,9 +1,32 @@
 """Experiment 36 (Chapter 20): Blackboard."""
+import re
 import threading
+
+from agentic.live import OpenAIModel
 
 AUTHORITY = {"catalog_v4": 3, "catalog_v3": 2, "carrier_api": 2,
              "calculator": 2, "cached_page": 1}
 REQUIRED = ["unit_price", "quantity", "shipping"]
+SOURCES = {
+    "catalog_v3": "Catalog v3: Widget W2, unit price 80 euros, order "
+                  "quantity 3.",
+    "carrier_api": "Carrier API: shipping for this order costs 15 euros.",
+    "cached_page": "Cached web page: Widget W2 now only 90 euros!",
+    "catalog_v4": "Catalog v4 (correction): Widget W2, unit price 90 euros.",
+}
+
+
+def worker(source, key):
+    """A real model reads one source and returns the fact it finds."""
+    model = OpenAIModel(system="Extract facts from the source. Reply with "
+                        "the number only.")
+    reply = model.generate([{"role": "user", "content": SOURCES[source] +
+                             f"\nWhat is the {key.replace('_', ' ')}?"}])
+    return int(re.findall(r"\d+", reply["answer"])[0])
+
+
+def publish_from(board, source, key, expected_version=None):
+    return board.publish(key, worker(source, key), source, expected_version)
 
 
 class Blackboard:
@@ -51,15 +74,16 @@ def calculate_total(board):
 
 
 board = Blackboard()
-board.publish("unit_price", 80, "catalog_v3")
-board.publish("quantity", 3, "catalog_v3")
+publish_from(board, "catalog_v3", "unit_price")
+publish_from(board, "catalog_v3", "quantity")
 print(f"ready after pricing: {calculate_total(board) is not None}")
-board.publish("shipping", 15, "carrier_api")
+publish_from(board, "carrier_api", "shipping")
 print(f"ready after shipping: {calculate_total(board)}")
 
-last_write_wins = {"unit_price": 80}
-last_write_wins["unit_price"] = 90  # a cached page overwrites the catalog
-board.publish("unit_price", 90, "cached_page")
+last_write_wins = {"unit_price": board.current("unit_price")}
+cached = worker("cached_page", "unit_price")
+last_write_wins["unit_price"] = cached  # the cached page overwrites
+board.publish("unit_price", cached, "cached_page")
 print(f"last write wins: unit_price={last_write_wins['unit_price']}")
 for claim in board.claims["unit_price"]:
     print(f"  claim kept: {claim}")
@@ -69,7 +93,7 @@ print(f"A claims calculate_total: {board.claim_task('calculate_total', 'A')}")
 print(f"B claims calculate_total: {board.claim_task('calculate_total', 'B')}")
 
 snapshot, total = calculate_total(board)
-board.publish("unit_price", 90, "catalog_v4")  # correction lands mid-task
+publish_from(board, "catalog_v4", "unit_price")  # correction lands mid-task
 print(f"commit total={total}: "
       f"{board.publish('total', total, 'calculator', snapshot)}")
 snapshot, total = calculate_total(board)

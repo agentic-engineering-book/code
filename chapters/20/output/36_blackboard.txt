@@ -1,0 +1,11 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+ready after pricing: False
+ready after shipping: (3, 255)
+last write wins: unit_price=90
+  claim kept: {'value': 80, 'source': 'catalog_v3'}
+  claim kept: {'value': 90, 'source': 'cached_page'}
+resolved by authority: unit_price=80
+A claims calculate_total: True
+B claims calculate_total: False
+commit total=255: rejected: stale (read v4, board is v5)
+recompute total=285: ok (v6)

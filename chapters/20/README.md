@@ -1,12 +1,10 @@
-# Chapter 20 experiments
+# Chapter 20: Blackboard
 
-Run from the repository root, for example:
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. The workers that publish facts are real models (five requests, a fraction of a cent), so your output may differ from the recorded run in [output/](output/). The board itself is ordinary code. Set `BOOK_MODEL` to use another model.
 
-```bash
-PYTHONPATH=. python chapters/20/36_blackboard.py
-```
+- `36_blackboard.py` - Experiment 36: Blackboard. Model workers extract facts from their sources; the board keeps claims with provenance, resolves conflicts by authority, claims tasks atomically and rejects a stale write. `python chapters/20/36_blackboard.py`
 
-- `36_blackboard.py` - Experiment 36: Blackboard - readiness, preserved conflicting claims, atomic task claiming, and a compare-and-swap stale-write check
+Kernel modules used: `agentic/live.py`.
 
 ## Framework companions
 
