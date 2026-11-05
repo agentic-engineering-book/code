@@ -1,69 +1,65 @@
 """Experiment 57 (Chapter 30): Prompt self-improvement."""
+from agentic.live import OpenAIModel
 
-PROMPTS = {
-    "v1": "Classify the request as:\nBILLING or TECHNICAL.",
-    # Two revisions proposed after reviewing the development failures.
-    "v2": ("Classify by the user's primary requested resolution.\n"
-           "BILLING:\ncharge, invoice, refund, payment\n"
-           "TECHNICAL:\nerror, crash, login, log in, setup"),
-    "overfit": ("Classify the request.\n"
-                "BILLING:\ncharged twice, invoice is wrong\n"
-                "TECHNICAL:\napp crashes, cannot log in"),
-}
 B, T = "BILLING", "TECHNICAL"
-DEVELOPMENT = [("charged twice", B), ("app crashes", T),
-               ("invoice is wrong", B), ("cannot log in", T)]
-VALIDATION = [("refund my payment", B), ("setup fails with an error", T),
-              ("charged for two seats", B), ("login loop", T)]
-TEST = [("double charge on card", B), ("password reset never arrives", T),
-        ("billing address update", B), ("installer crashes", T),
-        ("refund not received", B), ("error 500 on export", T),
-        ("card declined at checkout", B)]
+# House rule the first prompt does not state: a payment problem caused by
+# a bug in our app is TECHNICAL.
+DEVELOPMENT = [("charged twice after the app crashed at checkout", T),
+               ("my invoice has the wrong company name", B),
+               ("the payment page threw an error and took my money twice", T),
+               ("cannot log in after the update", T)]
+VALIDATION = [("double charge caused by the checkout freezing", T),
+              ("refund for the annual plan I cancelled", B),
+              ("billed for a seat I removed last month", B),
+              ("app crashed mid-payment and I paid twice", T)]
+TEST = [("I was charged twice because the app crashed during checkout", T),
+        ("refund for the duplicate payment the checkout bug caused", T),
+        ("the invoice shows the wrong VAT number", B),
+        ("app froze and billed me for an order that never went through", T),
+        ("please refund last month, I cancelled in time", B),
+        ("password reset email never arrives", T),
+        ("card was charged although the order failed with error 500", T),
+        ("why did my price go up this month?", B)]
+V1 = ("Classify the support request as BILLING or TECHNICAL. "
+      "Reply with the label only.")
 
 
-def keywords(prompt, label):
-    lines = prompt.splitlines()
-    if f"{label}:" not in lines:
-        return []
-    return lines[lines.index(f"{label}:") + 1].split(", ")
+def ask(system, content):
+    reply = OpenAIModel(system=system).generate(
+        [{"role": "user", "content": content}])
+    return reply["answer"].strip()
 
 
-def classify(prompt, request):
-    """Stands in for a model that follows the keyword lists it is given."""
-    for label in (B, T):
-        if any(word in request for word in keywords(prompt, label)):
-            return label
-    return B if "bill" in request else T
-
-
-def score(name, dataset, label=None):
+def score(prompt, dataset, label=None):
     rows = [(r, gold) for r, gold in dataset if label in (None, gold)]
-    correct = sum(classify(PROMPTS[name], r) == gold for r, gold in rows)
-    return correct, len(rows)
+    return sum(ask(prompt, r) == gold for r, gold in rows), len(rows)
 
 
-def show(name, dataset):
-    return "{}/{}".format(*score(name, dataset))
-
-
-print("development set (the failures the revisions were written from):")
-for name in PROMPTS:
-    print(f"  {name:<8} {show(name, DEVELOPMENT)}")
-print("validation set (used to choose between candidates):")
-for name in PROMPTS:
-    print(f"  {name:<8} {show(name, VALIDATION)}")
-chosen = max(["v2", "overfit"], key=lambda n: score(n, VALIDATION)[0])
-print(f"  selected: {chosen}")
-
-print("held-out test set (used once, for the promotion decision):")
-for name in ("v1", chosen):
-    print(f"  {name:<8} {show(name, TEST)}  billing "
-          f"{show(name, [r for r in TEST if r[1] == B])}  technical "
-          f"{show(name, [r for r in TEST if r[1] == T])}")
-gain = score(chosen, TEST)[0] > score("v1", TEST)[0]
-no_regression = all(score(chosen, TEST, lab)[0] >= score("v1", TEST, lab)[0]
-                    for lab in (B, T))
-print(f"promote {chosen}: {gain and no_regression} "
-      f"(held-out gain {gain}, no slice regression {no_regression})")
-print(f"lineage: version 2 = prompt {chosen}, parent 1 = v1, "
-      "rollback target v1")
+failures = [(r, gold) for r, gold in DEVELOPMENT if ask(V1, r) != gold]
+PROMPTS = {
+    "v1": V1,
+    # A real model revises the prompt from the development failures.
+    "revised": ask("You improve classification prompts. Reply with the "
+                   "new prompt only.",
+                   f"Current prompt:\n{V1}\n\nIt got these wrong (request "
+                   "-> correct label):\n" +
+                   "\n".join(f"- {r} -> {g}" for r, g in failures) +
+                   "\n\nWrite an improved prompt that states the general "
+                   "rule, not these examples."),
+    # A candidate that simply lists the development examples.
+    "examples": V1 + "\nKnown cases:\n" +
+                "\n".join(f"- {r} -> {g}" for r, g in DEVELOPMENT),
+}
+print(f"v1 failed {len(failures)} of {len(DEVELOPMENT)} development cases")
+print(f"{'prompt':<9} {'dev':>5} {'valid.':>6} {'test':>5}")
+results = {name: [score(p, d) for d in (DEVELOPMENT, VALIDATION, TEST)]
+           for name, p in PROMPTS.items()}
+for name, scores in results.items():
+    print(f"{name:<9}" + "".join(f" {c}/{n}".rjust(6) for c, n in scores))
+chosen = max(["revised", "examples"], key=lambda n: results[n][1][0])
+gain = results[chosen][2][0] > results["v1"][2][0]
+no_regression = all(score(PROMPTS[chosen], TEST, lab)[0] >=
+                    score(V1, TEST, lab)[0] for lab in (B, T))
+print(f"chosen on validation: {chosen}")
+print(f"promote: {gain and no_regression} (held-out gain {gain}, "
+      f"no slice regression {no_regression})")

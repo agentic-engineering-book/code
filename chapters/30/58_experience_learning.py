@@ -1,4 +1,5 @@
 """Experiment 58 (Chapter 30): Experience learning."""
+from agentic.live import OpenAIModel, schema
 
 # condition -> action -> outcome, one record per past task
 EPISODES = [
@@ -9,7 +10,24 @@ EPISODES = [
     ("T61", "timeout", "retry immediately", "failed"),
     ("T87", "API-X 429", "exponential backoff", "recovered"),
 ]
-NEW_TASKS = ["API-X 429", "timeout", "payment declined"]
+NEW_TASKS = {"API-X 429": "The call to API-X returned 429 Too Many Requests.",
+             "timeout": "The call to the inventory API timed out.",
+             "payment declined": "The customer's card was declined "
+                                 "(insufficient funds)."}
+ACTIONS = [schema("retry_now", "Retry the failed operation immediately."),
+           schema("backoff_retry", "Retry after an exponential backoff."),
+           schema("ask_customer", "Ask the customer to act.",
+                  message="message")]
+
+
+def agent_action(lessons, task):
+    """A real agent handles a new task with the lessons in its context."""
+    model = OpenAIModel(tools=ACTIONS, tool_choice="required",
+                        system="Lessons from past tasks:\n- " +
+                        "\n- ".join(lessons))
+    decision = model.generate([{"role": "user",
+                                "content": NEW_TASKS[task] + " Handle it."}])
+    return decision["action"]
 
 
 def naive_learning(episodes):
@@ -44,13 +62,12 @@ def validated_learning(episodes, min_successes=3, min_rate=0.75):
 
 naive = naive_learning(EPISODES)
 print("naive lessons:", naive)
-for task in NEW_TASKS:
-    print(f"  {task:<16} -> {' + '.join(naive)}")
 print("validated lessons (evidence, provenance, scope):")
 promoted = validated_learning(EPISODES)
-print("retrieval for new tasks:")
+validated = [f"{r['scope']} -> {r['action']} ({r['successes']}/"
+             f"{r['successes'] + r['failures']} recovered: "
+             f"{', '.join(r['source_tasks'])})" for r in promoted]
+print("a real agent acts on new tasks:")
 for task in NEW_TASKS:
-    match = [r for r in promoted if r["scope"] == task]
-    advice = (f"{match[0]['action']} (from {match[0]['source_tasks']})"
-              if match else "no validated lesson; reason from scratch")
-    print(f"  {task:<16} -> {advice}")
+    print(f"  {task:<16} naive -> {agent_action(naive, task):<13} "
+          f"validated -> {agent_action(validated, task)}")

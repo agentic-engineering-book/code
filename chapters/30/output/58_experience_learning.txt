@@ -1,0 +1,9 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+naive lessons: ['Always exponential backoff', 'Always retry immediately']
+validated lessons (evidence, provenance, scope):
+  API-X 429 -> exponential backoff 3/3 promote
+  timeout   -> retry immediately   1/3 keep testing
+a real agent acts on new tasks:
+  API-X 429        naive -> retry_now     validated -> backoff_retry
+  timeout          naive -> retry_now     validated -> backoff_retry
+  payment declined naive -> ask_customer  validated -> ask_customer

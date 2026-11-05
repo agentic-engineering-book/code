@@ -1,0 +1,8 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+v1 failed 2 of 4 development cases
+prompt      dev valid.  test
+v1          2/4   2/4   5/8
+revised     4/4   4/4   8/8
+examples    4/4   4/4   8/8
+chosen on validation: revised
+promote: True (held-out gain True, no slice regression True)
