@@ -1,0 +1,10 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+ground truth: B
+independent errors: votes=['B', 'B', 'A']
+  majority=B correct=True oracle@3=True unique sources=3
+correlated errors: votes=['A', 'A', 'B']
+  majority=A correct=False oracle@3=True unique sources=2
+nine correlated voters: votes=['A', 'A', 'A', 'A', 'A', 'A', 'A', 'B', 'B']
+  majority=A correct=False oracle@9=True unique sources=2
+even split: votes=['A', 'B']
+  majority=tie correct=False oracle@2=True unique sources=2

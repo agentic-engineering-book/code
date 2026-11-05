@@ -1,0 +1,10 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+bare claims, wrong one persuasive:
+  right answer in A: model judge A A A (3/3 correct), grounded judge True
+  right answer in B: model judge A B B (2/3 correct), grounded judge True
+only the right one shows work:
+  right answer in A: model judge A A A (3/3 correct), grounded judge True
+  right answer in B: model judge B B B (3/3 correct), grounded judge True
+both show work:
+  right answer in A: model judge A A A (3/3 correct), grounded judge True
+  right answer in B: model judge A A A (0/3 correct), grounded judge True

@@ -1,8 +1,27 @@
 """Experiment 34 (Chapter 19): Voting."""
 from collections import Counter
 
+from agentic.live import OpenAIModel
+
+QUESTION = ("Which supplier had the lower defect rate last year, A or B? "
+            "Answer A or B only.")
 GROUND_TRUTH = "B"
-SOURCES = {"filing": "B", "analyst_note": "B", "promo_blog": "A"}
+SOURCES = {
+    "filing": "Annual filing: last year supplier B's defect rate was 1.2%; "
+              "supplier A's was 2.9%.",
+    "analyst_note": "Analyst note: B beat A on quality last year, with "
+                    "fewer than half A's defects.",
+    "promo_blog": "Supplier A blog: A is the quality leader, with the "
+                  "lowest defect rates in the industry!",
+}
+
+
+def voter(source):
+    """A real model that reads one source and votes."""
+    model = OpenAIModel(system="Answer from the source you are given.")
+    reply = model.generate([{"role": "user",
+                             "content": SOURCES[source] + "\n" + QUESTION}])
+    return reply["answer"].strip()[:1]
 
 
 def majority(votes):
@@ -14,9 +33,9 @@ def majority(votes):
 
 
 def evaluate(label, sources_read):
-    votes = [SOURCES[source] for source in sources_read]
+    votes = [voter(source) for source in sources_read]
     decision = majority(votes)
-    oracle = GROUND_TRUTH in votes  # was at least one worker correct?
+    oracle = GROUND_TRUTH in votes  # was at least one voter correct?
     print(f"{label}: votes={votes}")
     print(f"  majority={decision} correct={decision == GROUND_TRUTH} "
           f"oracle@{len(votes)}={oracle} "
