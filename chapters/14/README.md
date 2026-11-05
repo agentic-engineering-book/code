@@ -1,12 +1,10 @@
-# Chapter 14 experiments
+# Chapter 14: Tree reasoning
 
-Run from the repository root, for example:
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. The experiment calls a real model (fourteen requests, a fraction of a cent), so your output will differ from the recorded run in [output/](output/). Set `BOOK_MODEL` to use another model.
 
-    PYTHONPATH=. python chapters/14/26_tree_reasoning.py
+- `26_tree_reasoning.py` - Experiment 26: Tree reasoning. The model answers the 2 -> 13 puzzle directly, then a one-level tree search prunes first moves with a model judge or an exact judge. `python chapters/14/26_tree_reasoning.py`
 
-(On Windows PowerShell: `$env:PYTHONPATH='.'; python chapters/14/26_tree_reasoning.py`.)
-
-- `26_tree_reasoning.py` - beam search on the 2 -> 13 puzzle with widths 1-3, greedy closeness versus look-ahead scoring
+Kernel modules used: `agentic/live.py`.
 
 ## Framework companions
 

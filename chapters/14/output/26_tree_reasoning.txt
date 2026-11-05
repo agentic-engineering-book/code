@@ -1,0 +1,12 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+ONE PATH: the model answers directly
+  +9 +3    correct=False
+  +9 *2    correct=False
+  +9 +3    correct=False
+  +9 *2    correct=False
+  +3 +9    correct=False
+TREE: code expands every first move, a judge prunes, code verifies
+  model_judge kept=['+9'] solutions=[]
+  model_judge kept=[] solutions=[]
+  model_judge kept=[] solutions=[]
+  exact_judge kept=['*2'] solutions=['*2 +9']
