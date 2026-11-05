@@ -1,0 +1,8 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+skills discovered: ['company-research']
+task-1 states: submitted -> working -> completed
+retry of msg-1 -> task-1 | tasks stored: 1
+intruder -> task-2 rejected
+valid artifact: True
+drifted agent: completed | valid artifact: False
+  drifted keys: ['A_price_usd', 'B_price_usd', 'comparison']

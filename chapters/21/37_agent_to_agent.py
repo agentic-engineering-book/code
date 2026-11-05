@@ -1,4 +1,14 @@
 """Experiment 37 (Chapter 21): Agent-to-agent communication."""
+import json
+
+from agentic.live import OpenAIModel
+
+FACTS = ("Facts: company A's product costs 80 US dollars; company B's costs "
+         "95 US dollars.")
+V1 = ("You are a research agent. " + FACTS + ' Reply with JSON only: '
+      '{"price": <the lower price as an integer>, "currency": "USD"}.')
+V2 = ("You are a research agent. " + FACTS +  # the schema line was dropped
+      " Reply with your comparison as JSON only.")
 AGENT_CARD = {
     "name": "researcher",
     "version": "1.0.0",
@@ -10,12 +20,13 @@ AGENT_CARD = {
 
 
 class RemoteAgent:
-    """In-process stand-in for an A2A server: no network, no real auth."""
+    """An in-process A2A-style server (no network, no real auth) whose
+    work is done by a real model."""
 
-    def __init__(self, card, allowed_callers, result):
+    def __init__(self, card, allowed_callers, instructions):
         self.card = card
         self.allowed_callers = allowed_callers
-        self.result = result
+        self.instructions = instructions
         self.tasks = {}
         self.task_for_message = {}
 
@@ -31,7 +42,11 @@ class RemoteAgent:
             task["states"].append("rejected")
             return task
         task["states"].append("working")
-        part = {"kind": "data", "data": self.result}
+        model = OpenAIModel(system=self.instructions,
+                            response_format={"type": "json_object"})
+        text = message["parts"][0]["text"]
+        reply = model.generate([{"role": "user", "content": text}])
+        part = {"kind": "data", "data": json.loads(reply["answer"])}
         task["artifacts"].append(
             {"artifactId": "art-1", "name": "comparison", "parts": [part]})
         task["states"].append("completed")
@@ -44,8 +59,7 @@ def valid_comparison(artifact):
     return has_price and data.get("currency") == "USD"
 
 
-remote = RemoteAgent(AGENT_CARD, {"coordinator"},
-                     {"price": 80, "currency": "USD"})
+remote = RemoteAgent(AGENT_CARD, {"coordinator"}, V1)
 skills = [skill["id"] for skill in remote.card["skills"]]
 print("skills discovered:", skills)
 
@@ -63,8 +77,8 @@ print("intruder ->", denied["id"], denied["states"][-1])
 
 print("valid artifact:", valid_comparison(task["artifacts"][0]))
 
-drifted = RemoteAgent(AGENT_CARD, {"coordinator"},
-                      {"amount": "eighty dollars"})
+drifted = RemoteAgent(AGENT_CARD, {"coordinator"}, V2)
 task = drifted.send_message("coordinator", message)
 print("drifted agent:", task["states"][-1], "| valid artifact:",
       valid_comparison(task["artifacts"][0]))
+print("  drifted keys:", list(task["artifacts"][0]["parts"][0]["data"]))

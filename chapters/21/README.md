@@ -1,11 +1,10 @@
-# Chapter 21 experiments
+# Chapter 21: Agent-to-agent communication
 
-- `37_agent_to_agent.py` - Experiment 37: agent-to-agent communication. An
-  in-process stand-in for an A2A server: agent card discovery, server-assigned
-  task IDs, messageId deduplication of retries, caller rejection, and artifact
-  schema validation. No network or real authentication.
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. The remote agent's work is done by a real model (two requests, a fraction of a cent), so your output may differ from the recorded run in [output/](output/). The protocol machinery is ordinary code. Set `BOOK_MODEL` to use another model.
 
-Run from the repository root: `PYTHONPATH=. python chapters/21/37_agent_to_agent.py`
+- `37_agent_to_agent.py` - Experiment 37: Agent-to-agent communication. Agent card, server-assigned task IDs, `messageId` deduplication, caller rejection, artifacts, and schema validation; a drifted agent whose instructions lost the schema line. `python chapters/21/37_agent_to_agent.py`
+
+Kernel modules used: `agentic/live.py`.
 
 ## Framework companions
 
