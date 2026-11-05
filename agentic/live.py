@@ -79,8 +79,9 @@ class OpenAIModel:
             elif role == "tool":  # a result with no recorded call
                 api.append({"role": "user",
                             "content": f"Tool result: {content}"})
-            else:
-                api.append({"role": role, "content": str(content)})
+            else:  # a list of parts (text, images) passes through
+                api.append({"role": role, "content": content
+                            if isinstance(content, list) else str(content)})
         return api
 
 

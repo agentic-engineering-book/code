@@ -1,0 +1,6 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+Stale coordinates:
+  click (420, 610) -> pressed 'Delete'
+Re-observe, ground by label, verify the postcondition:
+  click (510, 610) -> pressed 'Submit'
+  postcondition verified from new observation: True

@@ -1,0 +1,9 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+image evidence: Widget A, quantity 4 (confidence 0.99)
+naive fusion: ship 4 x Widget A
+provenance-preserving comparison: ESCALATE
+  quantity: image says 4 (confidence 0.99), order says 7
+smudged label: Widget A, quantity None (confidence 0.1)
+comparison: ESCALATE
+  quantity: image says UNKNOWN (confidence 0.1), order says 7
+  quantity: unreadable or low confidence -> re-capture

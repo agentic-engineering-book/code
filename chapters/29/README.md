@@ -1,16 +1,11 @@
-# Chapter 29 experiments: Computer-Use and Multimodal Agents
+# Chapter 29: Computer use and multimodal agents
 
-Run from the repository root with `PYTHONPATH=.` (or after `pip install -e .`).
-Standard library only.
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. Both experiments call a real model (five requests in all, a fraction of a cent), so your output may differ from the recorded runs in [output/](output/). Experiment 56 needs Pillow and a vision-capable model.
 
-- `55_computer_use.py` - a toy screen whose layout shifts after observation:
-  reusing the old coordinate presses Delete; re-observing and grounding by
-  label just before acting presses Submit, and the postcondition is checked
-  on a fresh observation.
-- `56_multimodal.py` - compares a (simulated) perception of a package label
-  with the order record. Naive fusion ships the wrong quantity; the
-  provenance-preserving comparison escalates the conflict and asks for a
-  re-capture when confidence is low or the field is occluded.
+- `55_computer_use.py` - Experiment 55: Computer use. A real model grounds "submit the form" on a toy screen whose layout shifts; stale coordinates versus re-grounding and a postcondition check. `python chapters/29/55_computer_use.py`
+- `56_multimodal.py` - Experiment 56: Multimodal reasoning. A rendered label photo read by a real vision model, compared with an order record; a second photo has the quantity smudged. `python chapters/29/56_multimodal.py`
+
+Kernel modules used: `agentic/live.py`.
 
 ## Framework companions
 
