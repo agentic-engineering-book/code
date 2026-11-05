@@ -1,36 +1,59 @@
-"""Experiment 34: LangGraph parallel voters with an explicit vote policy."""
+"""Experiment 34: Voting in LangGraph. See framework_examples/README."""
 from collections import Counter
 
-from framework_examples.support import parallel
+from framework_examples.support import chat, parallel
 
+QUESTION = ("Which supplier had the lower defect rate last year, A or B? "
+            "Answer A or B only.")
 GROUND_TRUTH = "B"
-SOURCES = {"filing": "B", "analyst_note": "B", "promo_blog": "A"}
+SOURCES = {
+    "filing": "Annual filing: last year supplier B's defect rate was 1.2%; "
+              "supplier A's was 2.9%.",
+    "analyst_note": "Analyst note: B beat A on quality last year, with "
+                    "fewer than half A's defects.",
+    "promo_blog": "Supplier A blog: A is the quality leader, with the "
+                  "lowest defect rates in the industry!",
+}
+
+
+def voter(source):
+    """A real model that reads one source and votes."""
+    reply = chat().invoke([("system", "Answer from the source you are given."),
+                           ("user", SOURCES[source] + "\n" + QUESTION)])
+    return reply.content.strip()[:1]
 
 
 def majority(votes):
+    """Most common answer; an exact tie is reported, not broken at random."""
     ranked = Counter(votes).most_common()
     if len(ranked) > 1 and ranked[0][1] == ranked[1][1]:
-        return "tie"  # escalate instead of breaking ties arbitrarily
+        return "tie"
     return ranked[0][0]
 
 
-def vote(sources_read):
-    voters = {f"voter_{i}": (lambda s=source: SOURCES[s])
+def evaluate(label, sources_read):
+    # One LangGraph branch per voter; they run in the same super-step.
+    voters = {f"voter_{i}": (lambda s=source: voter(s))
               for i, source in enumerate(sources_read, 1)}
-    votes = [answer for _, answer in parallel(voters)]
+    votes = [vote for _, vote in parallel(voters)]
     decision = majority(votes)
-    return {"votes": votes, "majority": decision,
-            "correct": decision == GROUND_TRUTH,
-            "unique_sources": len(set(sources_read))}
+    return [f"{label}: votes={votes}",
+            f"  majority={decision} correct={decision == GROUND_TRUTH} "
+            f"oracle@{len(votes)}={GROUND_TRUTH in votes} "
+            f"unique sources={len(set(sources_read))}"]
 
 
 def run():
-    return {
-        "independent": vote(["filing", "analyst_note", "promo_blog"]),
-        "correlated": vote(["promo_blog", "promo_blog", "filing"]),
-        "split": vote(["promo_blog", "filing"]),
-    }
+    return [f"ground truth: {GROUND_TRUTH}",
+            *evaluate("independent errors",
+                      ["filing", "analyst_note", "promo_blog"]),
+            *evaluate("correlated errors",
+                      ["promo_blog", "promo_blog", "filing"]),
+            *evaluate("nine correlated voters",
+                      ["promo_blog"] * 7 + ["filing"] * 2),
+            *evaluate("even split", ["promo_blog", "filing"])]
 
 
 if __name__ == "__main__":
-    print(run())
+    for line in run():
+        print(line)

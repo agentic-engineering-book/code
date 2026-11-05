@@ -1,48 +1,57 @@
-"""Experiment 9: LangGraph named-tool dispatch."""
-from langchain_core.messages import AIMessage
-from langchain_core.tools import tool
-from langgraph.graph import END, START, MessagesState, StateGraph
-from langgraph.prebuilt import ToolNode
+"""Experiment 9: Tool selection in LangChain. See framework_examples/README."""
+from langchain_core.tools import StructuredTool
 
-from agentic.tools import calculator as evaluate
+from framework_examples.support import chat
 
 
-@tool
-def calculator(expression: str) -> float:
-    """Evaluate a basic arithmetic expression."""
-    return evaluate(expression)
+def search(query: str) -> str:
+    """Never run here: the experiment only measures the model's choice."""
+    return ""
 
 
-@tool
-def weather(city: str) -> dict:
-    """Get the current weather in a city."""
-    return {"city": city, "temperature_c": 24}
+def search_tools(docs_name, docs_text, web_name, web_text):
+    """Two search tools: the company's documents first, then the web."""
+    return [StructuredTool.from_function(search, name=name, description=text)
+            for name, text in [(docs_name, docs_text), (web_name, web_text)]]
 
 
-@tool
-def search(topic: str) -> str:
-    """Find information about a topic."""
-    return f"3 fixture documents about {topic}"
-
-
-def dispatch(name, args):
-    """Run one proposed call through a ToolNode with three tools."""
-    builder = StateGraph(MessagesState)
-    builder.add_node("tools", ToolNode([calculator, weather, search]))
-    builder.add_edge(START, "tools")
-    builder.add_edge("tools", END)
-    proposal = AIMessage(content="", tool_calls=[
-        {"name": name, "args": args, "id": "call-1"}])
-    message = builder.compile().invoke({"messages": [proposal]})
-    return message["messages"][-1].status
+VARIANTS = {
+    "CLEAR": search_tools(
+        "search_docs", "Search the company's internal documents: "
+                       "policies, HR rules and expense rules.",
+        "search_web", "Search the public web for general knowledge."),
+    "SAME DESCRIPTIONS, VAGUE NAMES": search_tools(
+        "search_a", "Search for information.",
+        "search_b", "Search for information."),
+}
+DOCS, WEB = 0, 1
+TASKS = [
+    ("What is our travel expense limit per night?", DOCS),
+    ("How many vacation days do new employees get?", DOCS),
+    ("Who approves overtime in our company?", DOCS),
+    ("Who won the 2022 football World Cup?", WEB),
+    ("What is the population of Brazil?", WEB),
+    ("When was the telephone invented?", WEB),
+]
 
 
 def run():
-    # A correct name runs; a plausible but unregistered name is refused
-    # as an error observation instead of executing anything.
-    return {"weather": dispatch("weather", {"city": "Pretoria"}),
-            "forecast": dispatch("forecast", {"city": "Pretoria"})}
+    lines = []
+    for label, tools in VARIANTS.items():
+        # tool_choice="required": the model must pick one of the tools.
+        model = chat().bind_tools(tools, tool_choice="required")
+        lines.append(label)
+        correct = 0
+        for goal, expected in TASKS:
+            chosen = model.invoke(goal).tool_calls[0]["name"]
+            right = chosen == tools[expected].name
+            correct += right
+            mark = "ok" if right else "WRONG"
+            lines.append(f"  {goal:<46} -> {chosen:<11} {mark}")
+        lines += [f"  selection accuracy: {correct}/{len(TASKS)}", ""]
+    return lines
 
 
 if __name__ == "__main__":
-    print(run())
+    for line in run():
+        print(line)

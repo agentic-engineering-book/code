@@ -1,11 +1,23 @@
 """Small visible graph builders shared by the chapter examples.
 
 These helpers build real StateGraphs; node functions remain application code.
-Models and environment observations are fixtures, not live services.
+chat() returns a real model through LangChain; it needs OPENAI_API_KEY.
 """
 from typing import TypedDict, Any, Annotated
 import operator
+import os
+
+from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, START, END
+
+MODEL = os.environ.get("BOOK_MODEL", "gpt-5.4-mini-2026-03-17")
+SMALL_MODEL = "gpt-5.4-nano-2026-03-17"
+
+
+def chat(model=MODEL, **settings):
+    """A real chat model; every call is a paid provider request."""
+    settings = {"timeout": 60, "max_retries": 2, **settings}
+    return ChatOpenAI(model=model, **settings)
 
 
 class State(TypedDict, total=False):

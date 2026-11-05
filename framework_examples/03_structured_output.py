@@ -1,9 +1,9 @@
-"""Experiment 3: LangChain structured-output parsing."""
+"""Experiment 3: Structured output. See framework_examples/README."""
 from typing import Literal
 
-from langchain_core.exceptions import OutputParserException
-from langchain_core.output_parsers import PydanticOutputParser
 from pydantic import BaseModel
+
+from framework_examples.support import chat
 
 
 class Arguments(BaseModel):
@@ -11,22 +11,22 @@ class Arguments(BaseModel):
 
 
 class CalculatorDecision(BaseModel):
+    """A call to the calculator with an arithmetic expression."""
     action: Literal["calculator"]
     arguments: Arguments
 
 
 def run():
-    parser = PydanticOutputParser(pydantic_object=CalculatorDecision)
-    good = parser.invoke(
-        '{"action": "calculator", "arguments": {"expression": "37*42"}}')
-    try:
-        parser.invoke('{"action": "delete_database", "arguments": {}}')
-        rejected = False
-    except OutputParserException:
-        rejected = True
-    return {"parsed": good.model_dump(),
-            "delete_database_rejected": rejected}
+    # The provider constrains generation to the Pydantic schema.
+    model = chat().with_structured_output(CalculatorDecision,
+                                          include_raw=True)
+    result = model.invoke("Work out 27611 times 2033.")
+    decision = result["parsed"]
+    return [f"RAW: {result['raw'].content}",
+            f"ACTION: {decision.action}",
+            f"ARGUMENTS: {decision.arguments.model_dump()}"]
 
 
 if __name__ == "__main__":
-    print(run())
+    for line in run():
+        print(line)

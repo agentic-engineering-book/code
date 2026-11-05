@@ -1,36 +1,21 @@
-"""Experiment 2: LangGraph model/tool loop."""
-from langchain_core.language_models.fake_chat_models import (
-    FakeMessagesListChatModel)
-from langchain_core.messages import AIMessage, HumanMessage
+"""Experiment 2: Model to agent in LangGraph. See framework_examples/README."""
+from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langchain_core.tools import tool
 from langgraph.graph import START, MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
 
 from agentic.tools import calculator as evaluate
+from framework_examples.support import chat
 
 
 @tool
 def calculator(expression: str) -> float:
-    """Evaluate a basic arithmetic expression."""
+    """Evaluate an arithmetic expression exactly. Supports + - * / **."""
     return evaluate(expression)
 
 
-def build_model(live):
-    if live:
-        import os
-        from langchain_openai import ChatOpenAI
-        model = ChatOpenAI(model=os.environ["BOOK_MODEL"], timeout=30,
-                           max_retries=1)
-        return model.bind_tools([calculator])
-    call = {"name": "calculator", "args": {"expression": "37*42"},
-            "id": "call-1"}
-    return FakeMessagesListChatModel(responses=[
-        AIMessage(content="", tool_calls=[call]),
-        AIMessage(content="37 x 42 = 1554.")])
-
-
-def run(live=False):
-    model = build_model(live)
+def run():
+    model = chat().bind_tools([calculator])
     builder = StateGraph(MessagesState)
     builder.add_node("model",
                      lambda s: {"messages": [model.invoke(s["messages"])]})
@@ -38,12 +23,21 @@ def run(live=False):
     builder.add_edge(START, "model")
     builder.add_conditional_edges("model", tools_condition)
     builder.add_edge("tools", "model")
-    question = HumanMessage(content="What is 37 * 42? Use the calculator.")
+    question = HumanMessage(content="What is 27611 * 2033?")
     result = builder.compile().invoke({"messages": [question]},
                                       {"recursion_limit": 10})
-    return [(m.type, m.content) for m in result["messages"][1:]]
+    lines = []
+    for message in result["messages"][1:]:
+        if isinstance(message, AIMessage) and message.tool_calls:
+            call = message.tool_calls[0]
+            lines.append(f"ACTION: {call['name']} {call['args']}")
+        elif isinstance(message, ToolMessage):
+            lines.append(f"OBSERVATION: {message.content}")
+        else:
+            lines.append("ANSWER: " + " ".join(message.content.split())[:60])
+    return lines
 
 
 if __name__ == "__main__":
-    import sys
-    print(run(live="--live" in sys.argv))
+    for line in run():
+        print(line)

@@ -1,32 +1,49 @@
-"""Experiment 5: LangGraph observe-decide-act loop."""
-from agentic.tools import calculator
-from framework_examples.support import bounded_loop
+"""Experiment 5: Agent loop in LangGraph. See framework_examples/README."""
+from langchain_core.messages import HumanMessage
+from langchain_core.tools import tool
+
+from agentic.tools import calculator as evaluate
+from framework_examples.support import bounded_loop, chat
+
+GOAL = ("Multiply 27611 by 2033. If the result is even, add 6; "
+        "otherwise subtract 6.")
 
 
-def policy(observations):
-    """Stand-in model: decides only from the observations it has seen."""
-    if not observations:
-        return {"action": "calculator", "expression": "12*7"}
-    if len(observations) == 1:
-        return {"action": "calculator",
-                "expression": f"{observations[-1]}+6"}
-    return {"done": True, "answer": f"The answer is {observations[-1]}."}
+@tool
+def calculator(expression: str) -> float:
+    """Evaluate an arithmetic expression exactly. Supports + - * / **."""
+    return evaluate(expression)
+
+
+model = chat().bind_tools([calculator], parallel_tool_calls=False)
 
 
 def step(state):
-    decision = policy(state["results"])
-    if decision.get("done"):
-        return {"value": decision["answer"], "step": state["step"] + 1}
-    observation = calculator(decision["expression"])
-    return {"results": [observation], "step": state["step"] + 1}
+    """One turn: the model decides; software runs the tool it names."""
+    decision = model.invoke(state["results"])
+    if not decision.tool_calls:
+        return {"results": [decision], "value": decision.content,
+                "step": state["step"] + 1}
+    observation = calculator.invoke(decision.tool_calls[0])
+    return {"results": [decision, observation], "step": state["step"] + 1}
 
 
 def run():
-    state = bounded_loop(step, lambda s: s.get("value") is not None,
-                         {"step": 0, "results": []}, limit=10)
-    return {"observations": state["results"], "answer": state["value"],
-            "decisions": state["step"]}
+    state = bounded_loop(
+        step, lambda s: s.get("value") is not None or s["step"] >= 10,
+        {"step": 0, "results": [HumanMessage(content=GOAL)]}, limit=25)
+    lines = []
+    for message in state["results"][1:]:
+        if message.type == "ai" and message.tool_calls:
+            call = message.tool_calls[0]
+            lines.append(f"ACTION: {call['name']} {call['args']}")
+        elif message.type == "tool":
+            lines.append(f"OBSERVATION: {message.content}")
+        else:
+            lines.append("DONE: " + " ".join(message.content.split())[:70])
+    return lines + [f"MODEL CALLS: {state['step']}"]
 
 
 if __name__ == "__main__":
-    print(run())
+    for line in run():
+        print(line)

@@ -47,13 +47,14 @@ of the model. Rerunning will give somewhat different numbers.
 ## Framework implementations
 
 All 59 experiments also have runnable LangChain core / LangGraph companions.
-See [the framework guide](framework_examples/README.md) for installation,
-pinned versions, and the boundaries of the local fixtures.
+Like the experiments, they call a real model (`OPENAI_API_KEY`, paid
+requests). See [the framework guide](framework_examples/README.md) for
+installation, pinned versions, and the boundaries of each example.
 
 ```bash
 python -m pip install -r requirements-frameworks.txt   # Python 3.12+
 python -m framework_examples.02_llm_to_agent
-python -m framework_examples.run_all
+python -m framework_examples.run_all             # all 59: many paid requests
 ```
 
 ## Notebooks

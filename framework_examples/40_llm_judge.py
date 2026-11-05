@@ -1,31 +1,60 @@
-"""Experiment 40: LangChain pairwise judge with an order-swap test."""
-from langchain_core.language_models.fake import FakeListLLM
-from langchain_core.output_parsers import JsonOutputParser
-from langchain_core.prompts import PromptTemplate
+"""Experiment 40: LLM-as-judge in LangChain. See framework_examples/README."""
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
 
-PROMPT = PromptTemplate.from_template(
-    "Rubric: prefer the answer that is correct and grounded in the "
-    "evidence.\nEvidence: {evidence}\nFirst: {first}\nSecond: {second}\n"
-    'Reply as JSON: {{"winner": "first" | "second"}}')
-SHORT = "Revenue was $120m (2025 annual report)."
-POLISHED = "Revenue grew strongly to roughly $190m across new markets."
+from framework_examples.support import chat
+
+QUESTION = "What was the company's revenue last year?"
+RUBRIC = """Score 0-2:
+2 = correct, complete, grounded
+1 = partially correct
+0 = incorrect or unsupported"""
+LABELED = [  # trusted labels for a small calibration subset
+    ("Revenue was $120m (source: 2025 annual report).", 2),
+    ("Revenue grew strongly to roughly $190m last year, driven by "
+     "expansion into several new regional markets.", 0),
+    ("Revenue was $120m.", 1),
+    ("I don't know.", 0),
+]
+TRIALS = 3
+SCORE = ChatPromptTemplate.from_messages([
+    ("system", "You grade answers with this rubric:\n{rubric}\n"
+               "Reply with the score only."),
+    ("human", "Question: {question}\nAnswer: {answer}")])
+PAIR = ChatPromptTemplate.from_messages([
+    ("system", "You compare two answers to a question. Reply with A or B "
+               "only: which answer is better?"),
+    ("human", "Question: {question}\nAnswer A: {a}\nAnswer B: {b}")])
 
 
 def run():
-    # A scripted judge that always picks the first position: a known bias.
-    model = FakeListLLM(responses=['{"winner": "first"}'] * 2)
-    judge = PROMPT | model | JsonOutputParser()
-    evidence = "2025 annual report: revenue $120m"
-    order_ab = judge.invoke(
-        {"evidence": evidence, "first": SHORT, "second": POLISHED})
-    order_ba = judge.invoke(
-        {"evidence": evidence, "first": POLISHED, "second": SHORT})
-    picked_ab = SHORT if order_ab["winner"] == "first" else POLISHED
-    picked_ba = POLISHED if order_ba["winner"] == "first" else SHORT
-    return {"order_ab_picks_short": picked_ab == SHORT,
-            "order_ba_picks_short": picked_ba == SHORT,
-            "position_consistent": picked_ab == picked_ba}
+    judge = SCORE | chat() | StrOutputParser()
+    pairwise = PAIR | chat() | StrOutputParser()
+    lines = ["calibration against trusted labels:"]
+    agreement = over_scored = 0
+    for answer, label in LABELED:
+        replies = judge.batch([{"rubric": RUBRIC, "question": QUESTION,
+                                "answer": answer}] * TRIALS)
+        scores = [int(reply.strip()[0]) for reply in replies]
+        agreement += sum(score == label for score in scores)
+        over_scored += sum(score > label for score in scores)
+        lines.append(f"  label={label} judge={scores}  {answer[:36]}")
+    total = TRIALS * len(LABELED)
+    lines.append(f"agreement {agreement}/{total}, "
+                 f"over-scored {over_scored}/{total}")
+    short, polished = LABELED[0][0], LABELED[1][0]
+    first = pairwise.batch(
+        [{"question": QUESTION, "a": short, "b": polished}] * TRIALS)
+    second = pairwise.batch(
+        [{"question": QUESTION, "a": polished, "b": short}] * TRIALS)
+    lines += ["swap test, prefers the sourced answer",
+              "  when it is shown first: "
+              f" {[r.strip().startswith('A') for r in first]}",
+              "  when it is shown second: "
+              f"{[r.strip().startswith('B') for r in second]}"]
+    return lines
 
 
 if __name__ == "__main__":
-    print(run())
+    for line in run():
+        print(line)

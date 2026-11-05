@@ -1,33 +1,31 @@
-"""Experiment 13: LangChain Embeddings interface, in-memory vector store."""
-import re
-
-from langchain_core.embeddings import Embeddings
+"""Experiment 13: Word counts vs embeddings in LangChain. See README."""
 from langchain_core.vectorstores import InMemoryVectorStore
+from langchain_openai import OpenAIEmbeddings
+
+from agentic.context import retrieve
 
 DOCUMENTS = ["Shipping usually takes 3 to 5 days.",
              "Refunds are accepted within 30 days.",
              "Gold customers receive free delivery."]
-VOCABULARY = ["refund", "day", "shipping", "gold", "delivery"]
-
-
-class BagOfWordsEmbeddings(Embeddings):
-    """Transparent stand-in for a learned embedding model."""
-
-    def embed_query(self, text):
-        words = [w[:-1] if len(w) > 3 and w.endswith("s") else w
-                 for w in re.findall(r"[a-z0-9]+", text.lower())]
-        return [float(words.count(term)) for term in VOCABULARY]
-
-    def embed_documents(self, texts):
-        return [self.embed_query(text) for text in texts]
+QUERIES = ["refund days", "Can I get my money back?",
+           "How long until my parcel arrives?", "Do I pay for postage?"]
 
 
 def run():
-    store = InMemoryVectorStore(BagOfWordsEmbeddings())
+    store = InMemoryVectorStore(
+        OpenAIEmbeddings(model="text-embedding-3-small"))
     store.add_texts(DOCUMENTS)
-    hits = store.similarity_search_with_score("refund days", k=3)
-    return [[doc.page_content, round(score, 2)] for doc, score in hits]
+    lines = []
+    for query in QUERIES:
+        lines.append("QUERY: " + query)
+        score, best = retrieve(query, DOCUMENTS, k=1)[0]
+        lines.append(f"  word counts  {score:.2f}  "
+                     f"{best if score else '(no word in common)'}")
+        doc, score = store.similarity_search_with_score(query, k=1)[0]
+        lines.append(f"  embeddings   {score:.2f}  {doc.page_content}")
+    return lines
 
 
 if __name__ == "__main__":
-    print(run())
+    for line in run():
+        print(line)

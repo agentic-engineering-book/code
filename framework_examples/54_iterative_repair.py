@@ -1,70 +1,93 @@
-"""Experiment 54: LangGraph repair loop fed by full-suite test failures."""
+"""Experiment 54: Repair loop in LangGraph. See framework_examples/README."""
 import os
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
-from typing import TypedDict
 
-from langgraph.graph import END, START, StateGraph
+from langchain_core.messages import AIMessage, HumanMessage
+from langgraph.graph import END, START, MessagesState, StateGraph
 
-TESTS = '''from calc import divide
+from framework_examples.support import chat
 
-CASES = [((1, 0), None), ((6, 3), 2.0), ((7, 2), 3.5)]
-for args, expected in CASES:
-    actual = divide(*args)
-    if actual != expected or (actual is None) != (expected is None):
-        print(f"divide{args}: expected {expected}, got {actual}")
+# The tests belong to the harness. The agent sees only their failures.
+TESTS = '''from prices import parse_price
+
+CASES = {"dollars": ("$1,234.50", 123450), "plain": ("12", 1200),
+         "euro comma": ("3,50 EUR", 350), "empty": ("", None)}
+for name, (text, expected) in CASES.items():
+    try:
+        actual = parse_price(text)
+    except Exception as error:
+        actual = type(error).__name__
+    if actual != expected:
+        print(f"FAILED {name}: parse_price({text!r}) "
+              f"expected {expected}, got {actual!r}")
 '''
-BODY = ("def divide(a, b):\n    if b == 0:\n        return {zero}\n"
-        "    return a {op} b\n")
-PATCHES = {"": BODY.format(zero=0, op="/"),
-           "expected None": BODY.format(zero=None, op="//"),
-           "expected 3.5": BODY.format(zero=None, op="/")}
+TASK = ("Implement parse_price(text) in prices.py: it returns the price in "
+        "the text as an integer number of cents.")
+CASE_NAMES = {"dollars", "plain", "euro comma", "empty"}
 
 
-class State(TypedDict):
-    feedback: str
-    history: list
+class State(MessagesState):
+    failed: set
+    passed_before: set
+    attempt: int
 
 
-def make_graph(workspace):
-    def propose(state):  # scripted model: picks a patch from the feedback
-        clue = next(c for c in reversed(PATCHES) if c in state["feedback"])
-        (workspace / "calc.py").write_text(PATCHES[clue])
-        return {}
+def build(workspace, lines):
+    model = chat()
+
+    def propose(state):
+        reply = model.invoke(state["messages"])
+        code = reply.text.strip().strip("`").removeprefix("python\n")
+        (workspace / "prices.py").write_text(code, encoding="utf-8")
+        return {"messages": [AIMessage(code)]}
 
     def test(state):
         # Temp dir, empty environment, timeout. This is NOT a sandbox.
         env = ({"SYSTEMROOT": os.environ["SYSTEMROOT"]}
                if os.name == "nt" else {})
-        done = subprocess.run([sys.executable, "-B", "test_divide.py"],
-                              cwd=workspace, env=env, capture_output=True,
-                              text=True, timeout=10)
-        feedback = done.stdout.strip() or "all passed"
-        return {"feedback": feedback,
-                "history": state["history"] + [feedback]}
+        output = subprocess.run(
+            [sys.executable, "-B", "test_prices.py"], cwd=workspace,
+            env=env, capture_output=True, text=True, timeout=10
+        ).stdout.strip()
+        failed = {line.split(":")[0].removeprefix("FAILED ")
+                  for line in output.splitlines()}
+        regressed = state["passed_before"] & failed  # passed, now fails
+        attempt = state["attempt"] + 1
+        lines.append(f"attempt {attempt}: failing {sorted(failed) or 'none'}"
+                     + (f", REGRESSED {sorted(regressed)}"
+                        if regressed else ""))
+        return {"messages": [HumanMessage("Test output:\n" + output)],
+                "failed": failed, "attempt": attempt,
+                "passed_before": state["passed_before"]
+                | (CASE_NAMES - failed)}
 
     builder = StateGraph(State)
     builder.add_node("propose", propose)
     builder.add_node("test", test)
     builder.add_edge(START, "propose")
     builder.add_edge("propose", "test")
-    builder.add_conditional_edges(
-        "test", lambda s: END if s["feedback"] == "all passed"
-        or len(s["history"]) >= 4 else "propose")
+    builder.add_conditional_edges(  # bounded repair loop
+        "test", lambda s: END if not s["failed"] or s["attempt"] >= 4
+        else "propose")
     return builder.compile()
 
 
 def run():
+    lines = []
     with tempfile.TemporaryDirectory() as folder:
         workspace = Path(folder)
-        (workspace / "test_divide.py").write_text(TESTS)
-        final = make_graph(workspace).invoke({"feedback": "",
-                                              "history": []})
-    return {"attempts": len(final["history"]),
-            "feedback": final["history"]}
+        (workspace / "test_prices.py").write_text(TESTS)
+        build(workspace, lines).invoke(
+            {"messages": [("system", "You are a coding agent. Reply with "
+                           "the complete new contents of prices.py only, "
+                           "no code fences."), ("user", TASK)],
+             "passed_before": set(), "attempt": 0})
+    return lines
 
 
 if __name__ == "__main__":
-    print(run())
+    for line in run():
+        print(line)

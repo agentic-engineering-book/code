@@ -1,10 +1,34 @@
-"""Experiment 36: a reducer-backed LangGraph blackboard with provenance."""
+"""Experiment 36: Blackboard in LangGraph. See framework_examples/README."""
+import operator
+import re
 from typing import Annotated, TypedDict
 
 from langgraph.errors import InvalidUpdateError
 from langgraph.graph import END, START, StateGraph
 
-AUTHORITY = {"catalog_v3": 2, "carrier_api": 2, "cached_page": 1}
+from framework_examples.support import chat
+
+AUTHORITY = {"catalog_v4": 3, "catalog_v3": 2, "carrier_api": 2,
+             "cached_page": 1}
+SOURCES = {
+    "catalog_v3": "Catalog v3: Widget W2, unit price 80 euros, order "
+                  "quantity 3.",
+    "carrier_api": "Carrier API: shipping for this order costs 15 euros.",
+    "cached_page": "Cached web page: Widget W2 now only 90 euros!",
+    "catalog_v4": "Catalog v4 (correction): Widget W2, unit price 90 euros.",
+}
+WORKERS = {"pricing": ("catalog_v3", ["unit_price", "quantity"]),
+           "shipping": ("carrier_api", ["shipping"]),
+           "scraper": ("cached_page", ["unit_price"])}
+
+
+def read(source, key):
+    """A real model reads one source and returns the fact it finds."""
+    reply = chat().invoke([
+        ("system", "Extract facts from the source. Reply with the number "
+         "only."),
+        ("user", SOURCES[source] + f"\nWhat is the {key.replace('_', ' ')}?")])
+    return int(re.findall(r"\d+", reply.content)[0])
 
 
 def merge_claims(left, right):
@@ -15,73 +39,73 @@ def merge_claims(left, right):
     return merged
 
 
-class Board(TypedDict):
+class Board(TypedDict, total=False):
     claims: Annotated[dict, merge_claims]
-    total: int
+    totals: Annotated[list, operator.add]
 
 
-def claim(key, value, source):
-    return {key: [{"value": value, "source": source}]}
+def worker(source, keys):
+    return lambda state: {"claims": {
+        key: [{"value": read(source, key), "source": source}]
+        for key in keys}}
 
 
-def resolve(claims, key):
+def current(claims, key):
+    """Resolve conflicting claims by source authority, not by timing."""
     return max(claims[key], key=lambda c: AUTHORITY[c["source"]])["value"]
 
 
-def calculator(state):
+def calculate(state):
     claims = state["claims"]
-    total = (resolve(claims, "unit_price") * resolve(claims, "quantity")
-             + resolve(claims, "shipping"))
-    return {"total": total}
+    total = (current(claims, "unit_price") * current(claims, "quantity")
+             + current(claims, "shipping"))
+    return {"totals": [total]}
 
 
-def pricing(state):
-    return {"claims": {**claim("unit_price", 80, "catalog_v3"),
-                       **claim("quantity", 3, "catalog_v3")}}
-
-
-def scraper(state):
-    return {"claims": claim("unit_price", 90, "cached_page")}
-
-
-def shipping(state):
-    return {"claims": claim("shipping", 15, "carrier_api")}
-
-
-WRITERS = {"pricing": pricing, "scraper": scraper, "shipping": shipping}
-
-
-def build(state_type, writers, sink):
-    builder = StateGraph(state_type)
-    for name, writer in writers.items():
-        builder.add_node(name, writer)
+def build():
+    builder = StateGraph(Board)
+    for name, (source, keys) in WORKERS.items():
+        builder.add_node(name, worker(source, keys))
         builder.add_edge(START, name)
-    builder.add_node("sink", sink)
-    builder.add_edge(list(writers), "sink")  # readiness: all writers done
-    builder.add_edge("sink", END)
+    builder.add_node("calculate", calculate)
+    builder.add_edge(list(WORKERS), "calculate")  # readiness: all published
+    builder.add_node("correction", worker("catalog_v4", ["unit_price"]))
+    builder.add_node("recalculate", calculate)
+    builder.add_edge("calculate", "correction")
+    builder.add_edge("correction", "recalculate")
+    builder.add_edge("recalculate", END)
     return builder.compile()
 
 
-class PlainBoard(TypedDict):
+class PlainBoard(TypedDict, total=False):
     unit_price: int  # no reducer: one writer per step at most
 
 
 def without_reducer():
-    writers = {"pricing": lambda s: {"unit_price": 80},
-               "scraper": lambda s: {"unit_price": 90}}
+    builder = StateGraph(PlainBoard)
+    for name in ("pricing", "scraper"):
+        source = WORKERS[name][0]
+        builder.add_node(name, lambda s, src=source:
+                         {"unit_price": read(src, "unit_price")})
+        builder.add_edge(START, name)
+        builder.add_edge(name, END)
     try:
-        build(PlainBoard, writers, lambda s: {}).invoke({})
+        builder.compile().invoke({})
     except InvalidUpdateError:
-        return "InvalidUpdateError: concurrent writes to unit_price"
+        return "InvalidUpdateError (concurrent writes)"
     return "no error"
 
 
 def run():
-    state = build(Board, WRITERS, calculator).invoke({"claims": {}})
-    prices = sorted(c["value"] for c in state["claims"]["unit_price"])
-    return {"unit_price_claims": prices, "total": state["total"],
-            "without_reducer": without_reducer()}
+    state = build().invoke({"claims": {}, "totals": []})
+    lines = ["unit_price claims kept:"]
+    lines += [f"  {claim}" for claim in state["claims"]["unit_price"]]
+    lines += [f"total before correction: {state['totals'][0]}",
+              f"total after correction: {state['totals'][1]}",
+              f"without a reducer: {without_reducer()}"]
+    return lines
 
 
 if __name__ == "__main__":
-    print(run())
+    for line in run():
+        print(line)

@@ -1,36 +1,55 @@
-"""Experiment 43: LangChain retry for transient errors, fallback otherwise."""
+"""Experiment 43: Retry, fallback, LangChain. See framework_examples/README."""
+import openai
 from langchain_core.runnables import RunnableLambda
 
+from framework_examples.support import chat, MODEL, SMALL_MODEL
 
-def make_tool(failures, error):
+QUESTION = "What is the capital of Peru? One word."
+RETRYABLE = (TimeoutError, openai.APITimeoutError, openai.APIConnectionError,
+             openai.RateLimitError)
+
+
+def model_call(model_name=MODEL, timeouts=0):
+    """A real model call; the first `timeouts` attempts are made to fail."""
     attempts = []
+    model = chat(model_name)
 
-    def tool(value):
-        attempts.append(value)
-        if len(attempts) <= failures:
-            raise error
-        return "success"
-    return tool, attempts
+    def call(question):
+        attempts.append(1)
+        if len(attempts) <= timeouts:
+            raise TimeoutError("injected: upstream timeout")
+        return model.invoke(question).content.strip()
+    return RunnableLambda(call), attempts
 
 
-def guarded(tool):
-    primary = RunnableLambda(tool).with_retry(
-        retry_if_exception_type=(TimeoutError, ConnectionError),
-        stop_after_attempt=3,
-        wait_exponential_jitter=False)  # no sleeping in a test fixture
-    return primary.with_fallbacks([RunnableLambda(lambda _: "fallback")])
+def guarded(runnable, fallback=None):
+    """Retry only transient errors, with exponential backoff and jitter."""
+    retried = runnable.with_retry(
+        retry_if_exception_type=RETRYABLE, stop_after_attempt=3,
+        exponential_jitter_params={"initial": 0.1, "max": 1, "jitter": 0.05})
+    if fallback is None:
+        return retried
+    return retried.with_fallbacks([fallback], exceptions_to_handle=RETRYABLE)
 
 
 def run():
-    results = {}
-    cases = {"transient": (2, TimeoutError("upstream timeout")),
-             "permanent": (9, ValueError("division by zero")),
-             "outage": (9, TimeoutError("upstream timeout"))}
-    for label, (failures, error) in cases.items():
-        tool, attempts = make_tool(failures, error)
-        results[label] = [guarded(tool).invoke(None), len(attempts)]
-    return results
+    nano = chat(SMALL_MODEL) | RunnableLambda(lambda m: "fallback: " +
+                                              m.content.strip())
+    cases = [("fails twice", model_call(timeouts=2), None),
+             ("permanent", model_call("no-such-model"), nano),
+             ("outage", model_call(timeouts=5), nano),
+             ("no fallback", model_call(timeouts=5), None)]
+    lines = []
+    for label, (runnable, attempts), fallback in cases:
+        try:
+            result = guarded(runnable, fallback).invoke(QUESTION)
+        except Exception as error:  # what reaches the caller
+            result = f"stopped: {type(error).__name__}"
+        lines.append(f"{label + ':':<13}{result} "
+                     f"(attempts: {len(attempts)})")
+    return lines
 
 
 if __name__ == "__main__":
-    print(run())
+    for line in run():
+        print(line)

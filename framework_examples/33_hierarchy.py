@@ -1,8 +1,10 @@
-"""Experiment 33: a LangGraph root over team-lead subgraphs."""
+"""Experiment 33: Hierarchy in LangGraph. See framework_examples/README."""
 import operator
 from typing import Annotated, TypedDict
 
 from langgraph.graph import END, START, StateGraph
+
+from framework_examples.support import chat
 
 REPORTS = {
     "research": [{"finding": "Option A is cheaper",
@@ -12,29 +14,40 @@ REPORTS = {
               {"finding": "Option B reuses the current stack",
                "caveat": None}],
 }
+HEDGES = ("confidence", "uncertain", "unverified", "unreliable")
 
 
-class LeadState(TypedDict):
+class LeadState(TypedDict, total=False):
     reports: Annotated[list, operator.add]
     summary: dict
 
 
-class RootState(TypedDict):
+class RootState(TypedDict, total=False):
     summaries: Annotated[list, operator.add]
-    decision: str
+    caveat_reached: bool
 
 
-def build_lead(team, keep_caveats):
+def text(report):
+    caveat = f" Caveat: {report['caveat']}." if report["caveat"] else ""
+    return report["finding"] + "." + caveat
+
+
+def build_lead(team, words, structured):
+    """A team-lead subgraph: workers report, a model lead summarizes."""
     builder = StateGraph(LeadState)
-    workers = [f"{team}_worker_{i}" for i in range(len(REPORTS[team]))]
+    workers = [f"worker_{i}" for i in range(len(REPORTS[team]))]
     for name, report in zip(workers, REPORTS[team]):
         builder.add_node(name, lambda s, r=report: {"reports": [r]})
         builder.add_edge(START, name)
 
     def summarize(state):
         reports = sorted(state["reports"], key=lambda r: r["finding"])
-        summary = {"team": team, "findings": [r["finding"] for r in reports]}
-        if keep_caveats:
+        reply = chat().invoke([
+            ("system", "You are a team lead. Summarize your workers' "
+             f"reports for the director in at most {words} words."),
+            ("user", "\n".join(map(text, reports)))])
+        summary = {"team": team, "summary": reply.content.strip()}
+        if structured:  # code carries caveats in their own field
             summary["caveats"] = [r["caveat"] for r in reports if r["caveat"]]
         return {"summary": summary}
 
@@ -44,34 +57,46 @@ def build_lead(team, keep_caveats):
     return builder.compile()
 
 
-def decide(state):
-    caveats = [c for s in state["summaries"] for c in s.get("caveats", [])]
-    if caveats:
-        return {"decision": "verify before choosing: " + "; ".join(caveats)}
-    return {"decision": "choose Option A"}
+def root(state):
+    seen = " ".join(s["summary"] + " ".join(s.get("caveats", []))
+                    for s in state["summaries"]).lower()
+    return {"caveat_reached": any(hedge in seen for hedge in HEDGES)}
 
 
-def build_root(keep_caveats):
+def build_root(words, structured=False):
     builder = StateGraph(RootState)
-    leads = []
     for team in REPORTS:
-        lead = build_lead(team, keep_caveats)
-        name = f"{team}_lead"
-        # The lead is a compiled subgraph with its own private state schema.
-        builder.add_node(name, lambda s, g=lead: {
+        lead = build_lead(team, words, structured)
+        # The lead is a compiled subgraph with its own private state.
+        builder.add_node(f"{team}_lead", lambda s, g=lead: {
             "summaries": [g.invoke({"reports": []})["summary"]]})
-        builder.add_edge(START, name)
-        leads.append(name)
-    builder.add_node("root", decide)
-    builder.add_edge(leads, "root")
+        builder.add_edge(START, f"{team}_lead")
+    builder.add_node("root", root)
+    builder.add_edge([f"{team}_lead" for team in REPORTS], "root")
     builder.add_edge("root", END)
     return builder.compile()
 
 
 def run():
-    return {"lossy_leads": build_root(False).invoke({})["decision"],
-            "structured_leads": build_root(True).invoke({})["decision"]}
+    flat = " ".join(text(r) for team in REPORTS.values() for r in team)
+    lines = [f"flat: root span=4, caveat reaches root="
+             f"{any(hedge in flat.lower() for hedge in HEDGES)}"]
+    for label, words, structured in [("10-word leads", 10, False),
+                                     ("6-word leads", 6, False),
+                                     ("6-word leads", 6, False),
+                                     ("6-word leads", 6, False),
+                                     ("structured leads", 6, True)]:
+        state = build_root(words, structured).invoke({"summaries": []})
+        research = next(s for s in state["summaries"]
+                        if s["team"] == "research")
+        lines.append(f"hierarchy, {label}: root span=2, caveat reaches "
+                     f"root={state['caveat_reached']}")
+        lines.append("  research lead: " + research["summary"][:58])
+        if structured:
+            lines.append(f"  caveats field: {research['caveats']}")
+    return lines
 
 
 if __name__ == "__main__":
-    print(run())
+    for line in run():
+        print(line)

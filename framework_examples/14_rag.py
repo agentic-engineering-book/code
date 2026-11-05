@@ -1,49 +1,48 @@
-"""Experiment 14: LangChain retriever, metadata filter, prompt, generator."""
+"""Experiment 14: The smallest RAG pipeline in LangChain. See README."""
 import re
 
 from langchain_core.documents import Document
-from langchain_core.prompts import PromptTemplate
-from langchain_core.retrievers import BaseRetriever
-from langchain_core.runnables import RunnableLambda
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+
+from agentic.context import retrieve
+from framework_examples.support import chat
 
 POLICIES = [
     Document("Refund window is 30 days.", metadata={"effective_year": 2025}),
     Document("Refund window is 14 days.", metadata={"effective_year": 2026}),
 ]
+QUESTION = "What is the current refund window?"
 
 
-class KeywordRetriever(BaseRetriever):
-    documents: list[Document]
-
-    def _get_relevant_documents(self, query, *, run_manager):
-        terms = set(re.findall(r"[a-z]+", query.lower()))
-        return [d for d in self.documents
-                if terms & set(re.findall(r"[a-z]+", d.page_content.lower()))]
-
-
-def newest(docs):
-    doc = max(docs, key=lambda d: d.metadata["effective_year"])
-    return {"evidence": doc.page_content,
-            "year": doc.metadata["effective_year"]}
-
-
-def fake_generator(prompt_value):
-    """Deterministic stand-in for a model: quotes the days in its evidence."""
-    days = re.search(r"(\d+) days", prompt_value.to_string())
-    return days.group(1) + " days" if days else "not in evidence"
+def dated(doc):
+    return f"[effective {doc.metadata['effective_year']}] {doc.page_content}"
 
 
 def run():
-    retriever = KeywordRetriever(documents=POLICIES)
-    prompt = PromptTemplate.from_template(
-        "Evidence ({year}): {evidence}\nWhat is the current refund window?")
-    select = RunnableLambda(newest)
-    answer = select | prompt | RunnableLambda(fake_generator)
-    candidates = retriever.invoke("current refund window")
-    return {"candidates": len(candidates),
-            "answer": answer.invoke(candidates),
-            "source_year": newest(candidates)["year"]}
+    scored = retrieve(QUESTION, POLICIES, k=2,
+                      text=lambda doc: doc.page_content)
+    old, new = [doc for score, doc in scored]  # equal scores: list order
+    evidence = {
+        "TOP CANDIDATE ONLY": old.page_content,
+        "BOTH, OLD POLICY FIRST": old.page_content + "\n" + new.page_content,
+        "BOTH, NEW POLICY FIRST": new.page_content + "\n" + old.page_content,
+        "BOTH, NEW FIRST, WITH DATES": dated(new) + "\n" + dated(old),
+    }
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "Answer the question from the evidence only. "
+                   "Reply in one short sentence."),
+        ("human", "Evidence:\n{evidence}\n\nQuestion: {question}")])
+    chain = prompt | chat() | StrOutputParser()
+    lines = ["SIMILARITY: " + ", ".join(f"{s:.2f}" for s, d in scored)]
+    for name, text in evidence.items():
+        replies = chain.batch([{"evidence": text, "question": QUESTION}] * 3)
+        days = [re.search(r"\d+ days", reply) for reply in replies]
+        answers = [m.group(0) if m else "no number" for m in days]
+        lines.append(f"{name:<28} answers: {', '.join(answers)}")
+    return lines
 
 
 if __name__ == "__main__":
-    print(run())
+    for line in run():
+        print(line)
