@@ -2,14 +2,21 @@
 from collections import Counter
 
 from agentic.live import OpenAIModel
-from live.common import SMALL_MODEL, arguments, parallel, rate, save, usage
-from live.ch13_self_critique import FORMAT, final
+from live.common import (SMALL_MODEL, arguments, numbers_in, parallel, rate,
+                         save, usage)
 from live.problems import problems
 
 QUESTION = ("Does a majority vote over five independent samples from a small "
             "model answer more problems correctly than a single sample?")
 TASKS = problems(20, seed=19)
 SAMPLES = 5
+FORMAT = " End with a line 'FINAL: <integer>'."
+
+
+def final(text):
+    tail = text.rsplit("FINAL:", 1)[-1] if "FINAL:" in text else text
+    values = numbers_in(tail)
+    return values[-1] if values else None
 
 
 def main():

@@ -1,0 +1,14 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+critic   draft  proposed  always            verified
+careful   5004      2090  improvement       improvement
+careful   5004      2090  improvement       improvement
+careful   5004      2090  improvement       improvement
+careful   2090      2090  preserved         preserved
+careful   2090      2090  preserved         preserved
+careful   2090      2090  preserved         preserved
+hasty     5004      4260  no useful repair  no useful repair
+hasty     5004      4266  no useful repair  no useful repair
+hasty     5004      4260  no useful repair  no useful repair
+hasty     2090      1350  REGRESSION        preserved
+hasty     2090      1254  REGRESSION        preserved
+hasty     2090      1046  REGRESSION        preserved

@@ -1,48 +1,42 @@
 """Experiment 25 (Chapter 13): Reflection."""
+import re
+
 from agentic import calculator
+from agentic.live import OpenAIModel
 
-TASK = "17 * 6"
-
-# Scripted critics: draft -> critique (None means "no defect found").
-GOOD_CRITIC = {
-    96: {"text": "The multiplication is incorrect. 17 * 6 = 102.",
-         "proposed": 102},
-    102: None,
+TASK = ("A shop buys 417 items at 35 dollars each and sells them at 47 "
+        "dollars each, but 62 items are unsold. What is the profit in dollars?")
+CORRECT = calculator("355 * 47 - 417 * 35")  # what a tool can confirm
+DRAFTS = {5004: "417 * (47 - 35) = 5004 dollars.",
+          2090: "355 * 47 - 417 * 35 = 16685 - 14595 = 2090 dollars."}
+CRITICS = {
+    "careful": "Check this answer step by step, then end with the correct "
+               "profit as a line 'FINAL: <integer>'.",
+    "hasty": "This answer contains a mistake. Find it and reply with the "
+             "corrected profit as a line 'FINAL: <integer>'.",
 }
-BAD_CRITIC = {
-    96: {"text": "The answer should be 112.", "proposed": 112},
-    102: {"text": "The answer should be 112.", "proposed": 112},
-}
+critic = OpenAIModel()
 
 
-def revise(draft, critique):
-    return draft if critique is None else critique["proposed"]
-
-
-def verified_revise(draft, critique):
-    """Change the draft only if a tool confirms the proposed value."""
-    if critique is None or calculator(TASK) != critique["proposed"]:
-        return draft
-    return critique["proposed"]
+def critique(draft, instruction):
+    """The critic's proposed revision: the number after FINAL."""
+    reply = critic.generate([{"role": "user", "content":
+                              f"Task: {TASK}\nAnswer: {draft}\n{instruction}"}])
+    found = re.findall(r"FINAL:\s*\$?([\d,]+)", reply["answer"])
+    return int(found[-1].replace(",", "")) if found else None
 
 
 def outcome(draft, revision):
-    correct = calculator(TASK)
-    if draft != correct:
-        return "improvement" if revision == correct else "no useful repair"
-    return "preserved" if revision == correct else "REGRESSION"
+    if draft != CORRECT:
+        return "improvement" if revision == CORRECT else "no useful repair"
+    return "preserved" if revision == CORRECT else "REGRESSION"
 
 
-print(f"{'draft':>5}  {'critic':6}  {'policy':8}  {'revision':>8}  outcome")
-for policy_name, policy in [("always", revise),
-                            ("verified", verified_revise)]:
-    counts = {}
-    for critic_name, critic in [("good", GOOD_CRITIC), ("bad", BAD_CRITIC)]:
-        for draft in (96, 102):
-            revision = policy(draft, critic[draft])
-            result = outcome(draft, revision)
-            counts[result] = counts.get(result, 0) + 1
-            print(f"{draft:>5}  {critic_name:6}  {policy_name:8}  "
-                  f"{revision:>8}  {result}")
-    print(f"  {policy_name}: improvements={counts.get('improvement', 0)} "
-          f"regressions={counts.get('REGRESSION', 0)}")
+print("critic   draft  proposed  always            verified")
+for name, instruction in CRITICS.items():
+    for draft, text in DRAFTS.items():
+        for trial in range(3):
+            proposed = critique(text, instruction)
+            verified = proposed if proposed == CORRECT else draft
+            print(f"{name:8} {draft:>5} {proposed!s:>9}  "
+                  f"{outcome(draft, proposed):17} {outcome(draft, verified)}")
