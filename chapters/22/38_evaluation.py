@@ -1,30 +1,27 @@
 """Experiment 38 (Chapter 22): Task evaluation."""
 from agentic.eval import exact_match, numeric_match, success_rate
+from agentic.live import OpenAIModel
 
 CASES = [
     ("17 * 6", 102),
     ("25 + 19", 44),
     ("81 / 9", 9),
+    ("4817 * 263", 1266871),
 ]
-
-# A fixture agent that answers in text, as a language model does.
-# One answer is wrong; one is right but formatted as "9.0".
-FIXTURE_ANSWERS = {"17 * 6": "102", "25 + 19": "45", "81 / 9": "9.0"}
+model = OpenAIModel()
 
 
 def agent(question):
-    return FIXTURE_ANSWERS[question]
+    """A real model answering without tools, in text."""
+    reply = model.generate([{"role": "user", "content":
+                             f"What is {question}? Reply with the number "
+                             "only."}])
+    return reply["answer"].strip()
 
 
-def evaluate(agent, cases, compare):
-    results = []
-    for question, expected in cases:
-        answer = agent(question)
-        results.append(compare(answer, expected))
-    return results
-
-
+answers = [(agent(question), expected) for question, expected in CASES]
+print("answers:", [answer for answer, expected in answers])
 for compare in (exact_match, numeric_match):
-    results = evaluate(agent, CASES, compare)
+    results = [compare(answer, expected) for answer, expected in answers]
     print(f"{compare.__name__:<13} {sum(results)}/{len(results)} correct "
           f"(success rate {success_rate(results):.2f})")

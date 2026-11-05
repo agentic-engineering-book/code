@@ -1,13 +1,12 @@
-# Chapter 22 experiments
+# Chapter 22: Evaluation
 
-- `38_evaluation.py` - Experiment 38: task evaluation with exact and numeric
-  match (uses `agentic/eval.py`).
-- `39_trajectory_eval.py` - Experiment 39: trajectory invariants versus a
-  single reference path.
-- `40_llm_judge.py` - Experiment 40: calibrating a (deliberately biased)
-  stand-in judge against trusted labels, plus an order-swap test.
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. All three experiments call real models (about thirty requests in all, a fraction of a cent), so your output will differ from the recorded runs in [output/](output/). Set `BOOK_MODEL` to use another model.
 
-Run from the repository root, e.g. `PYTHONPATH=. python chapters/22/38_evaluation.py`
+- `38_evaluation.py` - Experiment 38: Task evaluation. A real model's answers scored by exact and numeric match. `python chapters/22/38_evaluation.py`
+- `39_trajectory_eval.py` - Experiment 39: Trajectory evaluation. Two real agents' trajectories checked against invariants and one reference path. `python chapters/22/39_trajectory_eval.py`
+- `40_llm_judge.py` - Experiment 40: LLM-as-judge. A real judge calibrated against trusted labels, and a swap test. `python chapters/22/40_llm_judge.py`
+
+Kernel modules used: `agentic/eval.py`, `agentic/tools.py`, `agentic/live.py`.
 
 ## Framework companions
 

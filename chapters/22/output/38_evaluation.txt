@@ -1,0 +1,4 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+answers: ['102', '44', '9', '1266611']
+exact_match   0/4 correct (success rate 0.00)
+numeric_match 3/4 correct (success rate 0.75)

@@ -1,0 +1,7 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+gpt-5.4-mini-2026-03-17: tools=['retrieve', 'calculator']
+    answer_correct=True reference_match=True
+    required_tool=True irrelevant=0 unauthorized=0 within_limit=True
+gpt-5.4-nano-2026-03-17: tools=['retrieve']
+    answer_correct=True reference_match=False
+    required_tool=False irrelevant=0 unauthorized=0 within_limit=True

@@ -1,0 +1,10 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+calibration against trusted labels:
+  label=2 judge=[0, 1, 1]  Revenue was $120m (source: 2025 annu
+  label=0 judge=[2, 1, 2]  Revenue grew strongly to roughly $19
+  label=1 judge=[0, 0, 0]  Revenue was $120m.
+  label=0 judge=[0, 0, 0]  I don't know.
+agreement 3/12, over-scored 3/12
+swap test, prefers the sourced answer
+  when it is shown first:  [True, True, True]
+  when it is shown second: [True, False, False]
