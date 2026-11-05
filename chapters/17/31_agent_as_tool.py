@@ -1,74 +1,84 @@
 """Experiment 31 (Chapter 17): Agent as tool."""
 import json
+import textwrap
 
-from agentic import Agent, PolicyModel, ScriptedModel, calculator
-from agentic import last_observation
+from agentic import Agent, calculator
+from agentic.live import CALCULATOR_SCHEMA, OpenAIModel, schema
 
-SOURCES = {"X": "80"}
-SEARCH = {"action": "search", "arguments": {"query": "X"}}
+GOAL = "Find the reported value of X, then calculate X * 1.10."
+SEARCH = schema("search", "Search the company reports.", query="search terms")
+RESEARCHER = schema("researcher", "A research agent that finds facts in "
+                    "the company reports.", question="the question to research")
+
+
+def found(query):
+    return "Q3 report: the reported value of X is 80."
+
+
+def nothing(query):
+    return "no result"
+
+
+def make_chain():
+    """Every report points to the next one; none contains the value."""
+    reports = iter(range(2, 100))
+
+    def chain(query):
+        n = next(reports)
+        return (f"Report R{n - 1}: X is not given here; its value is "
+                f"reported in report R{n}.")
+    return chain
 
 
 class ResearchAgent:
     """A child agent with its own model, tool, and step budget."""
 
-    def __init__(self, model):
-        self.model = model
-        self.searches = 0
+    def __init__(self, sources):
+        self.sources, self.searches, self.model_calls = sources, 0, 0
 
     def search(self, query):
         self.searches += 1
-        return SOURCES.get(query, "no result")
+        return self.sources(query)
 
-    def run(self, question, max_steps):
-        before = self.model.calls
-        child = Agent(self.model, tools={"search": self.search},
+    def run(self, question, max_steps=5):
+        model = OpenAIModel(tools=[SEARCH], system="You are a research "
+                            "agent. Use search to answer the question. "
+                            "Reply with the answer only.")
+        child = Agent(model, tools={"search": self.search},
                       max_steps=max_steps)
         try:
             answer, status = child.run(question), "complete"
-        except RuntimeError:  # the child's step limit
+        except RuntimeError:  # the delegated step limit
             answer, status = None, "incomplete"
+        self.model_calls += len(model.calls)
         return json.dumps({"status": status, "answer": answer,
-                           "steps_used": self.model.calls - before})
+                           "steps_used": len(model.calls)})
 
 
-def parent_policy(messages):
-    observation = last_observation(messages)
-    if observation is None:
-        return {"action": "researcher",
-                "arguments": {"question": "What is X?"}}
-    if observation.startswith("{"):
-        result = json.loads(observation)
-        if result["status"] != "complete":
-            return {"done": True, "answer": "escalate: research incomplete"}
-        expression = f"{result['answer']} * 1.10"
-        return {"action": "calculator",
-                "arguments": {"expression": expression}}
-    return {"done": True, "answer": f"X * 1.10 = {observation}"}
-
-
-def run_parent(child_script, child_max_steps=5):
-    specialist = ResearchAgent(ScriptedModel(child_script))
-    actions = []
+def run_parent(label, sources):
+    print(label)
+    specialist, actions = ResearchAgent(sources), []
 
     def researcher(question):
         actions.append("researcher")
-        result = specialist.run(question, max_steps=child_max_steps)
-        print(f"  researcher returned: {result}")
+        result = specialist.run(question)
+        print("  researcher returned:", textwrap.shorten(result, 54))
         return result
 
     def calculate(expression):
         actions.append("calculator")
         return calculator(expression)
 
-    parent = Agent(PolicyModel(parent_policy),
-                   tools={"researcher": researcher, "calculator": calculate})
-    answer = parent.run("Find X, then calculate X * 1.10.")
+    parent = Agent(OpenAIModel(tools=[RESEARCHER, CALCULATOR_SCHEMA]),
+                   tools={"researcher": researcher, "calculator": calculate},
+                   max_steps=6)
+    answer = parent.run(GOAL)
     print(f"  parent actions: {actions}")
-    print(f"  hidden child searches: {specialist.searches}")
-    print(f"  answer: {answer}")
+    print(f"  hidden child work: model calls={specialist.model_calls}, "
+          f"searches={specialist.searches}")
+    print("  answer:", textwrap.shorten(answer, 68))
 
 
-print("cooperative specialist")
-run_parent([SEARCH, {"done": True, "answer": "80"}])
-print("looping specialist, delegated max_steps=5")
-run_parent([SEARCH])
+run_parent("source has the value", found)
+run_parent("source has nothing", nothing)
+run_parent("each report points to the next", make_chain())

@@ -1,0 +1,16 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+source has the value
+  researcher returned: {"status": "complete", "answer": "80", [...]
+  parent actions: ['researcher', 'calculator']
+  hidden child work: model calls=2, searches=1
+  answer: X = 80, and X * 1.10 = 88.0
+source has nothing
+  researcher returned: {"status": "complete", "answer": "I [...]
+  parent actions: ['researcher']
+  hidden child work: model calls=3, searches=2
+  answer: I couldn’t find a reported value for X, so I can’t calculate X [...]
+each report points to the next
+  researcher returned: {"status": "incomplete", "answer": null, [...]
+  parent actions: ['researcher']
+  hidden child work: model calls=5, searches=5
+  answer: I couldn’t determine the reported value of X from the company [...]
