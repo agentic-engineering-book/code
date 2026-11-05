@@ -33,11 +33,13 @@ def notebook(cells):
 def main():
     manifest = json.loads((ROOT / 'framework_examples/manifest.json').read_text(encoding='utf-8'))
     primitive = [cell('markdown', '# Agentic Engineering from First Principles: 59 experiments\n\n'
-                      'Each code cell is the exact content of one file in `chapters/`. The experiments are '
-                      'deterministic and use only the standard library and the `agentic` kernel.'),
+                      'Each code cell is the exact content of one file in `chapters/`. Every experiment calls '
+                      'a real model: install the repository (`pip install -e .`) and set `OPENAI_API_KEY`. '
+                      'Each cell makes paid requests, usually a fraction of a cent, and its output will differ '
+                      'from the recorded run in the book.'),
                  cell('code', SETUP)]
     framework = [cell('markdown', '# Framework companions: all 59 experiments\n\n'
-                      'Install `requirements-frameworks.txt` first (Python 3.12+). No API key is needed. '
+                      'Install `requirements-frameworks.txt` first (Python 3.12+) and set `OPENAI_API_KEY`: every example calls a real model. '
                       'Read each boundary before interpreting a result.'),
                  cell('code', SETUP)]
     for case in manifest:
