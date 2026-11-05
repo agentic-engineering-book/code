@@ -1,16 +1,11 @@
-# Chapter 28 experiments: Coding Agents
+# Chapter 28: Coding agents
 
-Run from the repository root with `PYTHONPATH=.` (or after `pip install -e .`).
-Both experiments create a throwaway repository in a temporary directory and
-run its tests in a child process with an empty environment and a timeout.
-That limits accidents; it is NOT a sandbox.
+Run from the repository root after `python -m pip install -e .`, with `OPENAI_API_KEY` set. Both experiments call a real model (about ten requests in all, a fraction of a cent), so your output will differ from the recorded runs in [output/](output/). Tests run in a child process with an empty environment and a timeout; this is not a sandbox.
 
-- `53_coding_agent.py` - a scripted model lists files, runs the failing test,
-  reads `calculator.py`, applies a one-line patch and reruns the test; the
-  passing test ends the loop. Paths outside the workspace are refused.
-- `54_iterative_repair.py` - `divide(a, 0)` must return None. Test failures
-  become the next observation; the second patch passes the targeted test but
-  breaks normal division, which only the full suite catches.
+- `53_coding_agent.py` - Experiment 53: The smallest coding agent. A real model lists, reads, patches and tests a one-bug repository; the passing test ends the loop. `python chapters/28/53_coding_agent.py`
+- `54_iterative_repair.py` - Experiment 54: Iterative repair. A real model implements `parse_price` against tests it cannot see; failures are fed back and regressions flagged. `python chapters/28/54_iterative_repair.py`
+
+Kernel modules used: `agentic/tools.py`, `agentic/live.py`.
 
 ## Framework companions
 

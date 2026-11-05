@@ -5,56 +5,55 @@ import sys
 import tempfile
 from pathlib import Path
 
-from agentic import PolicyModel, last_observation
+from agentic.live import OpenAIModel
 
-TESTS = '''import sys
-from calc import divide
+# The tests belong to the harness. The agent sees only their failures.
+TESTS = '''from prices import parse_price
 
-CASES = {"zero": ((1, 0), None), "exact": ((6, 3), 2.0),
-         "fraction": ((7, 2), 3.5)}
-for name in sys.argv[1:] or CASES:
-    args, expected = CASES[name]
-    actual = divide(*args)
-    if actual != expected or (actual is None) != (expected is None):
-        print(f"FAILED divide{args}: expected {expected}, got {actual}")
+CASES = {"dollars": ("$1,234.50", 123450), "plain": ("12", 1200),
+         "euro comma": ("3,50 EUR", 350), "empty": ("", None)}
+for name, (text, expected) in CASES.items():
+    try:
+        actual = parse_price(text)
+    except Exception as error:
+        actual = type(error).__name__
+    if actual != expected:
+        print(f"FAILED {name}: parse_price({text!r}) "
+              f"expected {expected}, got {actual!r}")
 '''
-BODY = ("def divide(a, b):\n    if b == 0:\n        return {zero}\n"
-        "    return a {op} b\n")
-PATCHES = {  # what a model might propose after each kind of feedback
-    None: BODY.format(zero=0, op="/"),
-    "expected None": BODY.format(zero=None, op="//"),
-    "expected 3.5": BODY.format(zero=None, op="/"),
-}
+TASK = ("Implement parse_price(text) in prices.py: it returns the price in "
+        "the text as an integer number of cents.")
+CASE_NAMES = {"dollars", "plain", "euro comma", "empty"}
 
 
-def propose(messages):
-    feedback = last_observation(messages) or ""
-    for clue, patch in PATCHES.items():
-        if clue and clue in feedback:
-            return patch
-    return PATCHES[None]
-
-
-def run_tests(workspace, *names):
+def run_tests(workspace):
     """Temp dir, empty environment, timeout. This is NOT a sandbox."""
     env = {"SYSTEMROOT": os.environ["SYSTEMROOT"]} if os.name == "nt" else {}
-    done = subprocess.run([sys.executable, "-B", "test_divide.py", *names],
+    done = subprocess.run([sys.executable, "-B", "test_prices.py"],
                           cwd=workspace, env=env, capture_output=True,
                           text=True, timeout=10)
-    return done.stdout.strip() or "all passed"
+    return done.stdout.strip()
 
 
-model = PolicyModel(propose)
-messages = [{"role": "user", "content": "divide(a, 0) must return None"}]
+model = OpenAIModel(system="You are a coding agent. Reply with the "
+                    "complete new contents of prices.py only, no code fences.")
+messages = [{"role": "user", "content": TASK}]
+passed_before = set()
 with tempfile.TemporaryDirectory() as folder:
     workspace = Path(folder)
-    (workspace / "test_divide.py").write_text(TESTS)
+    (workspace / "test_prices.py").write_text(TESTS)
     for attempt in range(1, 5):  # bounded repair loop
-        (workspace / "calc.py").write_text(model.generate(messages))
-        targeted = run_tests(workspace, "zero")
-        full = run_tests(workspace)
-        print(f"attempt {attempt}: targeted test -> {targeted}")
-        print(f"           full suite    -> {full}")
-        if full == "all passed":
+        code = model.generate(messages)["answer"].strip().strip("`")
+        code = code.removeprefix("python\n")
+        (workspace / "prices.py").write_text(code, encoding="utf-8")
+        output = run_tests(workspace)
+        failed = {line.split(":")[0].removeprefix("FAILED ")
+                  for line in output.splitlines()}
+        regressed = passed_before & failed  # passed before, fails now
+        print(f"attempt {attempt}: failing {sorted(failed) or 'none'}"
+              + (f", REGRESSED {sorted(regressed)}" if regressed else ""))
+        if not failed:
             break
-        messages.append({"role": "tool", "content": full})
+        passed_before |= CASE_NAMES - failed
+        messages += [{"role": "assistant", "content": {"answer": code}},
+                     {"role": "user", "content": "Test output:\n" + output}]

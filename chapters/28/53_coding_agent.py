@@ -3,9 +3,11 @@ import os
 import subprocess
 import sys
 import tempfile
+import textwrap
 from pathlib import Path
 
-from agentic import ScriptedModel, execute
+from agentic import execute
+from agentic.live import OpenAIModel, schema
 
 REPOSITORY = {
     "calculator.py": "def add(a, b):\n    return a - b\n",
@@ -53,14 +55,15 @@ def make_tools(workspace):
             "patch_file": patch_file, "run_tests": run_tests}
 
 
-model = ScriptedModel([
-    {"action": "list_files", "arguments": {}},
-    {"action": "run_tests", "arguments": {}},
-    {"action": "read_file", "arguments": {"path": "calculator.py"}},
-    {"action": "patch_file",
-     "arguments": {"path": "calculator.py", "old": "a - b", "new": "a + b"}},
-    {"action": "run_tests", "arguments": {}},
-])
+SCHEMAS = [schema("list_files", "List the Python files."),
+           schema("read_file", "Read a file.", path="file name"),
+           schema("patch_file", "Replace one exact snippet in a file.",
+                  path="file name", old="exact text to replace",
+                  new="replacement text"),
+           schema("run_tests", "Run the test suite.")]
+model = OpenAIModel(tools=SCHEMAS, system="You are a coding agent. Make "
+                    "the tests pass by fixing the code, not the tests.")
+messages = [{"role": "user", "content": "The tests fail. Fix the bug."}]
 
 with tempfile.TemporaryDirectory() as folder:
     workspace = Path(folder)
@@ -68,9 +71,15 @@ with tempfile.TemporaryDirectory() as folder:
         (workspace / name).write_text(text)
     tools = make_tools(workspace)
     for step in range(1, 9):
-        decision = model.generate([])
+        decision = model.generate(messages)
+        if decision.get("done"):
+            print(f"step {step}: model stops without passing tests")
+            break
         result = execute(decision, tools=tools)
-        print(f"step {step}: {decision['action']} -> {result!r}")
+        print(textwrap.shorten(f"step {step}: {decision['action']} -> "
+                               f"{result!r}", 76))
+        messages += [{"role": "assistant", "content": decision},
+                     {"role": "tool", "content": str(result)}]
         if decision["action"] == "run_tests" and result == "1 passed":
             print("completed: the tests, not the model, ended the loop")
             break

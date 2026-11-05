@@ -1,0 +1,4 @@
+# model gpt-5.4-mini-2026-03-17, run 2026-11-05
+attempt 1: failing ['empty', 'euro comma']
+attempt 2: failing ['dollars', 'plain'], REGRESSED ['dollars', 'plain']
+attempt 3: failing none
