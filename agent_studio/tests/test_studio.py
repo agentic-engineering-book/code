@@ -7,7 +7,7 @@ import pytest
 pytest.importorskip("pydantic")
 
 from studio import service  # noqa: E402
-from studio.examples import MONITORS  # noqa: E402
+from studio.examples import EXAMPLES, MONITORS  # noqa: E402
 
 
 @pytest.mark.parametrize(("spec", "code"), [
@@ -56,3 +56,24 @@ def test_streamed_mock_run_reports_events_and_outcome(tmp_path, monkeypatch):
 def test_invalid_environment_is_rejected():
     with pytest.raises(ValueError):
         service.oracle_for({"domain": "nowhere", "facts": {}})
+
+
+EXPECTED = {
+    "example-monitors": "approve_purchase(supplier_id=S2)",
+    "example-docking": "approve_purchase(supplier_id=S1)",
+    "example-laptops": "escalate(supplier_id=S1)",
+    "example-chairs": "request_information(supplier_id=S1)",
+    "example-projectors": "reject_all_quotes",
+}
+
+
+@pytest.mark.parametrize("example", EXAMPLES, ids=lambda e: e["id"])
+def test_every_example_has_its_intended_answer_and_runs(example, tmp_path, monkeypatch):
+    assert service.oracle_for(example["state"])["label"] == EXPECTED[example["id"]]
+    monkeypatch.setattr(service, "EVENT_LOG", tmp_path)
+    lines = [json.loads(x) for x in service.stream_run({
+        "environment": {"state": example["state"]},
+        "agents": [{"id": "a", "provider": "mock", "explain": "after"},
+                   {"id": "d1", "provider": "mock", "gate": "verifier"}]})]
+    assert not [m for m in lines if m["type"] in ("run_error", "batch_error")]
+    assert len([m for m in lines if m["type"] == "run_end"]) == 2
