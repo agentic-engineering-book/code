@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECAA Agent Studio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%236b4fd6'/%3E%3Cpath d='M4 8h8M8 4v8' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo" aria-hidden="true"></span>ECAA Agent Studio</div>
+  <div class="top-actions">
+    <label class="sr-only" for="template">Template</label>
+    <select id="template" title="Load a ready-made canvas">
+      <option value="">Load template…</option>
+      <option value="example">Example: ECAA agent buys monitors</option>
+      <option value="compare">Compare: standard agent vs ECAA</option>
+      <option value="all">All architectures side by side</option>
+      <option value="blank">Blank canvas</option>
+    </select>
+    <button id="btn-export" class="ghost" title="Download the canvas and the last runs as JSON">Export</button>
+    <span id="run-note" class="run-note"></span>
+    <button id="btn-run" class="primary">▶ Run</button>
+  </div>
+</header>
+
+<main class="workspace">
+  <aside class="palette" aria-label="Components">
+    <h2>Components</h2>
+    <p class="hint">Drag onto the canvas. Connect the right-hand port of one block to the left-hand port of the next.</p>
+    <div id="palette-items"></div>
+    <div class="legend">
+      <h3>Pipeline</h3>
+      <p>Environment → Agent → <em>optional</em> Self-review / Policy gate / ECAA verifier → Executor</p>
+      <p>The pipeline determines the architecture (A, B, B+, C, D1, D2).</p>
+    </div>
+  </aside>
+
+  <section class="canvas-wrap">
+    <div id="canvas" tabindex="0" aria-label="Agent canvas">
+      <div id="world">
+        <svg id="edges" width="1" height="1"></svg>
+        <div id="nodes"></div>
+      </div>
+    </div>
+    <div class="canvas-tools">
+      <button id="zoom-in" title="Zoom in">+</button>
+      <button id="zoom-out" title="Zoom out">−</button>
+      <button id="zoom-fit" title="Fit to view">⤢</button>
+    </div>
+    <div id="canvas-msg" class="canvas-msg"></div>
+  </section>
+
+  <aside class="inspector" id="inspector" aria-label="Inspector"></aside>
+</main>
+
+<div id="splitter" class="splitter" title="Drag to resize"></div>
+
+<section class="trace" id="trace">
+  <div class="trace-head">
+    <div id="run-strip" class="run-strip"><span class="muted">No runs yet. Load the example template and press Run.</span></div>
+    <div class="playback" id="playback">
+      <button data-pb="first" title="First step">⏮</button>
+      <button data-pb="prev" title="Previous step">◀</button>
+      <button data-pb="play" title="Play / pause" id="pb-play">▶</button>
+      <button data-pb="next" title="Next step">▶|</button>
+      <button data-pb="live" title="Jump to latest (follow live)">⏭ Live</button>
+      <select id="pb-speed" title="Playback speed">
+        <option value="0.5">0.5×</option><option value="1" selected>1×</option>
+        <option value="2">2×</option><option value="4">4×</option>
+      </select>
+      <input id="pb-scrub" type="range" min="0" max="0" value="0" aria-label="Step">
+      <span id="pb-pos" class="muted">0 / 0</span>
+    </div>
+  </div>
+  <div class="trace-body">
+    <div class="timeline" id="timeline"></div>
+    <div class="details">
+      <div class="tabs" role="tablist">
+        <button data-tab="ledger" class="on">Evidence ledger</button>
+        <button data-tab="cert">Certificate &amp; checks</button>
+        <button data-tab="outcome">Outcome</button>
+        <button data-tab="prompt">System prompt</button>
+      </div>
+      <div id="details-body" class="details-body"></div>
+    </div>
+  </div>
+</section>
+
+<div id="modal" class="modal" hidden>
+  <div class="modal-card">
+    <div class="modal-head"><h3 id="modal-title"></h3><button id="modal-close" class="ghost">✕</button></div>
+    <pre id="modal-body"></pre>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

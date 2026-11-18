@@ -54,6 +54,18 @@ python -m framework_examples.02_llm_to_agent
 python -m framework_examples.run_all             # all 59: many paid requests
 ```
 
+## Agent Studio
+
+[`agent_studio/`](agent_studio/) is a small local web app for explainable agents.
+You drag an agent pipeline onto a canvas, run it on a task, and watch each step. The agent
+has to explain its decision before it acts, and an independent verifier checks that
+explanation against the evidence before anything is executed. It runs offline with a
+mock model, or with a real model when `OPENAI_API_KEY` is set.
+
+```bash
+cd agent_studio && python -m pip install -r requirements.txt && python -m studio
+```
+
 ## Notebooks
 
 `notebooks/` contains both sets of experiments as notebooks. They are generated
